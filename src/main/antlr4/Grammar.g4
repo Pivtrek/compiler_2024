@@ -48,7 +48,7 @@ expression: value
             ;
 
 condition: value '=' value
-            | value '!=' value
+            | value NOTEQUAL value
             | value '>' value
             | value '<' value
             | value '>=' value
@@ -72,7 +72,7 @@ identifier: pidentifier
 pidentifier: [_a-z]+;
 num: [0-9]+;
 
-
+NOTEQUAL: '!=';
 LHBRACK: '[';
 RHBRACK: ']';
 WS: [ \t\r\n]+ -> skip ; //Pomijanie białych znaków
