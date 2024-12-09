@@ -32,6 +32,13 @@ proc_head: pidentifier '(' args_decl ')';
 
 proc_call: pidentifier '(' args ')';
 
+declarations: declarations',' pidentifier
+            | declarations',' pidentifier '['num':'num']'
+            | pidentifier
+            | pidentifier '['num':'num']'
+
+
+
 
 
 
