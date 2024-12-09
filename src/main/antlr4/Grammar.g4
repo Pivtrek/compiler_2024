@@ -38,15 +38,9 @@ declarations: declarations',' pidentifier
             | pidentifier '['num':'num']'
             ;
 
-args_decl: args_decl',' pidentifier
-        | args_decl',' 'T' pidentifier
-        | pidentifier
-        | 'T' pidentifier
-        ;
+args_decl: ('T'? pidentifier (',' 'T'? pidentifier)*)?;
 
-args: args',' pidentifier
-    | pidentifier
-    ;
+args: pidentifier (',' pidentifier)*;
 
 expression: value
             | value '+' value
