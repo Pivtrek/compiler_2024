@@ -4,9 +4,8 @@ grammar Grammar;
 
 program_all: procedures main;
 
-procedures: procedures PROCEDURE proc_head IS declarations BEGIN commands END
-        |  procedures PROCEDURE proc_head IS BEGIN commands END
-        ;
+procedures: (PROCEDURE proc_head IS declarations BEGIN commands END
+           | PROCEDURE proc_head IS BEGIN commands END)*;
 
 main: PROGRAM IS declarations BEGIN commands END
     | PROGRAM IS BEGIN commands END
