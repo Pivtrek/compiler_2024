@@ -56,7 +56,13 @@ expression: value
             | value '%' value
             ;
 
-
+condition: value '=' value
+            | value '!=' value
+            | value '>' value
+            | value '<' value
+            | value '>=' value
+            | value '<=' value
+            ;
 
 
 
