@@ -48,6 +48,14 @@ args: args',' pidentifier
     | pidentifier
     ;
 
+expression: value
+            | value '+' value
+            | value '-' value
+            | value '*' value
+            | value '/' value
+            | value '%' value
+            ;
+
 
 
 
