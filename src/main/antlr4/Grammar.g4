@@ -42,6 +42,11 @@ args_decl: args_decl',' pidentifier
         | args_decl',' 'T' pidentifier
         | pidentifier
         | 'T' pidentifier
+        ;
+
+args: args',' pidentifier
+    | pidentifier
+    ;
 
 
 
