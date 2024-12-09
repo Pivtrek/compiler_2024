@@ -12,9 +12,7 @@ main: PROGRAM IS declarations BEGIN commands END
     | PROGRAM IS BEGIN commands END
     ;
 
-commands: commands command
-        | command
-        ;
+commands: command+;
 
 command : identifier ':=' expression ';'
        | IF condition THEN commands ELSE commands ENDIF
