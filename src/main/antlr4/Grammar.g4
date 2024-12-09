@@ -69,8 +69,8 @@ value: num
     ;
 
 identifier: pidentifier
-        | pidentifier'['pidentifier']'
-        | pidentifier'['num']'
+        | pidentifier LHBRACK pidentifier RHBRACK
+        | pidentifier RHBRACK num RHBRACK
         ;
 
 
