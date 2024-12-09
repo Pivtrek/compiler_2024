@@ -36,6 +36,12 @@ declarations: declarations',' pidentifier
             | declarations',' pidentifier '['num':'num']'
             | pidentifier
             | pidentifier '['num':'num']'
+            ;
+
+args_decl: args_decl',' pidentifier
+        | args_decl',' 'T' pidentifier
+        | pidentifier
+        | 'T' pidentifier
 
 
 
