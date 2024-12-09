@@ -18,26 +18,26 @@ command : identifier ':=' expression ';'
        | IF condition THEN commands ENDIF
        | WHILE condition DO commands ENDWHILE
        | REPEAT commands UNTIL condition ';'
-       | FOR pidentifier FROM value TO value DO commands ENDFOR
-       | FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+       | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
+       | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
        | proc_call ';'
        | READ identifier ';'
        | WRITE value ';'
        ;
 
-proc_head: pidentifier '(' args_decl ')';
+proc_head: PIDENTIFIER '(' args_decl ')';
 
-proc_call: pidentifier '(' args ')';
+proc_call: PIDENTIFIER '(' args ')';
 
-declarations: declarations',' pidentifier
-            | declarations',' pidentifier '['num':'num']'
-            | pidentifier
-            | pidentifier '['num':'num']'
+declarations: declarations',' PIDENTIFIER
+            | declarations',' PIDENTIFIER '['NUM':'NUM']'
+            | PIDENTIFIER
+            | PIDENTIFIER '['NUM':'NUM']'
             ;
 
-args_decl: ('T'? pidentifier (',' 'T'? pidentifier)*)?;
+args_decl: ('T'? PIDENTIFIER (',' 'T'? PIDENTIFIER)*)?;
 
-args: pidentifier (',' pidentifier)*;
+args: PIDENTIFIER (',' PIDENTIFIER)*;
 
 expression: value
             | value '+' value
@@ -55,13 +55,13 @@ condition: value '=' value
             | value '<=' value
             ;
 
-value: num
+value: NUM
     | identifier
     ;
 
-identifier: pidentifier
-        | pidentifier LHBRACK pidentifier RHBRACK
-        | pidentifier RHBRACK num RHBRACK
+identifier: PIDENTIFIER
+        | PIDENTIFIER LHBRACK PIDENTIFIER RHBRACK
+        | PIDENTIFIER RHBRACK NUM RHBRACK
         ;
 
 
@@ -69,8 +69,8 @@ identifier: pidentifier
 
 
 
-pidentifier: [_a-z]+;
-num: [0-9]+;
+PIDENTIFIER: [_a-z]+;
+NUM: [0-9]+;
 
 NOTEQUAL: '!=';
 LHBRACK: '[';
