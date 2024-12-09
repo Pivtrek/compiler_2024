@@ -73,8 +73,13 @@ identifier: pidentifier
         | pidentifier'['num']'
         ;
 
+
 //Lexer rules
 
 
+
+pidentifier: [_a-z]+;
+num: [0-9]+;
+
 WS: [ \t\r\n]+ -> skip ; //Pomijanie białych znaków
-COMMENT: '#' ~[ \r\n]* -> skip ; //Pomijanie komentarzy
+COMMENT: '#' ~[\r\n]* -> skip ; //Pomijanie komentarzy
