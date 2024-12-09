@@ -64,8 +64,14 @@ condition: value '=' value
             | value '<=' value
             ;
 
+value: num
+    | identifier
+    ;
 
-
+identifier: pidentifier
+        | pidentifier'['pidentifier']'
+        | pidentifier'['num']'
+        ;
 
 //Lexer rules
 
