@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
-            <version>4.13.0</version> <!-- Upewnij się, że wersja jest najnowsza -->
+            <version>4.13.0</version>
         </dependency>
     </dependencies>
 
