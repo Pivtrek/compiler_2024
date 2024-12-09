@@ -28,6 +28,9 @@ command : identifier ':=' expression ';'
        | WRITE value ';'
        ;
 
+proc_head: pidentifier '(' args_decl ')';
+
+proc_call: pidentifier '(' args ')';
 
 
 
