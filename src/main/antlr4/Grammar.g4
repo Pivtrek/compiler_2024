@@ -81,5 +81,8 @@ identifier: pidentifier
 pidentifier: [_a-z]+;
 num: [0-9]+;
 
+
+LHBRACK: '[';
+RHBRACK: ']';
 WS: [ \t\r\n]+ -> skip ; //Pomijanie białych znaków
 COMMENT: '#' ~[\r\n]* -> skip ; //Pomijanie komentarzy
