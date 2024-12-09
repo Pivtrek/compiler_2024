@@ -4,25 +4,25 @@ grammar Grammar;
 
 program_all: procedures main;
 
-procedures: (PROCEDURE proc_head IS declarations BEGIN commands END
-           | PROCEDURE proc_head IS BEGIN commands END)*;
+procedures: ('PROCEDURE' proc_head 'IS' declarations 'BEGIN' commands 'END'
+           | 'PROCEDURE' proc_head 'IS' 'BEGIN' commands 'END')*;
 
-main: PROGRAM IS declarations BEGIN commands END
-    | PROGRAM IS BEGIN commands END
+main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'
+    | 'PROGRAM' 'IS' 'BEGIN' commands 'END'
     ;
 
 commands: command+;
 
 command : identifier ':=' expression ';'
-       | IF condition THEN commands ELSE commands ENDIF
-       | IF condition THEN commands ENDIF
-       | WHILE condition DO commands ENDWHILE
-       | REPEAT commands UNTIL condition ';'
-       | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
-       | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
+       | 'IF' condition 'THEN' commands 'ELSE' commands 'ENDIF'
+       | 'IF' condition 'THEN' commands 'ENDIF'
+       | 'WHILE' condition 'DO' commands 'ENDWHILE'
+       | 'REPEAT' commands 'UNTIL' condition ';'
+       | 'FOR' PIDENTIFIER 'FROM' value 'TO' value 'DO' commands 'ENDFOR'
+       | 'FOR' PIDENTIFIER 'FROM' value 'DOWNTO' value 'DO' commands 'ENDFOR'
        | proc_call ';'
-       | READ identifier ';'
-       | WRITE value ';'
+       | 'READ' identifier ';'
+       | 'WRITE' value ';'
        ;
 
 proc_head: PIDENTIFIER '(' args_decl ')';
