@@ -96,6 +96,15 @@ public class Symbol {
 
     @Override
     public String toString() {
-        return "Symbol{name='" + name + "', type=" + type + "}";
+        StringBuilder sb = new StringBuilder("Symbol{name='" + name + "', type=" + type);
+        if (type == SymbolType.ARRAY) {
+            sb.append(", lowerBound=").append(lowerBound)
+                    .append(", upperBound=").append(upperBound);
+        } else if (type == SymbolType.PROCEDURE) {
+            sb.append(", parameters=").append(parameters)
+                    .append(", localVariables=").append(localVariables);
+        }
+        sb.append('}');
+        return sb.toString();
     }
 }
