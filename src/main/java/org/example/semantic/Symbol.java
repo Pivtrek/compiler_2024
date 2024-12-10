@@ -1,6 +1,11 @@
 package org.example.semantic;
 
 public class Symbol {
+    public enum SymbolType{
+        INT,
+        ARRAY,
+        PROCEDURE
+    }
     private String name;
     private String type;
 
