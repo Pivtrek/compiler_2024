@@ -4,8 +4,10 @@ grammar Grammar;
 
 program_all: procedures main;
 
-procedures: ('PROCEDURE' proc_head 'IS' declarations 'BEGIN' commands 'END'
-           | 'PROCEDURE' proc_head 'IS' 'BEGIN' commands 'END')*;
+procedures: 'PROCEDURE' proc_head 'IS' declarations 'BEGIN' commands 'END'         #PROCEDUREWITHDECLARATIONS
+           | 'PROCEDURE' proc_head 'IS' 'BEGIN' commands 'END'                     #PROCEDUREWITHOUTDECLARATIONS
+           ;
+
 
 main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'
     | 'PROGRAM' 'IS' 'BEGIN' commands 'END'
@@ -29,10 +31,10 @@ proc_head: PIDENTIFIER '(' args_decl ')';
 
 proc_call: PIDENTIFIER '(' args ')';
 
-declarations: declarations',' PIDENTIFIER
-            | declarations',' PIDENTIFIER '['NUM':'NUM']'
-            | PIDENTIFIER
-            | PIDENTIFIER '['NUM':'NUM']'
+declarations: declarations',' PIDENTIFIER                   #MULTISINGLEDECLARATION
+            | declarations',' PIDENTIFIER '['NUM':'NUM']'   #MULTIARRAYDECLARATION
+            | PIDENTIFIER                                   #SINGLEDECLARATION
+            | PIDENTIFIER '['NUM':'NUM']'                   #ARRAYDECLARATION
             ;
 
 args_decl: ('T'? PIDENTIFIER (',' 'T'? PIDENTIFIER)*)?;
