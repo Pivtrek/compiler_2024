@@ -38,6 +38,8 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/generated-sources/antlr</outputDirectory>
+                            <visitor>true</visitor>
+                            <listener>true</listener>
                         </configuration>
                     </execution>
                 </executions>
