@@ -1,4 +1,8 @@
-// Generated from Grammar.g4 by ANTLR 4.13.0
+// Generated from org\example\parser\Grammar.g4 by ANTLR 4.13.0
+package org.example.parser;
+
+    package org.example.parser;
+
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -16,11 +20,19 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram_all(GrammarParser.Program_allContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GrammarParser#procedures}.
+	 * Visit a parse tree produced by the {@code PROCEDUREWITHDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#procedures}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProcedures(GrammarParser.ProceduresContext ctx);
+	T visitPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PROCEDUREWITHOUTDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#procedures}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GrammarParser#main}.
 	 * @param ctx the parse tree
@@ -116,11 +128,33 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProc_call(GrammarParser.Proc_callContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GrammarParser#declarations}.
+	 * Visit a parse tree produced by the {@code MULTISINGLEDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarations(GrammarParser.DeclarationsContext ctx);
+	T visitMULTISINGLEDECLARATION(GrammarParser.MULTISINGLEDECLARATIONContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MULTIARRAYDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMULTIARRAYDECLARATION(GrammarParser.MULTIARRAYDECLARATIONContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code SINGLEDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSINGLEDECLARATION(GrammarParser.SINGLEDECLARATIONContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ARRAYDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitARRAYDECLARATION(GrammarParser.ARRAYDECLARATIONContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GrammarParser#args_decl}.
 	 * @param ctx the parse tree
