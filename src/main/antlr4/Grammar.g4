@@ -47,12 +47,12 @@ expression: value
             | value '%' value
             ;
 
-condition: value '=' value
-            | value NOTEQUAL value
-            | value '>' value
-            | value '<' value
-            | value '>=' value
-            | value '<=' value
+condition: value '=' value  #EQ
+            | value NOTEQUAL value  #NEQ
+            | value '>' value   #GT
+            | value '<' value   #LT
+            | value '>=' value  #GEQ
+            | value '<=' value  #LEQ
             ;
 
 value: NUM
