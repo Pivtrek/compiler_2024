@@ -1,6 +1,7 @@
 package org.example.semantic;
 
 
+import java.util.List;
 import java.util.Objects;
 
 public class Symbol {
@@ -16,6 +17,10 @@ public class Symbol {
     //Fields for array
     private Integer lowerBound;
     private Integer upperBound;
+
+    //Fields for procedures
+    private List<Symbol> parameters;
+    private List<Symbol> localVariables;
 
     public Symbol(String name, SymbolType type){
         this.name = name;
