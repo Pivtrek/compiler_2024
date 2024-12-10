@@ -17,15 +17,29 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitProgram_all(GrammarParser.Program_allContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#procedures}.
+	 * Enter a parse tree produced by the {@code PROCEDUREWITHDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#procedures}.
 	 * @param ctx the parse tree
 	 */
-	void enterProcedures(GrammarParser.ProceduresContext ctx);
+	void enterPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#procedures}.
+	 * Exit a parse tree produced by the {@code PROCEDUREWITHDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#procedures}.
 	 * @param ctx the parse tree
 	 */
-	void exitProcedures(GrammarParser.ProceduresContext ctx);
+	void exitPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PROCEDUREWITHOUTDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#procedures}.
+	 * @param ctx the parse tree
+	 */
+	void enterPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PROCEDUREWITHOUTDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#procedures}.
+	 * @param ctx the parse tree
+	 */
+	void exitPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#main}.
 	 * @param ctx the parse tree
@@ -187,15 +201,53 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitProc_call(GrammarParser.Proc_callContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#declarations}.
+	 * Enter a parse tree produced by the {@code MULTISINGLEDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
 	 * @param ctx the parse tree
 	 */
-	void enterDeclarations(GrammarParser.DeclarationsContext ctx);
+	void enterMULTISINGLEDECLARATION(GrammarParser.MULTISINGLEDECLARATIONContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#declarations}.
+	 * Exit a parse tree produced by the {@code MULTISINGLEDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
 	 * @param ctx the parse tree
 	 */
-	void exitDeclarations(GrammarParser.DeclarationsContext ctx);
+	void exitMULTISINGLEDECLARATION(GrammarParser.MULTISINGLEDECLARATIONContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MULTIARRAYDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void enterMULTIARRAYDECLARATION(GrammarParser.MULTIARRAYDECLARATIONContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MULTIARRAYDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void exitMULTIARRAYDECLARATION(GrammarParser.MULTIARRAYDECLARATIONContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code SINGLEDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void enterSINGLEDECLARATION(GrammarParser.SINGLEDECLARATIONContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code SINGLEDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void exitSINGLEDECLARATION(GrammarParser.SINGLEDECLARATIONContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ARRAYDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void enterARRAYDECLARATION(GrammarParser.ARRAYDECLARATIONContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ARRAYDECLARATION}
+	 * labeled alternative in {@link GrammarParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void exitARRAYDECLARATION(GrammarParser.ARRAYDECLARATIONContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#args_decl}.
 	 * @param ctx the parse tree

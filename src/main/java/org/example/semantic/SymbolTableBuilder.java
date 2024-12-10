@@ -1,4 +1,5 @@
 package org.example.semantic;
 
-public class SymbolTableBuilder {
+
+public class SymbolTableBuilder{
 }
