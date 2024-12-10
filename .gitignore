@@ -13,9 +13,6 @@ target/
 *.ipr
 .idea
 
-#maven generated classes
-target
-
 ### Eclipse ###
 .apt_generated
 .classpath
