@@ -39,12 +39,12 @@ args_decl: ('T'? PIDENTIFIER (',' 'T'? PIDENTIFIER)*)?;
 
 args: PIDENTIFIER (',' PIDENTIFIER)*;
 
-expression: value
-            | value '+' value
-            | value '-' value
-            | value '*' value
-            | value '/' value
-            | value '%' value
+expression: value   #VALEXPR
+            | value '+' value   #ADD
+            | value '-' value   #SUB
+            | value '*' value   #MUL
+            | value '/' value   #DIV
+            | value '%' value   #MOD
             ;
 
 condition: value '=' value  #EQ
