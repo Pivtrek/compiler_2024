@@ -29,10 +29,10 @@ proc_head: PIDENTIFIER '(' args_decl ')';
 
 proc_call: PIDENTIFIER '(' args ')';
 
-declarations: declarations',' PIDENTIFIER
-            | declarations',' PIDENTIFIER '['NUM':'NUM']'
-            | PIDENTIFIER
-            | PIDENTIFIER '['NUM':'NUM']'
+declarations: declarations',' PIDENTIFIER                   #MULTISINGLEDECLARATION
+            | declarations',' PIDENTIFIER '['NUM':'NUM']'   #MULTIARRAYDECLARATION
+            | PIDENTIFIER                                   #SINGLEDECLARATION
+            | PIDENTIFIER '['NUM':'NUM']'                   #ARRAYDECLARATION
             ;
 
 args_decl: ('T'? PIDENTIFIER (',' 'T'? PIDENTIFIER)*)?;
