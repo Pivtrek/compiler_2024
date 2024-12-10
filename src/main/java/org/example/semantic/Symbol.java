@@ -62,6 +62,25 @@ public class Symbol {
         this.upperBound = upperBound;
     }
 
+    //Procedures methods
+
+    public void addParameter(Symbol parameter) {
+        if (type == SymbolType.PROCEDURE) {
+            parameters.add(parameter);
+        } else {
+            throw new UnsupportedOperationException("Tylko PROCEDURE może mieć parametry!");
+        }
+    }
+
+    public void addLocalVariable(Symbol localVariable) {
+        if (type == SymbolType.PROCEDURE) {
+            localVariables.add(localVariable);
+        } else {
+            throw new UnsupportedOperationException("Tylko PROCEDURE może mieć zmienne lokalne!");
+        }
+    }
+
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;                   // Ta sama referencja
