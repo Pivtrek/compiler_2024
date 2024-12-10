@@ -1,5 +1,4 @@
 package org.example.semantic;
-
-
-public class SymbolTableBuilder{
+import org.example.parser.GrammarBaseListener;
+public class SymbolTableBuilder extends GrammarBaseListener {
 }
