@@ -12,4 +12,8 @@ public class SymbolTable {
         symbolTable.add(symbol);
     }
 
+    public void printSymbols(){
+        System.out.println(symbolTable);
+    }
+
 }
