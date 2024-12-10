@@ -1,5 +1,8 @@
 package org.example.semantic;
 
+
+import java.util.Objects;
+
 public class Symbol {
     public enum SymbolType{
         INT,
@@ -21,5 +24,23 @@ public class Symbol {
 
     public String getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;                   // Ta sama referencja
+        if (obj == null || getClass() != obj.getClass()) return false; // Sprawdź typ
+        Symbol symbol = (Symbol) obj;
+        return Objects.equals(name, symbol.name);       // Porównaj nazwe symbolu
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);                      // Hash tylko na podstawie nazwy
+    }
+
+    @Override
+    public String toString() {
+        return "Symbol{name='" + name + "', type=" + type + "}";
     }
 }
