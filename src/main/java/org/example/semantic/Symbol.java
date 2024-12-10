@@ -4,7 +4,8 @@ public class Symbol {
     public enum SymbolType{
         INT,
         ARRAY,
-        PROCEDURE
+        PROCEDURE,
+        ITERATOR
     }
     private String name;
     private String type;
