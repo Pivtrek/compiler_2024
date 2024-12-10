@@ -41,6 +41,27 @@ public class Symbol {
         return type;
     }
 
+    public Integer getLowerBound() {
+        return lowerBound;
+    }
+
+    public Integer getUpperBound() {
+        return upperBound;
+    }
+
+    public List<Symbol> getParameters() {
+        return parameters;
+    }
+
+    public List<Symbol> getLocalVariables() {
+        return localVariables;
+    }
+
+    public void setArrayBounds(int lowerBound, int upperBound){
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;                   // Ta sama referencja
