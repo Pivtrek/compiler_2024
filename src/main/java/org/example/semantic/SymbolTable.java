@@ -8,6 +8,8 @@ public class SymbolTable {
         this.symbolTable = new HashSet<Symbol>();
     }
 
-
+    public void addSymbol(Symbol symbol){
+        symbolTable.add(symbol);
+    }
 
 }
