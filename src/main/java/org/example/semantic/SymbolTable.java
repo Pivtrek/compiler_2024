@@ -5,7 +5,9 @@ public class SymbolTable {
 
     private HashSet<Symbol> symbolTable;
     public SymbolTable() {
-        symbolTable = new HashSet<Symbol>();
+        this.symbolTable = new HashSet<Symbol>();
     }
+
+
 
 }
