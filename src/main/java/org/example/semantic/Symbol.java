@@ -13,6 +13,10 @@ public class Symbol {
     private String name;
     private SymbolType type;
 
+    //Fields for array
+    private Integer lowerBound;
+    private Integer upperBound;
+
     public Symbol(String name, SymbolType type){
         this.name = name;
         this.type = type;
