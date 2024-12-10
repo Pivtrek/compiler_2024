@@ -13,16 +13,16 @@ main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'
 
 commands: command+;
 
-command : identifier ':=' expression ';'
-       | 'IF' condition 'THEN' commands 'ELSE' commands 'ENDIF'
-       | 'IF' condition 'THEN' commands 'ENDIF'
-       | 'WHILE' condition 'DO' commands 'ENDWHILE'
-       | 'REPEAT' commands 'UNTIL' condition ';'
-       | 'FOR' PIDENTIFIER 'FROM' value 'TO' value 'DO' commands 'ENDFOR'
-       | 'FOR' PIDENTIFIER 'FROM' value 'DOWNTO' value 'DO' commands 'ENDFOR'
-       | proc_call ';'
-       | 'READ' identifier ';'
-       | 'WRITE' value ';'
+command : identifier ':=' expression ';'                                            #ASSIGN
+       | 'IF' condition 'THEN' commands 'ELSE' commands 'ENDIF'                     #IFELSE
+       | 'IF' condition 'THEN' commands 'ENDIF'                                     #IF
+       | 'WHILE' condition 'DO' commands 'ENDWHILE'                                 #WHILE
+       | 'REPEAT' commands 'UNTIL' condition ';'                                    #REPEATUNTIL
+       | 'FOR' PIDENTIFIER 'FROM' value 'TO' value 'DO' commands 'ENDFOR'           #FORUP
+       | 'FOR' PIDENTIFIER 'FROM' value 'DOWNTO' value 'DO' commands 'ENDFOR'       #FORDOWNTO
+       | proc_call ';'                                                              #CALLPROC
+       | 'READ' identifier ';'                                                      #READ
+       | 'WRITE' value ';'                                                          #WRITE
        ;
 
 proc_head: PIDENTIFIER '(' args_decl ')';
