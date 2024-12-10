@@ -1,5 +1,9 @@
 grammar Grammar;
 
+@header {
+    package org.example.parser;
+}
+
 //Parser rules
 
 program_all: procedures main;
