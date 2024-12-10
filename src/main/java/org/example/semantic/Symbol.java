@@ -1,6 +1,7 @@
 package org.example.semantic;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +26,11 @@ public class Symbol {
     public Symbol(String name, SymbolType type){
         this.name = name;
         this.type = type;
+
+        if (type == SymbolType.PROCEDURE){
+            this.parameters = new ArrayList<>();
+            this.localVariables = new ArrayList<>();
+        }
     }
 
     public String getName() {
