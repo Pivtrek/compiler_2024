@@ -12,6 +12,10 @@ public class SymbolTable {
         symbolTable.add(symbol);
     }
 
+    public boolean containsSymbol(Symbol symbol){
+        return symbolTable.contains(symbol);
+    }
+
     public void printSymbols(){
         System.out.println(symbolTable);
     }

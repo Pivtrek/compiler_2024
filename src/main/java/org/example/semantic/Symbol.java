@@ -38,4 +38,9 @@ public class Symbol {
     public int hashCode() {
         return Objects.hash(name);                      // Hash tylko na podstawie nazwy
     }
+
+    @Override
+    public String toString() {
+        return "Symbol{name='" + name + "', type=" + type + "}";
+    }
 }
