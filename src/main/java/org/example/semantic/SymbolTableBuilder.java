@@ -1,4 +1,5 @@
 package org.example.semantic;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.example.parser.GrammarBaseListener;
 import org.example.parser.GrammarParser;
 
@@ -13,7 +14,10 @@ public class SymbolTableBuilder extends GrammarBaseListener {
     //PROCEDURES
     @Override
     public void enterPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
-        System.out.println(ctx.proc_head().getText());
+        Symbol symbol = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE);
+        for (TerminalNode arg: ctx.proc_head().args_decl().PIDENTIFIER()){
+            symbol.addParameter(new Symbol(arg.getText(), Symbol.SymbolType.INT));
+        }
     }
 
     @Override
@@ -26,16 +30,11 @@ public class SymbolTableBuilder extends GrammarBaseListener {
 
     @Override
     public void enterMULTISINGLEDECLARATION(GrammarParser.MULTISINGLEDECLARATIONContext ctx) {
-        System.out.println("MULTI SINGLE DECLARATION PIDENTIFIER " + ctx.PIDENTIFIER().getText());
-        System.out.println("MULTI SINGLE DECLARATION declarations " + ctx.declarations().getText());
     }
 
     @Override
     public void enterSINGLEDECLARATION(GrammarParser.SINGLEDECLARATIONContext ctx) {
-        System.out.println("Single Declarations" + ctx.PIDENTIFIER().getText());
 
-        //Symbol symbol = new Symbol(ctx.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
-        //symbolTable.addSymbol(symbol);
     }
 
     @Override
