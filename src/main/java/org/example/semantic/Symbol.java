@@ -9,7 +9,10 @@ public class Symbol {
     public enum SymbolType{
         INT,
         ARRAY,
-        PROCEDURE,
+        PROCEDURE_WITH_LOCAL_VARIABLES,
+
+        PROCEDURE_WITHOUT_LOCAL_VARIABLES,
+
         ITERATOR
     }
     private String name;
@@ -27,9 +30,11 @@ public class Symbol {
         this.name = name;
         this.type = type;
 
-        if (type == SymbolType.PROCEDURE){
+        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES){
             this.parameters = new ArrayList<>();
             this.localVariables = new ArrayList<>();
+        } else if (type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
+            this.parameters = new ArrayList<>();
         }
     }
 
@@ -65,7 +70,7 @@ public class Symbol {
     //Procedures methods
 
     public void addParameter(Symbol parameter) {
-        if (type == SymbolType.PROCEDURE) {
+        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
             parameters.add(parameter);
         } else {
             throw new UnsupportedOperationException("Tylko PROCEDURE może mieć parametry!");
@@ -73,7 +78,7 @@ public class Symbol {
     }
 
     public void addLocalVariable(Symbol localVariable) {
-        if (type == SymbolType.PROCEDURE) {
+        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES) {
             localVariables.add(localVariable);
         } else {
             throw new UnsupportedOperationException("Tylko PROCEDURE może mieć zmienne lokalne!");
@@ -100,7 +105,7 @@ public class Symbol {
         if (type == SymbolType.ARRAY) {
             sb.append(", lowerBound=").append(lowerBound)
                     .append(", upperBound=").append(upperBound);
-        } else if (type == SymbolType.PROCEDURE) {
+        } else if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
             sb.append(", parameters=").append(parameters)
                     .append(", localVariables=").append(localVariables);
         }
