@@ -14,16 +14,32 @@ public class SymbolTableBuilder extends GrammarBaseListener {
     //PROCEDURES
     @Override
     public void enterPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
+
+        //Name of procedure
         Symbol symbol = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE);
+        //Arguments
         for (TerminalNode parameter: ctx.proc_head().args_decl().PIDENTIFIER()){
             symbol.addParameter(new Symbol(parameter.getText(), Symbol.SymbolType.INT));
         }
-        //for (TerminalNode local_variable: ctx.declarations()){
+        //Local variables
+        GrammarParser.DeclarationsContext declarationsContext = ctx.declarations();
+        if (declarationsContext != null){
+            GrammarParser.DeclarationsContext currentContext = declarationsContext;
 
-        //}
+            while (currentContext instanceof GrammarParser.MULTISINGLEDECLARATIONContext multiSingle){
+                symbol.addLocalVariable(new Symbol(multiSingle.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
+
+                currentContext = multiSingle.declarations();
+
+            }
+
+            //Last declaration is single declaration
+            if (currentContext instanceof GrammarParser.SINGLEDECLARATIONContext singleDeclaration){
+                symbol.addLocalVariable(new Symbol(singleDeclaration.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
+            }
+        }
+        //adding procedure to table
         symbolTable.addSymbol(symbol);
-        //TODO: local_variables obsługa!!!!
-        System.out.println(ctx.declarations().getText().split(","));
     }
 
     @Override
