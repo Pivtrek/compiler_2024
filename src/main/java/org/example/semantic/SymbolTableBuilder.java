@@ -15,14 +15,20 @@ public class SymbolTableBuilder extends GrammarBaseListener {
     @Override
     public void enterPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
         Symbol symbol = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE);
-        for (TerminalNode arg: ctx.proc_head().args_decl().PIDENTIFIER()){
-            symbol.addParameter(new Symbol(arg.getText(), Symbol.SymbolType.INT));
+        for (TerminalNode parameter: ctx.proc_head().args_decl().PIDENTIFIER()){
+            symbol.addParameter(new Symbol(parameter.getText(), Symbol.SymbolType.INT));
         }
+        //for (TerminalNode local_variable: ctx.declarations()){
+
+        //}
+        symbolTable.addSymbol(symbol);
+        //TODO: local_variables obsługa!!!!
+        System.out.println(ctx.declarations().getText().split(","));
     }
 
     @Override
     public void enterPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx) {
-        super.enterPROCEDUREWITHOUTDECLARATIONS(ctx);
+        //System.out.println();
     }
 
     //DECLARATIONS
