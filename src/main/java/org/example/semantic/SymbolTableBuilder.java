@@ -26,12 +26,14 @@ public class SymbolTableBuilder extends GrammarBaseListener {
 
     @Override
     public void enterMULTISINGLEDECLARATION(GrammarParser.MULTISINGLEDECLARATIONContext ctx) {
-        super.enterMULTISINGLEDECLARATION(ctx);
+        System.out.println("PIDENTIFIER " + ctx.PIDENTIFIER().getText());
+        System.out.println("declarations " + ctx.declarations().getText());
     }
 
     @Override
     public void enterSINGLEDECLARATION(GrammarParser.SINGLEDECLARATIONContext ctx) {
-        super.enterSINGLEDECLARATION(ctx);
+        Symbol symbol = new Symbol(ctx.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
+        symbolTable.addSymbol(symbol);
     }
 
     @Override
