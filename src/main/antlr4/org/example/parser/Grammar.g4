@@ -1,15 +1,11 @@
 grammar Grammar;
 
-@header {
-    package org.example.parser;
-}
-
 //Parser rules
 
-program_all: procedures main;
+program_all: (procedures)* main;
 
-procedures: 'PROCEDURE' proc_head 'IS' declarations 'BEGIN' commands 'END'         #PROCEDUREWITHDECLARATIONS
-           | 'PROCEDURE' proc_head 'IS' 'BEGIN' commands 'END'                     #PROCEDUREWITHOUTDECLARATIONS
+procedures: PROCEDURE proc_head 'IS' declarations 'BEGIN' commands 'END'         #PROCEDUREWITHDECLARATIONS
+           | PROCEDURE proc_head 'IS' 'BEGIN' commands 'END'                     #PROCEDUREWITHOUTDECLARATIONS
            ;
 
 
@@ -17,7 +13,7 @@ main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'
     | 'PROGRAM' 'IS' 'BEGIN' commands 'END'
     ;
 
-commands: command+;
+commands: command (command)*;
 
 command : identifier ':=' expression ';'                                            #ASSIGN
        | 'IF' condition 'THEN' commands 'ELSE' commands 'ENDIF'                     #IFELSE
@@ -67,14 +63,12 @@ value: NUM
 
 identifier: PIDENTIFIER
         | PIDENTIFIER LHBRACK PIDENTIFIER RHBRACK
-        | PIDENTIFIER RHBRACK NUM RHBRACK
+        | PIDENTIFIER LHBRACK NUM RHBRACK
         ;
-
 
 //Lexer rules
 
-
-
+PROCEDURE: 'PROCEDURE';
 PIDENTIFIER: [_a-z]+;
 NUM: [0-9]+;
 
@@ -83,3 +77,4 @@ LHBRACK: '[';
 RHBRACK: ']';
 WS: [ \t\r\n]+ -> skip ; //Pomijanie białych znaków
 COMMENT: '#' ~[\r\n]* -> skip ; //Pomijanie komentarzy
+

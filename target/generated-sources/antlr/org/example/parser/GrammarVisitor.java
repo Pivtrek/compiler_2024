@@ -1,8 +1,5 @@
 // Generated from org\example\parser\Grammar.g4 by ANTLR 4.13.0
 package org.example.parser;
-
-    package org.example.parser;
-
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
