@@ -13,7 +13,7 @@ public class SymbolTableBuilder extends GrammarBaseListener {
     //PROCEDURES
     @Override
     public void enterPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
-        super.enterPROCEDUREWITHDECLARATIONS(ctx);
+        System.out.println(ctx.proc_head().getText());
     }
 
     @Override
@@ -26,14 +26,16 @@ public class SymbolTableBuilder extends GrammarBaseListener {
 
     @Override
     public void enterMULTISINGLEDECLARATION(GrammarParser.MULTISINGLEDECLARATIONContext ctx) {
-        System.out.println("PIDENTIFIER " + ctx.PIDENTIFIER().getText());
-        System.out.println("declarations " + ctx.declarations().getText());
+        System.out.println("MULTI SINGLE DECLARATION PIDENTIFIER " + ctx.PIDENTIFIER().getText());
+        System.out.println("MULTI SINGLE DECLARATION declarations " + ctx.declarations().getText());
     }
 
     @Override
     public void enterSINGLEDECLARATION(GrammarParser.SINGLEDECLARATIONContext ctx) {
-        Symbol symbol = new Symbol(ctx.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
-        symbolTable.addSymbol(symbol);
+        System.out.println("Single Declarations" + ctx.PIDENTIFIER().getText());
+
+        //Symbol symbol = new Symbol(ctx.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
+        //symbolTable.addSymbol(symbol);
     }
 
     @Override
