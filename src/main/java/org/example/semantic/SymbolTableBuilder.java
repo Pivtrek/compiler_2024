@@ -4,6 +4,12 @@ import org.example.parser.GrammarParser;
 
 public class SymbolTableBuilder extends GrammarBaseListener {
 
+    private SymbolTable symbolTable;
+
+    public SymbolTableBuilder(SymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
+    }
+
     //PROCEDURES
     @Override
     public void enterPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
