@@ -21,7 +21,7 @@ public class GrammarLexer extends Lexer {
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, PROCEDURE=38, 
+		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, PROCEDURE=37, T=38, 
 		PIDENTIFIER=39, NUM=40, NOTEQUAL=41, LHBRACK=42, RHBRACK=43, WS=44, COMMENT=45;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
@@ -37,8 +37,8 @@ public class GrammarLexer extends Lexer {
 			"T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16", 
 			"T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24", 
 			"T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32", 
-			"T__33", "T__34", "T__35", "T__36", "PROCEDURE", "PIDENTIFIER", "NUM", 
-			"NOTEQUAL", "LHBRACK", "RHBRACK", "WS", "COMMENT"
+			"T__33", "T__34", "T__35", "PROCEDURE", "T", "PIDENTIFIER", "NUM", "NOTEQUAL", 
+			"LHBRACK", "RHBRACK", "WS", "COMMENT"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -48,8 +48,8 @@ public class GrammarLexer extends Lexer {
 			null, "'IS'", "'BEGIN'", "'END'", "'PROGRAM'", "':='", "';'", "'IF'", 
 			"'THEN'", "'ELSE'", "'ENDIF'", "'WHILE'", "'DO'", "'ENDWHILE'", "'REPEAT'", 
 			"'UNTIL'", "'FOR'", "'FROM'", "'TO'", "'ENDFOR'", "'DOWNTO'", "'READ'", 
-			"'WRITE'", "'('", "')'", "','", "':'", "'T'", "'+'", "'-'", "'*'", "'/'", 
-			"'%'", "'='", "'>'", "'<'", "'>='", "'<='", "'PROCEDURE'", null, null, 
+			"'WRITE'", "'('", "')'", "','", "':'", "'+'", "'-'", "'*'", "'/'", "'%'", 
+			"'='", "'>'", "'<'", "'>='", "'<='", "'PROCEDURE'", "'T'", null, null, 
 			"'!='", "'['", "']'"
 		};
 	}
@@ -59,7 +59,7 @@ public class GrammarLexer extends Lexer {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, "PROCEDURE", "PIDENTIFIER", "NUM", "NOTEQUAL", "LHBRACK", 
+			null, "PROCEDURE", "T", "PIDENTIFIER", "NUM", "NOTEQUAL", "LHBRACK", 
 			"RHBRACK", "WS", "COMMENT"
 		};
 	}
@@ -156,8 +156,8 @@ public class GrammarLexer extends Lexer {
 		"\u0001\u0018\u0001\u0018\u0001\u0019\u0001\u0019\u0001\u001a\u0001\u001a"+
 		"\u0001\u001b\u0001\u001b\u0001\u001c\u0001\u001c\u0001\u001d\u0001\u001d"+
 		"\u0001\u001e\u0001\u001e\u0001\u001f\u0001\u001f\u0001 \u0001 \u0001!"+
-		"\u0001!\u0001\"\u0001\"\u0001#\u0001#\u0001#\u0001$\u0001$\u0001$\u0001"+
-		"%\u0001%\u0001%\u0001%\u0001%\u0001%\u0001%\u0001%\u0001%\u0001%\u0001"+
+		"\u0001!\u0001\"\u0001\"\u0001\"\u0001#\u0001#\u0001#\u0001$\u0001$\u0001"+
+		"$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001%\u0001%\u0001"+
 		"&\u0004&\u00f8\b&\u000b&\f&\u00f9\u0001\'\u0004\'\u00fd\b\'\u000b\'\f"+
 		"\'\u00fe\u0001(\u0001(\u0001(\u0001)\u0001)\u0001*\u0001*\u0001+\u0004"+
 		"+\u0109\b+\u000b+\f+\u010a\u0001+\u0001+\u0001,\u0001,\u0005,\u0111\b"+
@@ -203,7 +203,7 @@ public class GrammarLexer extends Lexer {
 		"9\u00d8\u0001\u0000\u0000\u0000;\u00da\u0001\u0000\u0000\u0000=\u00dc"+
 		"\u0001\u0000\u0000\u0000?\u00de\u0001\u0000\u0000\u0000A\u00e0\u0001\u0000"+
 		"\u0000\u0000C\u00e2\u0001\u0000\u0000\u0000E\u00e4\u0001\u0000\u0000\u0000"+
-		"G\u00e6\u0001\u0000\u0000\u0000I\u00e9\u0001\u0000\u0000\u0000K\u00ec"+
+		"G\u00e7\u0001\u0000\u0000\u0000I\u00ea\u0001\u0000\u0000\u0000K\u00f4"+
 		"\u0001\u0000\u0000\u0000M\u00f7\u0001\u0000\u0000\u0000O\u00fc\u0001\u0000"+
 		"\u0000\u0000Q\u0100\u0001\u0000\u0000\u0000S\u0103\u0001\u0000\u0000\u0000"+
 		"U\u0105\u0001\u0000\u0000\u0000W\u0108\u0001\u0000\u0000\u0000Y\u010e"+
@@ -256,21 +256,21 @@ public class GrammarLexer extends Lexer {
 		"\u00cd.\u0001\u0000\u0000\u0000\u00ce\u00cf\u0005)\u0000\u0000\u00cf0"+
 		"\u0001\u0000\u0000\u0000\u00d0\u00d1\u0005,\u0000\u0000\u00d12\u0001\u0000"+
 		"\u0000\u0000\u00d2\u00d3\u0005:\u0000\u0000\u00d34\u0001\u0000\u0000\u0000"+
-		"\u00d4\u00d5\u0005T\u0000\u0000\u00d56\u0001\u0000\u0000\u0000\u00d6\u00d7"+
-		"\u0005+\u0000\u0000\u00d78\u0001\u0000\u0000\u0000\u00d8\u00d9\u0005-"+
-		"\u0000\u0000\u00d9:\u0001\u0000\u0000\u0000\u00da\u00db\u0005*\u0000\u0000"+
-		"\u00db<\u0001\u0000\u0000\u0000\u00dc\u00dd\u0005/\u0000\u0000\u00dd>"+
-		"\u0001\u0000\u0000\u0000\u00de\u00df\u0005%\u0000\u0000\u00df@\u0001\u0000"+
-		"\u0000\u0000\u00e0\u00e1\u0005=\u0000\u0000\u00e1B\u0001\u0000\u0000\u0000"+
-		"\u00e2\u00e3\u0005>\u0000\u0000\u00e3D\u0001\u0000\u0000\u0000\u00e4\u00e5"+
-		"\u0005<\u0000\u0000\u00e5F\u0001\u0000\u0000\u0000\u00e6\u00e7\u0005>"+
-		"\u0000\u0000\u00e7\u00e8\u0005=\u0000\u0000\u00e8H\u0001\u0000\u0000\u0000"+
-		"\u00e9\u00ea\u0005<\u0000\u0000\u00ea\u00eb\u0005=\u0000\u0000\u00ebJ"+
-		"\u0001\u0000\u0000\u0000\u00ec\u00ed\u0005P\u0000\u0000\u00ed\u00ee\u0005"+
-		"R\u0000\u0000\u00ee\u00ef\u0005O\u0000\u0000\u00ef\u00f0\u0005C\u0000"+
-		"\u0000\u00f0\u00f1\u0005E\u0000\u0000\u00f1\u00f2\u0005D\u0000\u0000\u00f2"+
-		"\u00f3\u0005U\u0000\u0000\u00f3\u00f4\u0005R\u0000\u0000\u00f4\u00f5\u0005"+
-		"E\u0000\u0000\u00f5L\u0001\u0000\u0000\u0000\u00f6\u00f8\u0007\u0000\u0000"+
+		"\u00d4\u00d5\u0005+\u0000\u0000\u00d56\u0001\u0000\u0000\u0000\u00d6\u00d7"+
+		"\u0005-\u0000\u0000\u00d78\u0001\u0000\u0000\u0000\u00d8\u00d9\u0005*"+
+		"\u0000\u0000\u00d9:\u0001\u0000\u0000\u0000\u00da\u00db\u0005/\u0000\u0000"+
+		"\u00db<\u0001\u0000\u0000\u0000\u00dc\u00dd\u0005%\u0000\u0000\u00dd>"+
+		"\u0001\u0000\u0000\u0000\u00de\u00df\u0005=\u0000\u0000\u00df@\u0001\u0000"+
+		"\u0000\u0000\u00e0\u00e1\u0005>\u0000\u0000\u00e1B\u0001\u0000\u0000\u0000"+
+		"\u00e2\u00e3\u0005<\u0000\u0000\u00e3D\u0001\u0000\u0000\u0000\u00e4\u00e5"+
+		"\u0005>\u0000\u0000\u00e5\u00e6\u0005=\u0000\u0000\u00e6F\u0001\u0000"+
+		"\u0000\u0000\u00e7\u00e8\u0005<\u0000\u0000\u00e8\u00e9\u0005=\u0000\u0000"+
+		"\u00e9H\u0001\u0000\u0000\u0000\u00ea\u00eb\u0005P\u0000\u0000\u00eb\u00ec"+
+		"\u0005R\u0000\u0000\u00ec\u00ed\u0005O\u0000\u0000\u00ed\u00ee\u0005C"+
+		"\u0000\u0000\u00ee\u00ef\u0005E\u0000\u0000\u00ef\u00f0\u0005D\u0000\u0000"+
+		"\u00f0\u00f1\u0005U\u0000\u0000\u00f1\u00f2\u0005R\u0000\u0000\u00f2\u00f3"+
+		"\u0005E\u0000\u0000\u00f3J\u0001\u0000\u0000\u0000\u00f4\u00f5\u0005T"+
+		"\u0000\u0000\u00f5L\u0001\u0000\u0000\u0000\u00f6\u00f8\u0007\u0000\u0000"+
 		"\u0000\u00f7\u00f6\u0001\u0000\u0000\u0000\u00f8\u00f9\u0001\u0000\u0000"+
 		"\u0000\u00f9\u00f7\u0001\u0000\u0000\u0000\u00f9\u00fa\u0001\u0000\u0000"+
 		"\u0000\u00faN\u0001\u0000\u0000\u0000\u00fb\u00fd\u0007\u0001\u0000\u0000"+

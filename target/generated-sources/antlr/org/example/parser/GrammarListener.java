@@ -250,15 +250,53 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitARRAYDECLARATION(GrammarParser.ARRAYDECLARATIONContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#args_decl}.
+	 * Enter a parse tree produced by the {@code ARGSMULTIDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
 	 * @param ctx the parse tree
 	 */
-	void enterArgs_decl(GrammarParser.Args_declContext ctx);
+	void enterARGSMULTIDECL(GrammarParser.ARGSMULTIDECLContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#args_decl}.
+	 * Exit a parse tree produced by the {@code ARGSMULTIDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
 	 * @param ctx the parse tree
 	 */
-	void exitArgs_decl(GrammarParser.Args_declContext ctx);
+	void exitARGSMULTIDECL(GrammarParser.ARGSMULTIDECLContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ARGSDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterARGSDECL(GrammarParser.ARGSDECLContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ARGSDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitARGSDECL(GrammarParser.ARGSDECLContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ARGSARRDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterARGSARRDECL(GrammarParser.ARGSARRDECLContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ARGSARRDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitARGSARRDECL(GrammarParser.ARGSARRDECLContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ARGSMUTLIARRDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterARGSMUTLIARRDECL(GrammarParser.ARGSMUTLIARRDECLContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ARGSMUTLIARRDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitARGSMUTLIARRDECL(GrammarParser.ARGSMUTLIARRDECLContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#args}.
 	 * @param ctx the parse tree

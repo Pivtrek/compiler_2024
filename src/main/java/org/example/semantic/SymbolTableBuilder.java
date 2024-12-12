@@ -1,4 +1,5 @@
 package org.example.semantic;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.example.parser.GrammarBaseListener;
 import org.example.parser.GrammarParser;
@@ -17,12 +18,23 @@ public class SymbolTableBuilder extends GrammarBaseListener {
 
         //Name of procedure
         Symbol symbol = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
+
         //Arguments
-        for (TerminalNode parameter: ctx.proc_head().args_decl().PIDENTIFIER()){
-            symbol.addParameter(new Symbol(parameter.getText(), Symbol.SymbolType.INT));
+        GrammarParser.Args_declContext argsCtx = ctx.proc_head().args_decl();
+        if (argsCtx != null) {
+            for (ParseTree child : argsCtx.children) {
+                if (child instanceof GrammarParser.ARGSARRDECLContext arrayArg) {
+                    symbol.addParameter(new Symbol(arrayArg.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY));
+                } else if (!child.getText().equals(",")) {
+                    symbol.addParameter(new Symbol(child.getText(), Symbol.SymbolType.INT));
+                }
+            }
         }
+
         //Local variables
         GrammarParser.DeclarationsContext declarationsContext = ctx.declarations();
+
+
         if (declarationsContext != null){
             GrammarParser.DeclarationsContext currentContext = declarationsContext;
 
@@ -48,9 +60,12 @@ public class SymbolTableBuilder extends GrammarBaseListener {
         //Name of procedure
         Symbol symbol = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES);
         //Arguments
+        /*
         for (TerminalNode parameter: ctx.proc_head().args_decl().PIDENTIFIER()){
             symbol.addParameter(new Symbol(parameter.getText(), Symbol.SymbolType.INT));
         }
+
+         */
         symbolTable.addSymbol(symbol);
     }
 

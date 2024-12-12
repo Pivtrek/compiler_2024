@@ -269,13 +269,49 @@ public class GrammarBaseListener implements GrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArgs_decl(GrammarParser.Args_declContext ctx) { }
+	@Override public void enterARGSMULTIDECL(GrammarParser.ARGSMULTIDECLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArgs_decl(GrammarParser.Args_declContext ctx) { }
+	@Override public void exitARGSMULTIDECL(GrammarParser.ARGSMULTIDECLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterARGSDECL(GrammarParser.ARGSDECLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitARGSDECL(GrammarParser.ARGSDECLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterARGSARRDECL(GrammarParser.ARGSARRDECLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitARGSARRDECL(GrammarParser.ARGSARRDECLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterARGSMUTLIARRDECL(GrammarParser.ARGSMUTLIARRDECLContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitARGSMUTLIARRDECL(GrammarParser.ARGSMUTLIARRDECLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

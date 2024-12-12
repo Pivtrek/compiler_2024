@@ -37,11 +37,11 @@ declarations: declarations',' PIDENTIFIER                   #MULTISINGLEDECLARAT
             | PIDENTIFIER '['NUM':'NUM']'                   #ARRAYDECLARATION
             ;
 
-args_decl: args_decl',' PIDENTIFIER
-            | args_decl',' 'T' PIDENTIFIER
-            | PIDENTIFIER
-            | PIDENTIFIER
-            ;
+args_decl: args_decl ',' T PIDENTIFIER #ARGSMUTLIARRDECL
+         | args_decl ',' PIDENTIFIER   #ARGSMULTIDECL
+         | T PIDENTIFIER               #ARGSARRDECL
+         | PIDENTIFIER                 #ARGSDECL
+         ;
 
 args: PIDENTIFIER (',' PIDENTIFIER)*;
 
@@ -73,6 +73,7 @@ identifier: PIDENTIFIER
 //Lexer rules
 
 PROCEDURE: 'PROCEDURE';
+T: 'T';
 PIDENTIFIER: [_a-z]+;
 NUM: [0-9]+;
 
