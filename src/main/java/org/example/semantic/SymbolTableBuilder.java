@@ -26,32 +26,63 @@ public class SymbolTableBuilder extends GrammarBaseListener {
                 if (child instanceof GrammarParser.ARGSARRDECLContext arrayArg) {
                     symbol.addParameter(new Symbol(arrayArg.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY));
                 } else if (!child.getText().equals(",")) {
+                    //System.out.println(child.getText());
                     symbol.addParameter(new Symbol(child.getText(), Symbol.SymbolType.INT));
                 }
             }
         }
 
-        //Local variables
         GrammarParser.DeclarationsContext declarationsContext = ctx.declarations();
 
+        System.out.println(declarationsContext.getClass());
 
-        if (declarationsContext != null){
-            GrammarParser.DeclarationsContext currentContext = declarationsContext;
 
-            while (currentContext instanceof GrammarParser.MULTISINGLEDECLARATIONContext multiSingle){
-                symbol.addLocalVariable(new Symbol(multiSingle.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
 
-                currentContext = multiSingle.declarations();
-
-            }
-
-            //Last declaration is single declaration
-            if (currentContext instanceof GrammarParser.SINGLEDECLARATIONContext singleDeclaration){
-                symbol.addLocalVariable(new Symbol(singleDeclaration.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
-            }
-        }
         //adding procedure to table
         symbolTable.addSymbol(symbol);
+    }
+
+    private void processDeclarations(GrammarParser.DeclarationsContext ctx) {
+        // Obsłuż rekurencję w deklaracjach
+        if (ctx instanceof GrammarParser.MULTISINGLEDECLARATIONContext) {
+            GrammarParser.MULTISINGLEDECLARATIONContext multiDecl = (GrammarParser.MULTISINGLEDECLARATIONContext) ctx;
+
+            // Przetwarzaj wcześniejsze deklaracje
+            processDeclarations(multiDecl.declarations());
+
+            // Pobierz aktualny identyfikator
+            String variableName = multiDecl.PIDENTIFIER().getText();
+            System.out.println("Zmienna: " + variableName);
+            //symbolTable.addSymbol(variableName, new Symbol(variableName, "INT")); // Dodaj do tablicy symboli
+        } else if (ctx instanceof GrammarParser.MULTIARRAYDECLARATIONContext) {
+            GrammarParser.MULTIARRAYDECLARATIONContext multiArrayDecl = (GrammarParser.MULTIARRAYDECLARATIONContext) ctx;
+
+            // Przetwarzaj wcześniejsze deklaracje
+            processDeclarations(multiArrayDecl.declarations());
+
+            // Pobierz aktualną tablicę
+            String arrayName = multiArrayDecl.PIDENTIFIER().getText();
+            String lowerBound = multiArrayDecl.NUM(0).getText();
+            String upperBound = multiArrayDecl.NUM(1).getText();
+            System.out.println("Tablica: " + arrayName + " [" + lowerBound + ":" + upperBound + "]");
+            //symbolTable.addSymbol(arrayName, new Symbol(arrayName, "ARRAY")); // Dodaj do tablicy symboli
+        } else if (ctx instanceof GrammarParser.SINGLEDECLARATIONContext) {
+            GrammarParser.SINGLEDECLARATIONContext singleDecl = (GrammarParser.SINGLEDECLARATIONContext) ctx;
+
+            // Pojedyncza zmienna
+            String variableName = singleDecl.PIDENTIFIER().getText();
+            System.out.println("Zmienna: " + variableName);
+            //symbolTable.addSymbol(variableName, new Symbol(variableName, "INT")); // Dodaj do tablicy symboli
+        } else if (ctx instanceof GrammarParser.ARRAYDECLARATIONContext) {
+            GrammarParser.ARRAYDECLARATIONContext arrayDecl = (GrammarParser.ARRAYDECLARATIONContext) ctx;
+
+            // Pojedyncza tablica
+            String arrayName = arrayDecl.PIDENTIFIER().getText();
+            String lowerBound = arrayDecl.NUM(0).getText();
+            String upperBound = arrayDecl.NUM(1).getText();
+            System.out.println("Tablica: " + arrayName + " [" + lowerBound + ":" + upperBound + "]");
+            //symbolTable.addSymbol(arrayName, new Symbol(arrayName, "ARRAY")); // Dodaj do tablicy symboli
+        }
     }
 
     @Override
@@ -74,11 +105,12 @@ public class SymbolTableBuilder extends GrammarBaseListener {
 
     @Override
     public void enterMULTISINGLEDECLARATION(GrammarParser.MULTISINGLEDECLARATIONContext ctx) {
+        //System.out.println(ctx.declarations());
     }
 
     @Override
     public void enterSINGLEDECLARATION(GrammarParser.SINGLEDECLARATIONContext ctx) {
-
+        //System.out.println(ctx.PIDENTIFIER());
     }
 
     @Override

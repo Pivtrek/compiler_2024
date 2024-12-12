@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class TestTable {
     public static void main(String[] args) {
 
-        String filePath = "examples/example8.imp";
+        String filePath = "examples/example2.imp";
 
         try {
             // 1. Odczyt kodu z pliku
@@ -34,11 +34,10 @@ public class TestTable {
 
             // 4. Inicjalizacja SymbolTable i SymbolTableBuilder
             SymbolTable symbolTable = new SymbolTable();
-            SymbolTableBuilder builder = new SymbolTableBuilder(symbolTable);
+            SymbolTableBuilderVisitor visitor = new SymbolTableBuilderVisitor(symbolTable);
 
             // 5. Przejdź po drzewie składniowym
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(builder, tree);
+            visitor.visit(tree);
 
             // 6. Wypisz zawartość tablicy symboli
             System.out.println("Tablica symboli:");
