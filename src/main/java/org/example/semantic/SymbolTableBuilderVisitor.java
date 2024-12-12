@@ -33,12 +33,10 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     //Process arguments recursively with recognition of arrays and integers
     private void processArguments(GrammarParser.Args_declContext ctx, Symbol procedure){
         if (ctx instanceof GrammarParser.ARGSMULTIDECLContext argument_context) {
-            System.out.println("CIPA");
             procedure.addParameter(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
             processArguments(argument_context.args_decl(), procedure);
 
         } else if (ctx instanceof GrammarParser.ARGSDECLContext argument_context) {
-            System.out.println("DUPA");
             procedure.addParameter(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
 
         } else if (ctx instanceof GrammarParser.ARGSMUTLIARRDECLContext array_context) {
@@ -47,7 +45,6 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             processArguments(array_context.args_decl(), procedure);
 
         } else if (ctx instanceof GrammarParser.ARGSARRDECLContext array_context) {
-            System.out.println("CIPA2");
             procedure.addParameter(new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY));
         }
     }
