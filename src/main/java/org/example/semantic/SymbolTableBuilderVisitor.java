@@ -30,6 +30,32 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
         return null;
     }
+
+    @Override
+    public Void visitPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
+        visit(ctx.proc_head());
+        //Procedure name
+        Symbol procedure_with_variables = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
+
+        visit(ctx.proc_head().args_decl());
+
+        //Process arguments
+        GrammarParser.Args_declContext argsCtx = ctx.proc_head().args_decl();
+
+        if (argsCtx != null) {
+            processArguments(argsCtx, procedure_with_variables);
+        }
+
+        //Process local variables
+
+        visit(ctx.declarations());
+
+
+
+
+        return null;
+    }
+
     //Process arguments recursively with recognition of arrays and integers
     private void processArguments(GrammarParser.Args_declContext ctx, Symbol procedure){
         if (ctx instanceof GrammarParser.ARGSMULTIDECLContext argument_context) {
