@@ -37,7 +37,11 @@ declarations: declarations',' PIDENTIFIER                   #MULTISINGLEDECLARAT
             | PIDENTIFIER '['NUM':'NUM']'                   #ARRAYDECLARATION
             ;
 
-args_decl: ('T'? PIDENTIFIER (',' 'T'? PIDENTIFIER)*)?;
+args_decl: args_decl',' PIDENTIFIER
+            | args_decl',' 'T' PIDENTIFIER
+            | PIDENTIFIER
+            | PIDENTIFIER
+            ;
 
 args: PIDENTIFIER (',' PIDENTIFIER)*;
 
