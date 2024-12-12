@@ -37,14 +37,11 @@ declarations: declarations',' PIDENTIFIER                   #MULTISINGLEDECLARAT
             | PIDENTIFIER '['NUM':'NUM']'                   #ARRAYDECLARATION
             ;
 
-args_decl: args_decl COMMA argument #ARGSMUTLIARRDECL
-         | argument  #ARGSMULTIDECL
+args_decl: args_decl COMMA T PIDENTIFIER #ARGSMUTLIARRDECL
+         | args_decl COMMA PIDENTIFIER   #ARGSMULTIDECL
+         | T PIDENTIFIER                 #ARGSARRDECL
+         |  PIDENTIFIER                  #ARGSDECL
          ;
-
-
-argument: T PIDENTIFIER   #ARGSARRDECL
-          | PIDENTIFIER  #ARGSDECL
-          ;
 
 args: PIDENTIFIER (',' PIDENTIFIER)*;
 
