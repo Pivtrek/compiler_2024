@@ -9,8 +9,8 @@ procedures: PROCEDURE proc_head 'IS' declarations 'BEGIN' commands 'END'        
            ;
 
 
-main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'
-    | 'PROGRAM' 'IS' 'BEGIN' commands 'END'
+main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'                            #MAINDECLARATIONS
+    | 'PROGRAM' 'IS' 'BEGIN' commands 'END'                                         #MAINWITHOUTDECLARATIONS
     ;
 
 commands: command (command)*;
@@ -37,7 +37,11 @@ declarations: declarations',' PIDENTIFIER                   #MULTISINGLEDECLARAT
             | PIDENTIFIER '['NUM':'NUM']'                   #ARRAYDECLARATION
             ;
 
-args_decl: ('T'? PIDENTIFIER (',' 'T'? PIDENTIFIER)*)?;
+args_decl: args_decl COMMA T PIDENTIFIER #ARGSMUTLIARRDECL
+         | args_decl COMMA PIDENTIFIER   #ARGSMULTIDECL
+         | T PIDENTIFIER                 #ARGSARRDECL
+         |  PIDENTIFIER                  #ARGSDECL
+         ;
 
 args: PIDENTIFIER (',' PIDENTIFIER)*;
 
@@ -69,6 +73,8 @@ identifier: PIDENTIFIER
 //Lexer rules
 
 PROCEDURE: 'PROCEDURE';
+COMMA: ',';
+T: 'T';
 PIDENTIFIER: [_a-z]+;
 NUM: [0-9]+;
 

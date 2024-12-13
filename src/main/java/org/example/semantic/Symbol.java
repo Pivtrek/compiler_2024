@@ -13,6 +13,8 @@ public class Symbol {
 
         PROCEDURE_WITHOUT_LOCAL_VARIABLES,
 
+        MAIN_WITH_LOCAL_VARIABLES,
+        MAIN_WITHOUT_LOCAL_VARIABLES,
         ITERATOR
     }
     private String name;
@@ -35,6 +37,8 @@ public class Symbol {
             this.localVariables = new ArrayList<>();
         } else if (type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
             this.parameters = new ArrayList<>();
+        } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
+            this.localVariables = new ArrayList<>();
         }
     }
 
@@ -78,10 +82,10 @@ public class Symbol {
     }
 
     public void addLocalVariable(Symbol localVariable) {
-        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES) {
+        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
             localVariables.add(localVariable);
         } else {
-            throw new UnsupportedOperationException("Tylko PROCEDURE może mieć zmienne lokalne!");
+            throw new UnsupportedOperationException("Tylko PROCEDURE albo MAIN może mieć zmienne lokalne!");
         }
     }
 
@@ -108,6 +112,8 @@ public class Symbol {
         } else if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
             sb.append(", parameters=").append(parameters)
                     .append(", localVariables=").append(localVariables);
+        } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
+            sb.append(", localVariables=").append(localVariables);
         }
         sb.append('}');
         return sb.toString();

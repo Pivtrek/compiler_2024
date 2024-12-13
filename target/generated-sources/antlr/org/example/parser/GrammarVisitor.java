@@ -31,11 +31,19 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GrammarParser#main}.
+	 * Visit a parse tree produced by the {@code MAINDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#main}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMain(GrammarParser.MainContext ctx);
+	T visitMAINDECLARATIONS(GrammarParser.MAINDECLARATIONSContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MAINWITHOUTDECLARATIONS}
+	 * labeled alternative in {@link GrammarParser#main}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GrammarParser#commands}.
 	 * @param ctx the parse tree
@@ -153,11 +161,33 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitARRAYDECLARATION(GrammarParser.ARRAYDECLARATIONContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GrammarParser#args_decl}.
+	 * Visit a parse tree produced by the {@code ARGSMULTIDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArgs_decl(GrammarParser.Args_declContext ctx);
+	T visitARGSMULTIDECL(GrammarParser.ARGSMULTIDECLContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ARGSDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitARGSDECL(GrammarParser.ARGSDECLContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ARGSARRDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitARGSARRDECL(GrammarParser.ARGSARRDECLContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ARGSMUTLIARRDECL}
+	 * labeled alternative in {@link GrammarParser#args_decl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitARGSMUTLIARRDECL(GrammarParser.ARGSMUTLIARRDECLContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GrammarParser#args}.
 	 * @param ctx the parse tree

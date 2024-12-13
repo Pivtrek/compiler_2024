@@ -34,11 +34,10 @@ public class TestTable {
 
             // 4. Inicjalizacja SymbolTable i SymbolTableBuilder
             SymbolTable symbolTable = new SymbolTable();
-            SymbolTableBuilder builder = new SymbolTableBuilder(symbolTable);
+            SymbolTableBuilderVisitor visitor = new SymbolTableBuilderVisitor(symbolTable);
 
             // 5. Przejdź po drzewie składniowym
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(builder, tree);
+            visitor.visit(tree);
 
             // 6. Wypisz zawartość tablicy symboli
             System.out.println("Tablica symboli:");
