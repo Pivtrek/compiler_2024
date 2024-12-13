@@ -82,10 +82,10 @@ public class Symbol {
     }
 
     public void addLocalVariable(Symbol localVariable) {
-        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES) {
+        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
             localVariables.add(localVariable);
         } else {
-            throw new UnsupportedOperationException("Tylko PROCEDURE może mieć zmienne lokalne!");
+            throw new UnsupportedOperationException("Tylko PROCEDURE albo MAIN może mieć zmienne lokalne!");
         }
     }
 
