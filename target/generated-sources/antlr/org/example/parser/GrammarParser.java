@@ -332,22 +332,22 @@ public class GrammarParser extends Parser {
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class MAINContext extends MainContext {
+	public static class MAINWITHOUTDECLARATIONSContext extends MainContext {
 		public CommandsContext commands() {
 			return getRuleContext(CommandsContext.class,0);
 		}
-		public MAINContext(MainContext ctx) { copyFrom(ctx); }
+		public MAINWITHOUTDECLARATIONSContext(MainContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterMAIN(this);
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterMAINWITHOUTDECLARATIONS(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitMAIN(this);
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitMAINWITHOUTDECLARATIONS(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitMAIN(this);
+			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitMAINWITHOUTDECLARATIONS(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -378,7 +378,7 @@ public class GrammarParser extends Parser {
 				}
 				break;
 			case 2:
-				_localctx = new MAINContext(_localctx);
+				_localctx = new MAINWITHOUTDECLARATIONSContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(60);

@@ -38,12 +38,12 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMAINDECLARATIONS(GrammarParser.MAINDECLARATIONSContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code MAIN}
+	 * Visit a parse tree produced by the {@code MAINWITHOUTDECLARATIONS}
 	 * labeled alternative in {@link GrammarParser#main}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMAIN(GrammarParser.MAINContext ctx);
+	T visitMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GrammarParser#commands}.
 	 * @param ctx the parse tree

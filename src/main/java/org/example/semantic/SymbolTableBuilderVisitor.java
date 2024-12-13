@@ -79,10 +79,10 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitMAIN(GrammarParser.MAINContext ctx) {
-        Symbol main = new Symbol("PROGRAM_IS", Symbol.SymbolType.MAIN_WITHOUT_LOCAL_VARIABLES);
+    public Void visitMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx) {
+        Symbol main_without_declaratations = new Symbol("PROGRAM_IS", Symbol.SymbolType.MAIN_WITHOUT_LOCAL_VARIABLES);
 
-        symbolTable.addSymbol(main);
+        symbolTable.addSymbol(main_without_declaratations);
 
         return null;
     }

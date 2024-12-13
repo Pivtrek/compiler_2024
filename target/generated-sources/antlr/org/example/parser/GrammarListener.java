@@ -54,17 +54,17 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitMAINDECLARATIONS(GrammarParser.MAINDECLARATIONSContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code MAIN}
+	 * Enter a parse tree produced by the {@code MAINWITHOUTDECLARATIONS}
 	 * labeled alternative in {@link GrammarParser#main}.
 	 * @param ctx the parse tree
 	 */
-	void enterMAIN(GrammarParser.MAINContext ctx);
+	void enterMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code MAIN}
+	 * Exit a parse tree produced by the {@code MAINWITHOUTDECLARATIONS}
 	 * labeled alternative in {@link GrammarParser#main}.
 	 * @param ctx the parse tree
 	 */
-	void exitMAIN(GrammarParser.MAINContext ctx);
+	void exitMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#commands}.
 	 * @param ctx the parse tree

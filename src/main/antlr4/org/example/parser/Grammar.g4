@@ -10,7 +10,7 @@ procedures: PROCEDURE proc_head 'IS' declarations 'BEGIN' commands 'END'        
 
 
 main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'                            #MAINDECLARATIONS
-    | 'PROGRAM' 'IS' 'BEGIN' commands 'END'                                         #MAIN
+    | 'PROGRAM' 'IS' 'BEGIN' commands 'END'                                         #MAINWITHOUTDECLARATIONS
     ;
 
 commands: command (command)*;

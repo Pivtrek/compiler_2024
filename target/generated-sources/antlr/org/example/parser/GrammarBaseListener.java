@@ -65,13 +65,13 @@ public class GrammarBaseListener implements GrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMAIN(GrammarParser.MAINContext ctx) { }
+	@Override public void enterMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMAIN(GrammarParser.MAINContext ctx) { }
+	@Override public void exitMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
