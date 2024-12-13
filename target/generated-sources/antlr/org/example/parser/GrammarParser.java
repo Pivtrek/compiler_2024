@@ -298,27 +298,56 @@ public class GrammarParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class MainContext extends ParserRuleContext {
+		public MainContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_main; }
+	 
+		public MainContext() { }
+		public void copyFrom(MainContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class MAINDECLARATIONSContext extends MainContext {
 		public DeclarationsContext declarations() {
 			return getRuleContext(DeclarationsContext.class,0);
 		}
 		public CommandsContext commands() {
 			return getRuleContext(CommandsContext.class,0);
 		}
-		public MainContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_main; }
+		public MAINDECLARATIONSContext(MainContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterMain(this);
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterMAINDECLARATIONS(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitMain(this);
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitMAINDECLARATIONS(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitMain(this);
+			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitMAINDECLARATIONS(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class MAINContext extends MainContext {
+		public CommandsContext commands() {
+			return getRuleContext(CommandsContext.class,0);
+		}
+		public MAINContext(MainContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterMAIN(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitMAIN(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitMAIN(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -331,6 +360,7 @@ public class GrammarParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
+				_localctx = new MAINDECLARATIONSContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(53);
@@ -348,6 +378,7 @@ public class GrammarParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new MAINContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(60);

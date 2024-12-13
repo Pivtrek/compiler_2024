@@ -61,8 +61,10 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         return null;
     }
 
-
-
+    @Override
+    public Void visitMAINDECLARATIONS(GrammarParser.MAINDECLARATIONSContext ctx) {
+        return super.visitMAINDECLARATIONS(ctx);
+    }
 
     //Process arguments recursively with recognition of arrays and integers
     private void processArguments(GrammarParser.Args_declContext ctx, Symbol procedure){
