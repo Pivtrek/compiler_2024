@@ -80,7 +80,11 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitMAIN(GrammarParser.MAINContext ctx) {
-        return super.visitMAIN(ctx);
+        Symbol main = new Symbol("PROGRAM_IS", Symbol.SymbolType.MAIN_WITHOUT_LOCAL_VARIABLES);
+
+        symbolTable.addSymbol(main);
+
+        return null;
     }
 
     //Process arguments recursively with recognition of arrays and integers
