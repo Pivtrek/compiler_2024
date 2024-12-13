@@ -63,7 +63,15 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitMAINDECLARATIONS(GrammarParser.MAINDECLARATIONSContext ctx) {
-        return super.visitMAINDECLARATIONS(ctx);
+        Symbol main = new Symbol("PROGRAM_IS_DECLARATIONS", Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
+
+        visit(ctx.declarations());
+
+
+
+
+
+        return null;
     }
 
     //Process arguments recursively with recognition of arrays and integers
