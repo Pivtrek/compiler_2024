@@ -13,6 +13,8 @@ public class Symbol {
 
         PROCEDURE_WITHOUT_LOCAL_VARIABLES,
 
+        MAIN_WITH_LOCAL_VARIABLES,
+        MAIN_WITHOUT_LOCAL_VARIABLES,
         ITERATOR
     }
     private String name;
