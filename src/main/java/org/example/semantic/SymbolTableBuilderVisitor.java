@@ -63,7 +63,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitMAINDECLARATIONS(GrammarParser.MAINDECLARATIONSContext ctx) {
-        Symbol main_with_declarations = new Symbol("PROGRAM_IS_DECLARATIONS", Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
+        Symbol main_with_declarations = new Symbol("PROGRAM_IS_DECLARATIONS", Symbol.SymbolType.MAIN_WITH_LOCAL_VARIABLES);
 
         visit(ctx.declarations());
 
@@ -73,7 +73,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             processDeclarations(declCtx, main_with_declarations);
         }
 
-
+        symbolTable.addSymbol(main_with_declarations);
 
         return null;
     }
