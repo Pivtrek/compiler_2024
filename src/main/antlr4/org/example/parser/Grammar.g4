@@ -9,8 +9,8 @@ procedures: PROCEDURE proc_head 'IS' declarations 'BEGIN' commands 'END'        
            ;
 
 
-main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'
-    | 'PROGRAM' 'IS' 'BEGIN' commands 'END'
+main: 'PROGRAM' 'IS' declarations 'BEGIN' commands 'END'                            #MAINDECLARATIONS
+    | 'PROGRAM' 'IS' 'BEGIN' commands 'END'                                         #MAIN
     ;
 
 commands: command (command)*;
