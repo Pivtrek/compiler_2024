@@ -37,6 +37,8 @@ public class Symbol {
             this.localVariables = new ArrayList<>();
         } else if (type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
             this.parameters = new ArrayList<>();
+        } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
+            this.localVariables = new ArrayList<>();
         }
     }
 
