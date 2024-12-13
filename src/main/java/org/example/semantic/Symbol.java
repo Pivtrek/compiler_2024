@@ -112,6 +112,8 @@ public class Symbol {
         } else if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
             sb.append(", parameters=").append(parameters)
                     .append(", localVariables=").append(localVariables);
+        } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
+            sb.append(", localVariables=").append(localVariables);
         }
         sb.append('}');
         return sb.toString();
