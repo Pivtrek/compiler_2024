@@ -10,15 +10,23 @@ public class SemanticAnalysis {
     }
 
     public void analyze(){
-
+        checkForWrongLocalVariables();
     }
 
     //Checking if local variables in procedure are the same as arguments
     private void checkForWrongLocalVariables(){
-        for (Symbol symbol: symbolTable){
-
+        for (Symbol symbol: symbolTable.getALlSymbols()) {
+            System.out.println(symbol);
+            if (symbol.getType() == Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES){
+                for (Symbol parameter : symbol.getParameters()){
+                    for (Symbol local_variable : symbol.getLocalVariables()){
+                        if (parameter.getName().equals(local_variable.getName())){
+                            errorColector.reportError("dupa", 1); //TODO: BRAK LINI WIĘC TRZEBA TO ZAIMPLEMENTOWAĆ PRZY TWORZENIU PROCEDURY
+                        }
+                    }
+                }
+            }
         }
-            //TODO: CHANGE SYMBOLTABLE FOR MAP AND CREATE FUNCTION THAT RETURN A LIST OF ALL SYMBOLS FOR VALIDATION HERE
     }
 
 }
