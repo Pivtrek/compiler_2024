@@ -1,5 +1,5 @@
 PROCEDURE factorial(T s,n) IS
-  p, k[-10, 2]
+  p, k[10: 2]
 BEGIN
   s[0]:=1;
   p:=s[0];
