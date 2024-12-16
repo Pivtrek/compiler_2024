@@ -3,7 +3,7 @@ LISTA TODO
 ## Analiza Semantyczna: 
 
 - [x] Zbudować tablicę symboli 
-- [ ] Błąd deklaracji tablicy, pierwszy rozmiar większy od drugiego
+- [x] Błąd deklaracji tablicy, pierwszy rozmiar większy od drugiego
 - [ ] Użycie niezadeklarowanej zmiennej wewnątrz tablicy
 - [ ] Użycie niezainicjowanej zmiennej(bez assign wartosci)
 - [ ] Niewłaściwe użycie tablicy(c:=a;)
