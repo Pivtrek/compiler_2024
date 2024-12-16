@@ -4,32 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ErrorColector {
-    public static class SemanticError{
-        private final String message;
-        private final int line;
-
-        public SemanticError(String message, int line) {
-            this.message = message;
-            this.line = line;
-        }
-
-        @Override
-        public String toString() {
-            return "BŁĄD w linii: " + line + " : " + message;
+    public static class SemanticErrorException extends RuntimeException{
+        public SemanticErrorException(String message){
+            super(message);
         }
     }
 
-    private final List<SemanticError> errors = new ArrayList<>();
-
-    public void addError(String message, int line){
-        errors.add(new SemanticError(message, line));
-    }
-
-    public boolean hasError(){
-        return !errors.isEmpty();
-    }
-
-    public List<SemanticError> getErrors(){
-        return errors;
+    public void reportError(String message, int line){
+        String errorMessage = "Błąd semantyczny w linii " + line + " :" + message;
+        System.err.println(errorMessage);
+        throw new SemanticErrorException(errorMessage);
     }
 }
