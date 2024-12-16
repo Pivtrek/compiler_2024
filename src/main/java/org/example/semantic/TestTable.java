@@ -45,7 +45,7 @@ public class TestTable {
             symbolTable.printSymbols();
 
         } catch (ErrorColector.SemanticErrorException | IOException e) {
-            throw e;
+            //Purposely left empty, because Semantic error is printing error itself
         }
 
     }
