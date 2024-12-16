@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class TestTable {
     public static void main(String[] args) throws IOException {
 
-        String filePath = "examples/errors/error9.imp";
+        String filePath = "examples/example2.imp";
 
         try {
             // 1. Odczyt kodu z pliku
@@ -43,6 +43,8 @@ public class TestTable {
             // 6. Wypisz zawartość tablicy symboli
             System.out.println("Tablica symboli:");
             symbolTable.printSymbols();
+
+            System.out.println(symbolTable);
 
         } catch (ErrorColector.SemanticErrorException | IOException e) {
             //Purposely left empty, because Semantic error is printing error itself
