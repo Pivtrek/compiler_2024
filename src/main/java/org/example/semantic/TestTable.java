@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class TestTable {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         String filePath = "examples/errors/error9.imp";
 
@@ -45,7 +45,7 @@ public class TestTable {
             symbolTable.printSymbols();
 
         } catch (ErrorColector.SemanticErrorException | IOException e) {
-            System.err.println(e.getMessage());
+            throw e;
         }
 
     }
