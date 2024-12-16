@@ -6,9 +6,11 @@ import org.example.parser.GrammarParser;
 public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     private SymbolTable symbolTable;
+    private ErrorColector errorColector;
 
-    public SymbolTableBuilderVisitor(SymbolTable symbolTable) {
+    public SymbolTableBuilderVisitor(SymbolTable symbolTable, ErrorColector errorColector) {
         this.symbolTable = symbolTable;
+        this.errorColector = errorColector;
     }
 
     @Override
