@@ -15,7 +15,9 @@ public class SemanticAnalysis {
 
     //Checking if local variables in procedure are the same as arguments
     private void checkForWrongLocalVariables(){
-        for (Symbol symbol: symbolTable.g)
+        for (Symbol symbol: symbolTable){
+
+        }
             //TODO: CHANGE SYMBOLTABLE FOR MAP AND CREATE FUNCTION THAT RETURN A LIST OF ALL SYMBOLS FOR VALIDATION HERE
     }
 
