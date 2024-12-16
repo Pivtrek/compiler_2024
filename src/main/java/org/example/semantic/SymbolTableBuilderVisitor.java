@@ -6,9 +6,11 @@ import org.example.parser.GrammarParser;
 public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     private SymbolTable symbolTable;
+    private ErrorColector errorColector;
 
-    public SymbolTableBuilderVisitor(SymbolTable symbolTable) {
+    public SymbolTableBuilderVisitor(SymbolTable symbolTable, ErrorColector errorColector) {
         this.symbolTable = symbolTable;
+        this.errorColector = errorColector;
     }
 
     @Override
@@ -112,6 +114,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             Symbol array  = new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY);
             int lower_bound = Integer.parseInt(array_context.NUM(0).toString());
             int upper_bound = Integer.parseInt(array_context.NUM(1).toString());
+            if (lower_bound >= upper_bound){ //Error handling of declaring wrong range of array d[10:1] for example
+                errorColector.reportError("Niepoprawna deklaracja zasięgu tablicy " + array_context.PIDENTIFIER().getText(), array_context.PIDENTIFIER().getSymbol().getLine());
+            }
             array.setArrayBounds(lower_bound, upper_bound);
             procedure.addLocalVariable(array);
             processDeclarations(array_context.declarations(), procedure);
@@ -119,6 +124,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             Symbol array  = new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY);
             int lower_bound = Integer.parseInt(array_context.NUM(0).toString());
             int upper_bound = Integer.parseInt(array_context.NUM(1).toString());
+            if (lower_bound >= upper_bound){ //Error handling of declaring wrong range of array d[10:1] for example
+                errorColector.reportError("Niepoprawna deklaracja zasięgu tablicy " + array_context.PIDENTIFIER().getText(), array_context.PIDENTIFIER().getSymbol().getLine());
+            }
             array.setArrayBounds(lower_bound, upper_bound);
             procedure.addLocalVariable(array);
         }

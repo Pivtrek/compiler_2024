@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class TestTable {
     public static void main(String[] args) {
 
-        String filePath = "examples/example8.imp";
+        String filePath = "examples/errors/error9.imp";
 
         try {
             // 1. Odczyt kodu z pliku
@@ -34,7 +34,8 @@ public class TestTable {
 
             // 4. Inicjalizacja SymbolTable i SymbolTableBuilder
             SymbolTable symbolTable = new SymbolTable();
-            SymbolTableBuilderVisitor visitor = new SymbolTableBuilderVisitor(symbolTable);
+            ErrorColector errorColector = new ErrorColector();
+            SymbolTableBuilderVisitor visitor = new SymbolTableBuilderVisitor(symbolTable, errorColector);
 
             // 5. Przejdź po drzewie składniowym
             visitor.visit(tree);
@@ -43,8 +44,8 @@ public class TestTable {
             System.out.println("Tablica symboli:");
             symbolTable.printSymbols();
 
-        } catch (IOException e) {
-            System.err.println("Błąd odczytu pliku: " + e.getMessage());
+        } catch (ErrorColector.SemanticErrorException | IOException e) {
+            System.err.println(e.getMessage());
         }
 
     }
