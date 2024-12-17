@@ -40,11 +40,11 @@ public class TestTable {
             // 5. Przejdź po drzewie składniowym
             visitor.visit(tree);
 
-            // 6. Wypisz zawartość tablicy symboli
-            System.out.println("Tablica symboli:");
-            symbolTable.printSymbols();
+            //Analiza semantyczna
+            SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
+            semanticAnalysis.analyze();
 
-            System.out.println(symbolTable);
+
 
         } catch (ErrorColector.SemanticErrorException | IOException e) {
             //Purposely left empty, because Semantic error is printing error itself

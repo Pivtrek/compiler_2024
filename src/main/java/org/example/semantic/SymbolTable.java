@@ -16,6 +16,10 @@ public class SymbolTable {
         return symbolTable.contains(symbol);
     }
 
+    public HashSet<Symbol> getALlSymbols(){
+        return symbolTable;
+    }
+
     public void printSymbols(){
         System.out.println(symbolTable);
     }
