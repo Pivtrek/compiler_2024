@@ -1,6 +1,8 @@
 package org.example.semantic;
 
-public class SemanticAnalysis {
+import org.example.parser.GrammarBaseVisitor;
+
+public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private final SymbolTable symbolTable;
     private final ErrorColector errorColector;
 
@@ -21,7 +23,7 @@ public class SemanticAnalysis {
                 for (Symbol parameter : symbol.getParameters()){
                     for (Symbol local_variable : symbol.getLocalVariables()){
                         if (parameter.getName().equals(local_variable.getName())){
-                            errorColector.reportError("dupa", 1); //TODO: BRAK LINI WIĘC TRZEBA TO ZAIMPLEMENTOWAĆ PRZY TWORZENIU PROCEDURY
+                            errorColector.reportError("Powtórne użycie identyfikatora " + parameter.getName(), 1); //TODO: BRAK LINI WIĘC TRZEBA TO ZAIMPLEMENTOWAĆ PRZY TWORZENIU PROCEDURY
                         }
                     }
                 }
