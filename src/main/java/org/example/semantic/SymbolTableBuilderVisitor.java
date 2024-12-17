@@ -6,9 +6,11 @@ import org.example.parser.GrammarParser;
 public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     private SymbolTable symbolTable;
+    private ErrorColector errorColector;
 
-    public SymbolTableBuilderVisitor(SymbolTable symbolTable) {
+    public SymbolTableBuilderVisitor(SymbolTable symbolTable, ErrorColector errorColector) {
         this.symbolTable = symbolTable;
+        this.errorColector = errorColector;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     public Void visitPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
         visit(ctx.proc_head());
         //Procedure name
+
         Symbol procedure_with_variables = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
 
         visit(ctx.proc_head().args_decl());
@@ -104,21 +107,77 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     private void processDeclarations(GrammarParser.DeclarationsContext ctx, Symbol procedure){
         if (ctx instanceof GrammarParser.MULTISINGLEDECLARATIONContext argument_context){
+
+            //Error handling of using same name of declaration as parameter
+            if (procedure.getType().equals(Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES)){
+                for (Symbol parameter: procedure.getParameters()){
+                    if (parameter.getName().equals(argument_context.PIDENTIFIER().getText())){
+                        errorColector.reportError("Powtórne użycie identyfikatora " + argument_context.PIDENTIFIER().getText(), argument_context.PIDENTIFIER().getSymbol().getLine());
+                    }
+                }
+            }
+            //Done error handling
+
             procedure.addLocalVariable(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
             processDeclarations(argument_context.declarations(), procedure);
         } else if (ctx instanceof GrammarParser.SINGLEDECLARATIONContext argument_context) {
+
+            //Error handling of using same name of declaration as parameter
+            if (procedure.getType() == Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES){
+                for (Symbol parameter: procedure.getLocalVariables()){
+                    if (parameter.getName().equals(argument_context.PIDENTIFIER().getText())){
+                        errorColector.reportError("Powtórne użycie identyfikatora " + argument_context.PIDENTIFIER().getText(), argument_context.PIDENTIFIER().getSymbol().getLine());
+                    }
+                }
+            }
+            //Done error handling
+
             procedure.addLocalVariable(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
         } else if (ctx instanceof GrammarParser.MULTIARRAYDECLARATIONContext array_context) {
             Symbol array  = new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY);
+
+            //Error handling of declaring wrong range of array d[10:1] for example
             int lower_bound = Integer.parseInt(array_context.NUM(0).toString());
             int upper_bound = Integer.parseInt(array_context.NUM(1).toString());
+            if (lower_bound >= upper_bound){ //Error handling of declaring wrong range of array d[10:1] for example
+                errorColector.reportError("Niepoprawna deklaracja zasięgu tablicy " + array_context.PIDENTIFIER().getText(), array_context.PIDENTIFIER().getSymbol().getLine());
+            }
+            //Done Error handling
+
+            //Error handling of using same name of declaration as parameter
+            if (procedure.getType().equals(Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES)){
+                for (Symbol parameter: procedure.getParameters()){
+                    if (parameter.getName().equals(array_context.PIDENTIFIER().getText())){
+                        errorColector.reportError("Powtórne użycie identyfikatora " + (array_context.PIDENTIFIER().getText()) , array_context.PIDENTIFIER().getSymbol().getLine());
+                    }
+                }
+            }
+            //Done Error handling
+
             array.setArrayBounds(lower_bound, upper_bound);
             procedure.addLocalVariable(array);
             processDeclarations(array_context.declarations(), procedure);
         } else if (ctx instanceof GrammarParser.ARRAYDECLARATIONContext array_context) {
             Symbol array  = new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY);
+
+            //Error handling of declaring wrong range of array d[10:1] for example
             int lower_bound = Integer.parseInt(array_context.NUM(0).toString());
             int upper_bound = Integer.parseInt(array_context.NUM(1).toString());
+            if (lower_bound >= upper_bound){ //Error handling of declaring wrong range of array d[10:1] for example
+                errorColector.reportError("Niepoprawna deklaracja zasięgu tablicy " + array_context.PIDENTIFIER().getText(), array_context.PIDENTIFIER().getSymbol().getLine());
+            }
+            //Done Error handling
+
+            //Error handling of using same name of declaration as parameter
+            if (procedure.getType().equals(Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES)){
+                for (Symbol parameter: procedure.getParameters()){
+                    if (parameter.getName().equals(array_context.PIDENTIFIER().getText())){
+                        errorColector.reportError("Powtórne użycie identyfikatora " + (array_context.PIDENTIFIER().getText()) , array_context.PIDENTIFIER().getSymbol().getLine());
+                    }
+                }
+            }
+            //Done Error handling
+
             array.setArrayBounds(lower_bound, upper_bound);
             procedure.addLocalVariable(array);
         }
