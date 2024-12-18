@@ -206,12 +206,29 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     private void checkForUndefinedProcedureUsage(GrammarParser.CommandsContext commandsContext, SymbolTable symbolTable){
         for (int i=0; i<commandsContext.command().size();i++){
+            //CALPROC
             if (commandsContext.command(i) instanceof GrammarParser.CALLPROCContext){
                 String procedure_name = (((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER()).toString();
                 if (!(symbolTable.containsSymbol(new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES)))){
                     errorColector.reportError("Użycie niezdefiniowanej procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
                 }
-
+            }
+            //IF
+            if (commandsContext.command(i) instanceof GrammarParser.IFContext ifContext){
+                checkForUndefinedProcedureUsage(ifContext.commands(), symbolTable);
+            }
+            //IF ELSE
+            if (commandsContext.command(i) instanceof GrammarParser.IFELSEContext ifelseContext){
+                checkForUndefinedProcedureUsage(ifelseContext.commands(0), symbolTable);
+                checkForUndefinedProcedureUsage(ifelseContext.commands(1), symbolTable);
+            }
+            //WHILE
+            if (commandsContext.command(i) instanceof GrammarParser.WHILEContext whileContext){
+                checkForUndefinedProcedureUsage(whileContext.commands(),symbolTable);
+            }
+            //REPEAT UNTIL
+            if (commandsContext.command(i) instanceof GrammarParser.REPEATUNTILContext repeatuntilContext){
+                checkForUndefinedProcedureUsage(repeatuntilContext.commands(), symbolTable);
             }
         }
     }
