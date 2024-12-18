@@ -1,4 +1,5 @@
 package org.example.semantic;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
@@ -181,6 +182,10 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             array.setArrayBounds(lower_bound, upper_bound);
             procedure.addLocalVariable(array);
         }
+    }
+
+    private void checkForUndefinedProcedureUsage(ParseTree ctx, SymbolTable symbol_table){
+
     }
 
 }
