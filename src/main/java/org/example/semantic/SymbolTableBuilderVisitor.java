@@ -208,6 +208,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         for (int i=0; i<commandsContext.command().size();i++){
             //CALPROC
             if (commandsContext.command(i) instanceof GrammarParser.CALLPROCContext){
+                //Check if procedure is defined before calling
                 String procedure_name = (((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER()).toString();
                 if (!(symbolTable.containsSymbol(new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES)))){
                     errorColector.reportError("Użycie niezdefiniowanej procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
