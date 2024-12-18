@@ -32,7 +32,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         //Not declared procedure error handling
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
-        checkForUndefinedProcedureUsage(commandsContext, symbolTable);
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_without_variables);
 
         symbolTable.addSymbol(procedure_without_variables);
 
@@ -68,7 +68,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         //Not declared procedure error handling
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
-        checkForUndefinedProcedureUsage(commandsContext, symbolTable);
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_with_variables);
 
 
         symbolTable.addSymbol(procedure_with_variables);
@@ -92,7 +92,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         //Not declared procedure error handling
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
-        checkForUndefinedProcedureUsage(commandsContext, symbolTable);
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
         symbolTable.addSymbol(main_with_declarations);
 
         return null;
@@ -105,7 +105,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         //Not declared procedure error handling
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
-        checkForUndefinedProcedureUsage(commandsContext, symbolTable);
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_without_declaratations);
         symbolTable.addSymbol(main_without_declaratations);
 
         return null;
@@ -204,7 +204,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         }
     }
 
-    private void checkForUndefinedProcedureUsage(GrammarParser.CommandsContext commandsContext, SymbolTable symbolTable){
+    private void checkForUndefinedProcedureUsage(GrammarParser.CommandsContext commandsContext, SymbolTable symbolTable, Symbol procedure){
         for (int i=0; i<commandsContext.command().size();i++){
             //CALPROC
             if (commandsContext.command(i) instanceof GrammarParser.CALLPROCContext){
@@ -213,25 +213,34 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
                 if (!(symbolTable.containsSymbol(new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES)))){
                     errorColector.reportError("Użycie niezdefiniowanej procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
                 }
+                //Check if arguments in procedure are propper type
+                for (int j=0; j<((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().args().PIDENTIFIER().size();j++){
+                    String argumet_name = String.valueOf(((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().args().PIDENTIFIER(j));
+                    for(Symbol local_variable: procedure.getLocalVariables()){
+                        if(local_variable.getName().equals(argumet_name)){
+
+                            //TODO: how to get type of variable from called procedure ?
+                        }
+                    }
+                }
             }
             //IF
             if (commandsContext.command(i) instanceof GrammarParser.IFContext ifContext){
-                checkForUndefinedProcedureUsage(ifContext.commands(), symbolTable);
+                checkForUndefinedProcedureUsage(ifContext.commands(), symbolTable, procedure);
             }
             //IF ELSE
             if (commandsContext.command(i) instanceof GrammarParser.IFELSEContext ifelseContext){
-                checkForUndefinedProcedureUsage(ifelseContext.commands(0), symbolTable);
-                checkForUndefinedProcedureUsage(ifelseContext.commands(1), symbolTable);
+                checkForUndefinedProcedureUsage(ifelseContext.commands(0), symbolTable, procedure);
+                checkForUndefinedProcedureUsage(ifelseContext.commands(1), symbolTable, procedure);
             }
             //WHILE
             if (commandsContext.command(i) instanceof GrammarParser.WHILEContext whileContext){
-                checkForUndefinedProcedureUsage(whileContext.commands(),symbolTable);
+                checkForUndefinedProcedureUsage(whileContext.commands(),symbolTable, procedure);
             }
             //REPEAT UNTIL
             if (commandsContext.command(i) instanceof GrammarParser.REPEATUNTILContext repeatuntilContext){
-                checkForUndefinedProcedureUsage(repeatuntilContext.commands(), symbolTable);
+                checkForUndefinedProcedureUsage(repeatuntilContext.commands(), symbolTable, procedure);
             }
         }
     }
-
 }
