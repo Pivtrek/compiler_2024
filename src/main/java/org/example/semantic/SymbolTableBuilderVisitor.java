@@ -4,6 +4,8 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
 
+import java.util.Collections;
+
 public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
     private SymbolTable symbolTable;
@@ -33,6 +35,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_without_variables);
+
+        //reversing parameters to be in the right order
+        Collections.reverse(procedure_without_variables.getParameters());
 
         symbolTable.addSymbol(procedure_name,procedure_without_variables);
 
@@ -70,6 +75,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_with_variables);
 
+        //reversing parameters to be in the right order
+        Collections.reverse(procedure_with_variables.getParameters());
 
         symbolTable.addSymbol(procedure_name, procedure_with_variables);
 
