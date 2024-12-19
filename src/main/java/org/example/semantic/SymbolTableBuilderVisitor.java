@@ -18,7 +18,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     public Void visitPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx) {
         visit(ctx.proc_head());
         //Procedure name
-        Symbol procedure_without_variables = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES);
+        String procedure_name = ctx.proc_head().PIDENTIFIER().getText();
+        Symbol procedure_without_variables = new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES);
 
         visit(ctx.proc_head().args_decl());
 
@@ -33,7 +34,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_without_variables);
 
-        symbolTable.addSymbol(procedure_without_variables);
+        symbolTable.addSymbol(procedure_name,procedure_without_variables);
 
         return null;
     }
@@ -42,8 +43,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     public Void visitPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
         visit(ctx.proc_head());
         //Procedure name
-
-        Symbol procedure_with_variables = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
+        String procedure_name = ctx.proc_head().PIDENTIFIER().getText();
+        Symbol procedure_with_variables = new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
 
         visit(ctx.proc_head().args_decl());
 
@@ -70,7 +71,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_with_variables);
 
 
-        symbolTable.addSymbol(procedure_with_variables);
+        symbolTable.addSymbol(procedure_name, procedure_with_variables);
 
         return null;
     }
@@ -92,7 +93,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
-        symbolTable.addSymbol(main_with_declarations);
+        symbolTable.addSymbol("PROGRAM_IS_DECLARATIONS",main_with_declarations);
 
         return null;
     }
@@ -105,7 +106,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_without_declaratations);
-        symbolTable.addSymbol(main_without_declaratations);
+        symbolTable.addSymbol("PROGRAM_IS",main_without_declaratations);
 
         return null;
     }
