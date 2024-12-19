@@ -1,7 +1,10 @@
 package org.example.semantic;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
+
+import java.util.Collections;
 
 public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
@@ -16,9 +19,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     @Override
     public Void visitPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx) {
         visit(ctx.proc_head());
-
         //Procedure name
-        Symbol procedure_without_variables = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES);
+        String procedure_name = ctx.proc_head().PIDENTIFIER().getText();
+        Symbol procedure_without_variables = new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES);
 
         visit(ctx.proc_head().args_decl());
 
@@ -28,7 +31,15 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             processArguments(argsCtx, procedure_without_variables);
         }
 
-        symbolTable.addSymbol(procedure_without_variables);
+        //Not declared procedure error handling
+        visit(ctx.commands());
+        GrammarParser.CommandsContext commandsContext = ctx.commands();
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_without_variables);
+
+        //reversing parameters to be in the right order
+        Collections.reverse(procedure_without_variables.getParameters());
+
+        symbolTable.addSymbol(procedure_name,procedure_without_variables);
 
         return null;
     }
@@ -37,8 +48,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     public Void visitPROCEDUREWITHDECLARATIONS(GrammarParser.PROCEDUREWITHDECLARATIONSContext ctx) {
         visit(ctx.proc_head());
         //Procedure name
-
-        Symbol procedure_with_variables = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
+        String procedure_name = ctx.proc_head().PIDENTIFIER().getText();
+        Symbol procedure_with_variables = new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES);
 
         visit(ctx.proc_head().args_decl());
 
@@ -59,7 +70,15 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             processDeclarations(declCtx, procedure_with_variables);
         }
 
-        symbolTable.addSymbol(procedure_with_variables);
+        //Not declared procedure error handling
+        visit(ctx.commands());
+        GrammarParser.CommandsContext commandsContext = ctx.commands();
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, procedure_with_variables);
+
+        //reversing parameters to be in the right order
+        Collections.reverse(procedure_with_variables.getParameters());
+
+        symbolTable.addSymbol(procedure_name, procedure_with_variables);
 
         return null;
     }
@@ -76,7 +95,12 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             processDeclarations(declCtx, main_with_declarations);
         }
 
-        symbolTable.addSymbol(main_with_declarations);
+
+        //Not declared procedure error handling
+        visit(ctx.commands());
+        GrammarParser.CommandsContext commandsContext = ctx.commands();
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
+        symbolTable.addSymbol("PROGRAM_IS_DECLARATIONS",main_with_declarations);
 
         return null;
     }
@@ -85,7 +109,11 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     public Void visitMAINWITHOUTDECLARATIONS(GrammarParser.MAINWITHOUTDECLARATIONSContext ctx) {
         Symbol main_without_declaratations = new Symbol("PROGRAM_IS", Symbol.SymbolType.MAIN_WITHOUT_LOCAL_VARIABLES);
 
-        symbolTable.addSymbol(main_without_declaratations);
+        //Not declared procedure error handling
+        visit(ctx.commands());
+        GrammarParser.CommandsContext commandsContext = ctx.commands();
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_without_declaratations);
+        symbolTable.addSymbol("PROGRAM_IS",main_without_declaratations);
 
         return null;
     }
@@ -183,4 +211,44 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         }
     }
 
+    private void checkForUndefinedProcedureUsage(GrammarParser.CommandsContext commandsContext, SymbolTable symbolTable, Symbol procedure){
+        for (int i=0; i<commandsContext.command().size();i++){
+            //CALPROC
+            if (commandsContext.command(i) instanceof GrammarParser.CALLPROCContext){
+                //Check if procedure is defined before calling
+                String procedure_name = (((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER()).toString();
+                if (!(symbolTable.containsSymbol(procedure_name))){
+                    errorColector.reportError("Użycie niezdefiniowanej procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
+                }
+                //Check if arguments in procedure are propper type
+                for (int j=0; j<((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().args().PIDENTIFIER().size();j++){
+                    String argumet_name = String.valueOf(((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().args().PIDENTIFIER(j));
+                    for(Symbol local_variable: procedure.getLocalVariables()){
+                        if(local_variable.getName().equals(argumet_name)){
+                            if (local_variable.getType() != symbolTable.getSymbol(procedure_name).getParameters().get(j).getType()){
+                                errorColector.reportError("Niewłaściwy parametr procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
+                            }
+                        }
+                    }
+                }
+            }
+            //IF
+            if (commandsContext.command(i) instanceof GrammarParser.IFContext ifContext){
+                checkForUndefinedProcedureUsage(ifContext.commands(), symbolTable, procedure);
+            }
+            //IF ELSE
+            if (commandsContext.command(i) instanceof GrammarParser.IFELSEContext ifelseContext){
+                checkForUndefinedProcedureUsage(ifelseContext.commands(0), symbolTable, procedure);
+                checkForUndefinedProcedureUsage(ifelseContext.commands(1), symbolTable, procedure);
+            }
+            //WHILE
+            if (commandsContext.command(i) instanceof GrammarParser.WHILEContext whileContext){
+                checkForUndefinedProcedureUsage(whileContext.commands(),symbolTable, procedure);
+            }
+            //REPEAT UNTIL
+            if (commandsContext.command(i) instanceof GrammarParser.REPEATUNTILContext repeatuntilContext){
+                checkForUndefinedProcedureUsage(repeatuntilContext.commands(), symbolTable, procedure);
+            }
+        }
+    }
 }
