@@ -17,7 +17,6 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     @Override
     public Void visitPROCEDUREWITHOUTDECLARATIONS(GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext ctx) {
         visit(ctx.proc_head());
-
         //Procedure name
         Symbol procedure_without_variables = new Symbol(ctx.proc_head().PIDENTIFIER().getText(), Symbol.SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES);
 
@@ -219,7 +218,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
                     for(Symbol local_variable: procedure.getLocalVariables()){
                         if(local_variable.getName().equals(argumet_name)){
 
-                            //TODO: how to get type of variable from called procedure ?
+                            //TODO: how to get type of variable from called procedure ? propably Symbol Table needs to be converted into diffirient structure
                         }
                     }
                 }
