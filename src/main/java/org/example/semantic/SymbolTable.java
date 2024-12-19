@@ -1,19 +1,29 @@
 package org.example.semantic;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class SymbolTable {
 
-    private HashSet<Symbol> symbolTable;
+    private Map<String, Symbol> symbolTable = new HashMap<>();
     public SymbolTable() {
-        this.symbolTable = new HashSet<Symbol>();
+        this.symbolTable = new HashMap<>();
     }
 
-    public void addSymbol(Symbol symbol){
-        symbolTable.add(symbol);
+    public void addSymbol(String name, Symbol symbol){
+        symbolTable.put(name, symbol);
     }
 
-    public boolean containsSymbol(Symbol symbol){
-        return symbolTable.contains(symbol);
+    public Symbol getSymbol(String name){
+        return symbolTable.get(name);
+    }
+
+    public Map<String, Symbol> getAllSymbols(){
+        return symbolTable;
+    }
+
+    public boolean containsSymbol(String name){
+        return symbolTable.containsKey(name);
     }
 
     public HashSet<Symbol> getALlSymbols(){
