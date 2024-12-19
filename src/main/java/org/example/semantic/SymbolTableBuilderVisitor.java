@@ -218,9 +218,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
                     String argumet_name = String.valueOf(((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().args().PIDENTIFIER(j));
                     for(Symbol local_variable: procedure.getLocalVariables()){
                         if(local_variable.getName().equals(argumet_name)){
-
-                            //TODO: how to get type of variable from called procedure ?
-                            //TODO: Now its map just validate if the type of parameters are good
+                            if (local_variable.getType() != symbolTable.getSymbol(procedure_name).getParameters().get(j).getType()){
+                                errorColector.reportError("Niewłaściwy parametr procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
+                            }
                         }
                     }
                 }
