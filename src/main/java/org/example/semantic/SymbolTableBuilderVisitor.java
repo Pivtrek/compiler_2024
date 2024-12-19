@@ -210,7 +210,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             if (commandsContext.command(i) instanceof GrammarParser.CALLPROCContext){
                 //Check if procedure is defined before calling
                 String procedure_name = (((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER()).toString();
-                if (!(symbolTable.containsSymbol(new Symbol(procedure_name, Symbol.SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES)))){
+                if (!(symbolTable.containsSymbol(procedure_name))){
                     errorColector.reportError("Użycie niezdefiniowanej procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
                 }
                 //Check if arguments in procedure are propper type
@@ -219,7 +219,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
                     for(Symbol local_variable: procedure.getLocalVariables()){
                         if(local_variable.getName().equals(argumet_name)){
 
-                            //TODO: how to get type of variable from called procedure ? propably Symbol Table needs to be converted into diffirient structure
+                            //TODO: how to get type of variable from called procedure ?
+                            //TODO: Now its map just validate if the type of parameters are good
                         }
                     }
                 }
