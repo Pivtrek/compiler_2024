@@ -289,6 +289,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
                         if (Objects.equals(parameter.getName(), assignContext.identifier().PIDENTIFIER(0).toString()) && (!(parameter.getType().equals(Symbol.SymbolType.INT)))){
                             errorColector.reportError("Niewłaściwe użycie tablicy", assignContext.identifier().PIDENTIFIER(0).getSymbol().getLine());
                         }
+
                     }
                 }
                 //INT USAGE
@@ -327,4 +328,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
         }
     }
+    //TODO: its has to be done diffriently. Lets use visit assign function to get every assign
+    //TODO: and create function that can get procedure name, so we can procced all assignes
+    //TODO: with created symbol table, HINT!: case where we are entering loop its also an iterator
+    //TODO: as extra variable so we can already check if its changing or not and also, we can map variables
+    //TODO: so we know if we are assigning them with some value before using and all semantic analysis will be ready then!
 }
