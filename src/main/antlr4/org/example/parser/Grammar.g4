@@ -42,7 +42,6 @@ args_decl: args_decl COMMA T PIDENTIFIER #ARGSMUTLIARRDECL
          | T PIDENTIFIER                 #ARGSARRDECL
          |  PIDENTIFIER                  #ARGSDECL
          ;
-
 args: PIDENTIFIER (',' PIDENTIFIER)*;
 
 expression: value   #VALEXPR

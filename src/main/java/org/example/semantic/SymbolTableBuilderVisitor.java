@@ -107,8 +107,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         //TODO FIX MAINDECLARATIONS
-        //checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
-        //checkForIdentifierUsage(commandsContext, main_with_declarations);
+        checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
+        checkForIdentifierUsage(commandsContext, main_with_declarations);
         symbolTable.addSymbol("PROGRAM_IS_DECLARATIONS",main_with_declarations);
 
         return null;
@@ -224,7 +224,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     private void checkForUndefinedProcedureUsage(GrammarParser.CommandsContext commandsContext, SymbolTable symbolTable, Symbol procedure){
 
         ArrayList<Symbol> localVariablesAndParameters = new ArrayList<>();
-        localVariablesAndParameters.addAll(procedure.getParameters());
+        if (procedure.getParameters() != null){
+            localVariablesAndParameters.addAll(procedure.getParameters());
+        }
         if (procedure.getLocalVariables() != null){
             localVariablesAndParameters.addAll(procedure.getLocalVariables());
         }
@@ -271,7 +273,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     private void checkForIdentifierUsage(GrammarParser.CommandsContext commandsContext, Symbol procedure){
 
         ArrayList<Symbol> localVariablesAndParameters = new ArrayList<>();
-        localVariablesAndParameters.addAll(procedure.getParameters());
+        if (procedure.getParameters() != null){
+            localVariablesAndParameters.addAll(procedure.getParameters());
+        }
         if (procedure.getLocalVariables() != null){
             localVariablesAndParameters.addAll(procedure.getLocalVariables());
         }
@@ -300,10 +304,27 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
                         }
                     }
                 }
-            } else if (commandsContext.command(i) instanceof GrammarParser.WRITEContext) {
-                System.out.println("WRITE - " + commandsContext.command(i).getText());
+            } else if (commandsContext.command(i) instanceof GrammarParser.WRITEContext writeContext) {
+                if (writeContext.value().identifier().PIDENTIFIER().size() == 1){
+                    for (Symbol parameter : localVariablesAndParameters){
+                        if (Objects.equals(parameter.getName(), writeContext.value().identifier().PIDENTIFIER(0).toString()) && (!(parameter.getType().equals(Symbol.SymbolType.INT)))){
+                            errorColector.reportError("Niewłaściwe użycie tablicy", writeContext.value().identifier().PIDENTIFIER(0).getSymbol().getLine());
+                        }
+                    }
+                }
+                else if (writeContext.value().identifier().PIDENTIFIER().size() == 2){
+                    for (Symbol parameter : localVariablesAndParameters){
+                        //int usage as array
+                        if (Objects.equals(parameter.getName(), writeContext.value().identifier().PIDENTIFIER(0).toString()) && (!(parameter.getType().equals(Symbol.SymbolType.ARRAY)))){
+                            errorColector.reportError("Niewłaściwe użycie zmiennej", writeContext.value().identifier().PIDENTIFIER(0).getSymbol().getLine());
+                        }
+                        //array usage inside array
+                        else if (Objects.equals(parameter.getName(), writeContext.value().identifier().PIDENTIFIER(1).toString()) && (!(parameter.getType().equals(Symbol.SymbolType.INT)))){
+                            errorColector.reportError("Niewłaściwe użycie tablicy", writeContext.value().identifier().PIDENTIFIER(1).getSymbol().getLine());
+                        }
+                    }
+                }
             }
         }
     }
-
 }
