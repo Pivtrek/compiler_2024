@@ -251,4 +251,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
         }
     }
+    private void checkForIdentifierUsage(GrammarParser.CommandsContext commandsContext, Symbol procedure){
+
+    }
+
 }
