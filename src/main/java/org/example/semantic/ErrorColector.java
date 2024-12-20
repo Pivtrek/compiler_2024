@@ -12,6 +12,7 @@ public class ErrorColector {
 
     public void reportError(String message, int line){
         String errorMessage = "Błąd semantyczny w linii " + line + " :" + message;
+        //TODO: add one space to comma and merge and commit in proper way ofc
         System.err.println(errorMessage);
         throw new SemanticErrorException(errorMessage);
     }

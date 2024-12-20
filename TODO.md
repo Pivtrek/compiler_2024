@@ -4,7 +4,7 @@ LISTA TODO
 
 - [x] Zbudować tablicę symboli 
 - [x] Błąd deklaracji tablicy, pierwszy rozmiar większy od drugiego
-- [ ] Użycie niezadeklarowanej zmiennej wewnątrz tablicy
+- [ ] Użycie niezadeklarowanej zmiennej 
 - [ ] Użycie niezainicjowanej zmiennej(bez assign wartosci)
 - [ ] Niewłaściwe użycie tablicy(c:=a;)
 - [ ] Niewłaściwe użycie zmiennej, traktowanie jak tablica zwykłej zmiennej
@@ -12,3 +12,6 @@ LISTA TODO
 - [x] Nie można w procedurze użyć nazw argumentów jako deklaracje 
 - [x] Użycie niezdefiniowanej procedury, liczy się kolejność deklaracji!!!
 - [ ] Próba modyfikacji iteratora wewnątrz pętli
+- [ ] Error1
+- [ ] Error2
+- [ ] Error8
