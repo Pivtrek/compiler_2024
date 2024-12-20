@@ -4,7 +4,9 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
@@ -38,6 +40,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
 
         //reversing parameters to be in the right order
         Collections.reverse(procedure_without_variables.getParameters());
+
+        checkForIdentifierUsage(commandsContext, procedure_without_variables);
 
         symbolTable.addSymbol(procedure_name,procedure_without_variables);
 
@@ -78,6 +82,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         //reversing parameters to be in the right order
         Collections.reverse(procedure_with_variables.getParameters());
 
+        //Check for proper variables usage
+        checkForIdentifierUsage(commandsContext, procedure_with_variables);
+
         symbolTable.addSymbol(procedure_name, procedure_with_variables);
 
         return null;
@@ -99,7 +106,9 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         //Not declared procedure error handling
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
-        checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
+        //TODO FIX MAINDECLARATIONS
+        //checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
+        //checkForIdentifierUsage(commandsContext, main_with_declarations);
         symbolTable.addSymbol("PROGRAM_IS_DECLARATIONS",main_with_declarations);
 
         return null;
@@ -113,6 +122,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_without_declaratations);
+        checkForIdentifierUsage(commandsContext, main_without_declaratations);
         symbolTable.addSymbol("PROGRAM_IS",main_without_declaratations);
 
         return null;
@@ -212,6 +222,13 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     }
 
     private void checkForUndefinedProcedureUsage(GrammarParser.CommandsContext commandsContext, SymbolTable symbolTable, Symbol procedure){
+
+        ArrayList<Symbol> localVariablesAndParameters = new ArrayList<>();
+        localVariablesAndParameters.addAll(procedure.getParameters());
+        if (procedure.getLocalVariables() != null){
+            localVariablesAndParameters.addAll(procedure.getLocalVariables());
+        }
+
         for (int i=0; i<commandsContext.command().size();i++){
             //CALPROC
             if (commandsContext.command(i) instanceof GrammarParser.CALLPROCContext){
@@ -223,7 +240,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
                 //Check if arguments in procedure are propper type
                 for (int j=0; j<((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().args().PIDENTIFIER().size();j++){
                     String argumet_name = String.valueOf(((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().args().PIDENTIFIER(j));
-                    for(Symbol local_variable: procedure.getLocalVariables()){
+                    for(Symbol local_variable: localVariablesAndParameters){
                         if(local_variable.getName().equals(argumet_name)){
                             if (local_variable.getType() != symbolTable.getSymbol(procedure_name).getParameters().get(j).getType()){
                                 errorColector.reportError("Niewłaściwy parametr procedury " + procedure_name, ((GrammarParser.CALLPROCContext) commandsContext.command(i)).proc_call().PIDENTIFIER().getSymbol().getLine());
@@ -253,6 +270,40 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     }
     private void checkForIdentifierUsage(GrammarParser.CommandsContext commandsContext, Symbol procedure){
 
+        ArrayList<Symbol> localVariablesAndParameters = new ArrayList<>();
+        localVariablesAndParameters.addAll(procedure.getParameters());
+        if (procedure.getLocalVariables() != null){
+            localVariablesAndParameters.addAll(procedure.getLocalVariables());
+        }
+
+
+        for (int i=0;i<commandsContext.command().size();i++){
+            if (commandsContext.command(i) instanceof GrammarParser.ASSIGNContext assignContext){
+                //ARRAY USAGE
+                if (assignContext.identifier().PIDENTIFIER().size() == 1){
+                    for (Symbol parameter : localVariablesAndParameters){
+                        if (Objects.equals(parameter.getName(), assignContext.identifier().PIDENTIFIER(0).toString()) && (!(parameter.getType().equals(Symbol.SymbolType.INT)))){
+                            errorColector.reportError("Niewłaściwe użycie tablicy", assignContext.identifier().PIDENTIFIER(0).getSymbol().getLine());
+                        }
+                    }
+                }
+                //INT USAGE
+                else if (assignContext.identifier().PIDENTIFIER().size() == 2){
+                    for (Symbol parameter : localVariablesAndParameters){
+                        //int usage as array
+                        if (Objects.equals(parameter.getName(), assignContext.identifier().PIDENTIFIER(0).toString()) && (!(parameter.getType().equals(Symbol.SymbolType.ARRAY)))){
+                            errorColector.reportError("Niewłaściwe użycie zmiennej", assignContext.identifier().PIDENTIFIER(0).getSymbol().getLine());
+                        }
+                        //array usage inside array
+                        else if (Objects.equals(parameter.getName(), assignContext.identifier().PIDENTIFIER(1).toString()) && (!(parameter.getType().equals(Symbol.SymbolType.INT)))){
+                            errorColector.reportError("Niewłaściwe użycie tablicy", assignContext.identifier().PIDENTIFIER(1).getSymbol().getLine());
+                        }
+                    }
+                }
+            } else if (commandsContext.command(i) instanceof GrammarParser.WRITEContext) {
+                System.out.println("WRITE - " + commandsContext.command(i).getText());
+            }
+        }
     }
 
 }
