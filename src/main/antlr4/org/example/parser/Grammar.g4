@@ -65,9 +65,9 @@ value: NUM
     | identifier
     ;
 
-identifier: PIDENTIFIER
-        | PIDENTIFIER LHBRACK PIDENTIFIER RHBRACK
-        | PIDENTIFIER LHBRACK NUM RHBRACK
+identifier: PIDENTIFIER                             #INTUSAGE
+        | PIDENTIFIER LHBRACK PIDENTIFIER RHBRACK   #ARRAYWITHPIDUSAGE
+        | PIDENTIFIER LHBRACK NUM RHBRACK           #ARRAYWITHNUMUSAGE
         ;
 
 //Lexer rules
