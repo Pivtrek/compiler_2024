@@ -45,4 +45,13 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         }
         return "UKNOWN SCOPE";
     }
+
+    private boolean isInForLoop(ParserRuleContext context){
+        ParserRuleContext current = context;
+
+        if (current instanceof GrammarParser.FORUPContext || current instanceof GrammarParser.FORDOWNTOContext){
+            return true;
+        }
+        return false;
+    }
 }
