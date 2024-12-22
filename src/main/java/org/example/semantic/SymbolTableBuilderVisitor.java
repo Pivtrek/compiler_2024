@@ -328,6 +328,15 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
         }
     }
+
+    @Override
+    public Void visitASSIGN(GrammarParser.ASSIGNContext ctx) {
+
+        System.out.println(ctx.getText());
+
+        return null;
+    }
+
     //TODO: its has to be done diffriently. Lets use visit assign function to get every assign
     //TODO: and create function that can get procedure name, so we can procced all assignes
     //TODO: with created symbol table, HINT!: case where we are entering loop its also an iterator
