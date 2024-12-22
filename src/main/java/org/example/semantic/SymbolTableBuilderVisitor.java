@@ -339,8 +339,23 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     }
 
     private String findEnclosingScope(ParserRuleContext context){
+        ParserRuleContext current = context;
 
+        while (current != null){
+            if (current instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext){
+                return ((GrammarParser.PROCEDUREWITHDECLARATIONSContext) current).proc_head().PIDENTIFIER().getText();
+            }
+            if (current instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext){
+                return ((GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext) current).proc_head().PIDENTIFIER().getText();
+            }
+            if (current instanceof GrammarParser.MAINDECLARATIONSContext){
+                return "PROGRAM_IS_DECLARATIONS";
+            }
+            if (current instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext){
+                return "PROGRAM_IS";
+            }
 
+        }
         return "UKNOWN SCOPE";
     }
 
