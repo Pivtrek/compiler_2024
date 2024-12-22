@@ -1,4 +1,5 @@
 package org.example.semantic;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.example.parser.GrammarBaseVisitor;
@@ -328,9 +329,4 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
         }
     }
-    //TODO: its has to be done diffriently. Lets use visit assign function to get every assign
-    //TODO: and create function that can get procedure name, so we can procced all assignes
-    //TODO: with created symbol table, HINT!: case where we are entering loop its also an iterator
-    //TODO: as extra variable so we can already check if its changing or not and also, we can map variables
-    //TODO: so we know if we are assigning them with some value before using and all semantic analysis will be ready then!
 }
