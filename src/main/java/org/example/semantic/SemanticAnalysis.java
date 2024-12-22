@@ -1,6 +1,7 @@
 package org.example.semantic;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
 
@@ -13,19 +14,14 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         this.errorColector = errorColector;
     }
 
-    public void analyze(){
-
+    public void analyze(ParseTree root){
+        visit(root);
     }
-
-
     @Override
     public Void visitASSIGN(GrammarParser.ASSIGNContext ctx) {
 
-        System.out.println(ctx.getText() + "PROCEDURE - " + findEnclosingScope(ctx));
-
         return null;
     }
-
     private String findEnclosingScope(ParserRuleContext context){
         ParserRuleContext current = context;
         while (current != null){
@@ -45,12 +41,14 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         }
         return "UKNOWN SCOPE";
     }
-
     private boolean isInForLoop(ParserRuleContext context){
         ParserRuleContext current = context;
 
-        if (current instanceof GrammarParser.FORUPContext || current instanceof GrammarParser.FORDOWNTOContext){
-            return true;
+        while (current != null){
+            if (current instanceof GrammarParser.FORUPContext || current instanceof GrammarParser.FORDOWNTOContext){
+                return true;
+            }
+            current = current.getParent();
         }
         return false;
     }

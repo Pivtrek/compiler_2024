@@ -37,13 +37,13 @@ public class TestTable {
             ErrorColector errorColector = new ErrorColector();
             SymbolTableBuilderVisitor visitor = new SymbolTableBuilderVisitor(symbolTable, errorColector);
 
-            // 5. Przejdź po drzewie składniowym
-            visitor.visit(tree);
-
             //Analiza semantyczna
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
-            semanticAnalysis.analyze();
+            semanticAnalysis.analyze(tree);
 
+
+            // 5. Przejdź po drzewie składniowym
+            visitor.visit(tree);
 
 
         } catch (ErrorColector.SemanticErrorException | IOException e) {
