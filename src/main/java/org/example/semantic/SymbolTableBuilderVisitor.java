@@ -1,4 +1,5 @@
 package org.example.semantic;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.example.parser.GrammarBaseVisitor;
@@ -335,6 +336,12 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         System.out.println(ctx.getText());
 
         return null;
+    }
+
+    private String findEnclosingScope(ParserRuleContext context){
+
+
+        return "UKNOWN SCOPE";
     }
 
     //TODO: its has to be done diffriently. Lets use visit assign function to get every assign
