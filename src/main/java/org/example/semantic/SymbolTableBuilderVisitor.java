@@ -329,39 +329,4 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
         }
     }
-
-    @Override
-    public Void visitASSIGN(GrammarParser.ASSIGNContext ctx) {
-
-        System.out.println(ctx.getText());
-
-        return null;
-    }
-
-    private String findEnclosingScope(ParserRuleContext context){
-        ParserRuleContext current = context;
-
-        while (current != null){
-            if (current instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext){
-                return ((GrammarParser.PROCEDUREWITHDECLARATIONSContext) current).proc_head().PIDENTIFIER().getText();
-            }
-            if (current instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext){
-                return ((GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext) current).proc_head().PIDENTIFIER().getText();
-            }
-            if (current instanceof GrammarParser.MAINDECLARATIONSContext){
-                return "PROGRAM_IS_DECLARATIONS";
-            }
-            if (current instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext){
-                return "PROGRAM_IS";
-            }
-
-        }
-        return "UKNOWN SCOPE";
-    }
-
-    //TODO: its has to be done diffriently. Lets use visit assign function to get every assign
-    //TODO: and create function that can get procedure name, so we can procced all assignes
-    //TODO: with created symbol table, HINT!: case where we are entering loop its also an iterator
-    //TODO: as extra variable so we can already check if its changing or not and also, we can map variables
-    //TODO: so we know if we are assigning them with some value before using and all semantic analysis will be ready then!
 }
