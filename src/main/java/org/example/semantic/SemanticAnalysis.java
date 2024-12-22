@@ -28,7 +28,6 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
     private String findEnclosingScope(ParserRuleContext context){
         ParserRuleContext current = context;
-
         while (current != null){
             if (current instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext){
                 return ((GrammarParser.PROCEDUREWITHDECLARATIONSContext) current).proc_head().PIDENTIFIER().getText();
