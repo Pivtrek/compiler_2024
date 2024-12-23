@@ -52,4 +52,39 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         }
         return false;
     }
+
+    @Override
+    public Void visitFORUP(GrammarParser.FORUPContext ctx) {
+
+        String iterator = ctx.PIDENTIFIER().getText();
+        GrammarParser.CommandsContext commandsContext = ctx.commands();
+
+        for(GrammarParser.CommandContext command: commandsContext.command()){
+            visit(command);
+            if (command instanceof GrammarParser.ASSIGNContext assignContext){
+                if (assignContext.identifier().PIDENTIFIER(0).getText().equals(iterator)){
+                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier().PIDENTIFIER(0).getSymbol().getLine());
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitFORDOWNTO(GrammarParser.FORDOWNTOContext ctx) {
+
+        String iterator = ctx.PIDENTIFIER().getText();
+        GrammarParser.CommandsContext commandsContext = ctx.commands();
+
+        for(GrammarParser.CommandContext command: commandsContext.command()){
+            visit(command);
+            System.out.println(command.getText());
+            if (command instanceof GrammarParser.ASSIGNContext assignContext){
+                if (assignContext.identifier().PIDENTIFIER(0).getText().equals(iterator)){
+                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier().PIDENTIFIER(0).getSymbol().getLine());
+                }
+            }
+        }
+        return null;
+    }
 }
