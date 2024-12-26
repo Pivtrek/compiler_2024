@@ -36,6 +36,7 @@ public class TestTable {
             SymbolTable symbolTable = new SymbolTable();
             ErrorColector errorColector = new ErrorColector();
             SymbolTableBuilderVisitor visitor = new SymbolTableBuilderVisitor(symbolTable, errorColector);
+            visitor.visit(tree);
 
             //Analiza semantyczna
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
@@ -43,7 +44,7 @@ public class TestTable {
 
 
             // 5. Przejdź po drzewie składniowym
-            visitor.visit(tree);
+
 
 
         } catch (ErrorColector.SemanticErrorException | IOException e) {

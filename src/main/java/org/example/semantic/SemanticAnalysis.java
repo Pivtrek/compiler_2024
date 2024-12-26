@@ -18,23 +18,24 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         visit(root);
     }
     @Override
-    public Void visitASSIGN(GrammarParser.ASSIGNContext ctx) {
-
-        return null;
-    }
-
-    @Override
     public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
+        System.out.println(ctx.getText() + "  INTUSAGE");
+
         return super.visitINTUSAGE(ctx);
     }
 
     @Override
     public Void visitARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx) {
+        System.out.println(ctx.getText() + "  ARRAY PIDNETIFIER USAGE");
+
         return super.visitARRAYWITHPIDUSAGE(ctx);
     }
 
     @Override
     public Void visitARRAYWITHNUMUSAGE(GrammarParser.ARRAYWITHNUMUSAGEContext ctx) {
+        System.out.println(ctx.getText() + "  ARRAYNUM USAGE");
+
+
         return super.visitARRAYWITHNUMUSAGE(ctx);
     }
 
