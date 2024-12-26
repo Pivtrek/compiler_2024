@@ -5,6 +5,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
 
+import java.util.ArrayList;
+
 public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private final SymbolTable symbolTable;
     private final ErrorColector errorColector;
@@ -20,6 +22,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     @Override
     public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
         System.out.println(ctx.getText() + "  INTUSAGE");
+        checkIdentifierUsage(ctx);
 
         return super.visitINTUSAGE(ctx);
     }
@@ -111,6 +114,22 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     }
 
     private void checkIdentifierUsage(GrammarParser.INTUSAGEContext ctx){
+        ArrayList<Symbol> parametersAndLocalVariables = new ArrayList<>();
+        String procedure = findEnclosingScope(ctx);
+        if (symbolTable.containsSymbol(procedure)){
+            if (symbolTable.getSymbol(procedure).getParameters() != null){
+                parametersAndLocalVariables.addAll(symbolTable.getSymbol(procedure).getParameters());
+            }
+            if (symbolTable.getSymbol(procedure).getLocalVariables() != null){
+                parametersAndLocalVariables.addAll(symbolTable.getSymbol(procedure).getLocalVariables());
+            }
+        }
+        if (parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.ARRAY))){
+            errorColector.reportError("Niewłaściwe użycie tablicy " + ctx.getText(), ctx.PIDENTIFIER().getSymbol().getLine());
+        }
 
+        if (!parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.INT))){
+            errorColector.reportError("Niezadeklarowana zmienna " + ctx.getText(), ctx.PIDENTIFIER().getSymbol().getLine());
+        }
     }
 }

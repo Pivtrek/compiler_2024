@@ -95,7 +95,8 @@ public class Symbol {
         if (this == obj) return true;                   // Ta sama referencja
         if (obj == null || getClass() != obj.getClass()) return false; // Sprawdź typ
         Symbol symbol = (Symbol) obj;
-        return Objects.equals(name, symbol.name);       // Porównaj nazwe symbolu
+        return Objects.equals(name, symbol.name) &&
+        type == symbol.getType();// Porównaj nazwe symbolu
     }
 
     @Override
