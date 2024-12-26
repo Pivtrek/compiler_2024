@@ -60,12 +60,17 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         ParserRuleContext current = context;
 
         while (current != null){
-            if (current instanceof GrammarParser.FORUPContext || current instanceof GrammarParser.FORDOWNTOContext){
-                return true;
+            if (current instanceof GrammarParser.FORUPContext){
+                GrammarParser.FORUPContext forupContext = (GrammarParser.FORUPContext) context;
+                return forupContext.PIDENTIFIER().getText();
+
+            } if (current instanceof GrammarParser.FORDOWNTOContext) {
+                GrammarParser.FORDOWNTOContext fordowntoContext = (GrammarParser.FORDOWNTOContext) context;
+                return fordowntoContext.PIDENTIFIER().getText();
             }
             current = current.getParent();
         }
-        return false;
+        return "NO_ITERATOR";
     }
 
 
