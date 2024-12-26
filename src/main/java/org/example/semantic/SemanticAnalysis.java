@@ -109,4 +109,8 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         }
         return null;
     }
+
+    private void checkIdentifierUsage(GrammarParser.INTUSAGEContext ctx){
+
+    }
 }
