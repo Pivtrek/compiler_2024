@@ -22,6 +22,22 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
         return null;
     }
+
+    @Override
+    public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
+        return super.visitINTUSAGE(ctx);
+    }
+
+    @Override
+    public Void visitARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx) {
+        return super.visitARRAYWITHPIDUSAGE(ctx);
+    }
+
+    @Override
+    public Void visitARRAYWITHNUMUSAGE(GrammarParser.ARRAYWITHNUMUSAGEContext ctx) {
+        return super.visitARRAYWITHNUMUSAGE(ctx);
+    }
+
     private String findEnclosingScope(ParserRuleContext context){
         ParserRuleContext current = context;
         while (current != null){
@@ -63,9 +79,11 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
         for(GrammarParser.CommandContext command: commandsContext.command()){
             visit(command);
+            //TODO: resolve problem with seeing iterator of loop
+
             if (command instanceof GrammarParser.ASSIGNContext assignContext){
-                if (assignContext.identifier().PIDENTIFIER(0).getText().equals(iterator)){
-                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier().PIDENTIFIER(0).getSymbol().getLine());
+                if (assignContext.identifier().getText().equals(iterator)){
+                    //errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier());
                 }
             }
         }
@@ -82,8 +100,9 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             visit(command);
             System.out.println(command.getText());
             if (command instanceof GrammarParser.ASSIGNContext assignContext){
-                if (assignContext.identifier().PIDENTIFIER(0).getText().equals(iterator)){
-                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier().PIDENTIFIER(0).getSymbol().getLine());
+                //TODO: resolve problem with seeing iterator of loop
+                if (assignContext.identifier().getText().equals(iterator)){
+                    //errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier().getSymbol().getLine());
                 }
             }
         }

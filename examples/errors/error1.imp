@@ -2,8 +2,8 @@
 PROCEDURE pa(T a, b) IS
  c[0:5],d
 BEGIN
-  c:=e;
-  a:=c+d;
+  c[d]:=e;
+  a:=c[d]+d;
 END
 
 PROGRAM IS
