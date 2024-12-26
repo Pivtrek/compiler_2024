@@ -134,6 +134,22 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     }
 
     private void checkArrayUsage(Object ctx){
+        ArrayList<Symbol> parametersAndLocalVariables = new ArrayList<>();
+        String procedure = findEnclosingScope((ParserRuleContext) ctx);
+        if (symbolTable.containsSymbol(procedure)){
+            if (symbolTable.getSymbol(procedure).getParameters() != null){
+                parametersAndLocalVariables.addAll(symbolTable.getSymbol(procedure).getParameters());
+            }
+            if (symbolTable.getSymbol(procedure).getLocalVariables() != null){
+                parametersAndLocalVariables.addAll(symbolTable.getSymbol(procedure).getLocalVariables());
+            }
+        }
 
+        if (ctx instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
+
+        }
+        else if(ctx instanceof GrammarParser.ARRAYWITHPIDUSAGEContext){
+
+        }
     }
 }
