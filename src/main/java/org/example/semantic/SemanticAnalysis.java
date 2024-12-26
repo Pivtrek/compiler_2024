@@ -21,24 +21,19 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     }
     @Override
     public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
-        System.out.println(ctx.getText() + "  INTUSAGE");
         checkIdentifierUsage(ctx);
-
         return super.visitINTUSAGE(ctx);
     }
 
     @Override
     public Void visitARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx) {
-        System.out.println(ctx.getText() + "  ARRAY PIDNETIFIER USAGE");
-
+        checkArrayUsage(ctx);
         return super.visitARRAYWITHPIDUSAGE(ctx);
     }
 
     @Override
     public Void visitARRAYWITHNUMUSAGE(GrammarParser.ARRAYWITHNUMUSAGEContext ctx) {
-        System.out.println(ctx.getText() + "  ARRAYNUM USAGE");
-
-
+        checkArrayUsage(ctx);
         return super.visitARRAYWITHNUMUSAGE(ctx);
     }
 
@@ -145,11 +140,27 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             }
         }
 
-        if (ctx instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
-
+        if (ctx instanceof GrammarParser.ARRAYWITHNUMUSAGEContext context){
+            if (parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER().getText(), Symbol.SymbolType.INT))){
+                errorColector.reportError("Niewłaściwe użycie zmiennej " + context.PIDENTIFIER().getText(), context.PIDENTIFIER().getSymbol().getLine());
+            }
+            if (!parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY))){
+                errorColector.reportError("Niezadeklarowana tablica " + context.PIDENTIFIER().getText(), context.PIDENTIFIER().getSymbol().getLine());
+            }
         }
-        else if(ctx instanceof GrammarParser.ARRAYWITHPIDUSAGEContext){
-
+        else if(ctx instanceof GrammarParser.ARRAYWITHPIDUSAGEContext context){
+            if (parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(0).getText(), Symbol.SymbolType.INT))){
+                errorColector.reportError("Niewłaściwe użycie zmiennej " + context.PIDENTIFIER(0).getText(), context.PIDENTIFIER(0).getSymbol().getLine());
+            }
+            if (!parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(0).getText(), Symbol.SymbolType.ARRAY))){
+                errorColector.reportError("Niezadeklarowana tablica " + context.PIDENTIFIER(0).getText(), context.PIDENTIFIER(0).getSymbol().getLine());
+            }
+            if (parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(1).getText(), Symbol.SymbolType.ARRAY))){
+                errorColector.reportError("Niewłaściwe użycie tablicy " + context.PIDENTIFIER(1).getText(), context.PIDENTIFIER(1).getSymbol().getLine());
+            }
+            if (!parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(1).getText(), Symbol.SymbolType.INT))){
+                errorColector.reportError("Niezadeklarowana zmienna " + context.PIDENTIFIER(1).getText(), context.PIDENTIFIER(1).getSymbol().getLine());
+            }
         }
     }
 }
