@@ -12,6 +12,3 @@ LISTA TODO
 - [x] Nie można w procedurze użyć nazw argumentów jako deklaracje 
 - [x] Użycie niezdefiniowanej procedury, liczy się kolejność deklaracji!!!
 - [x] Próba modyfikacji iteratora wewnątrz pętli
-- [ ] Error1
-- [ ] Error2
-- [ ] Error8
