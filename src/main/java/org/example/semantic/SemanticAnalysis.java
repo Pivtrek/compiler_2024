@@ -132,4 +132,8 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             errorColector.reportError("Niezadeklarowana zmienna " + ctx.getText(), ctx.PIDENTIFIER().getSymbol().getLine());
         }
     }
+
+    private void checkArrayUsage(Object ctx){
+
+    }
 }
