@@ -6,7 +6,7 @@ import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
 
 import java.util.ArrayList;
-
+//TODO: FIX USING ITERATOR FOR AS PIDENTIFIER IN ARRAY AND INITIALIZATION OF LOCAL VARIABLE BY PROCEDURE
 public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private final SymbolTable symbolTable;
     private final ErrorColector errorColector;
