@@ -27,13 +27,11 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             if (symbolTable.getSymbol(procedure_name).getLocalVariables() != null){
                 for (Symbol symbol : symbolTable.getSymbol(procedure_name).getLocalVariables()){
                     if (symbol.getName().equals(ctx.identifier().getText())){
-                        symbol.
+                        symbol.setInitialized(true);
                     }
                 }
             }
         }
-
-
         return null;
     }
 
