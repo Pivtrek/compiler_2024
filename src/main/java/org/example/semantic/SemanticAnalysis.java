@@ -30,6 +30,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                 }
             }
         }
+        visit(ctx.expression());
         return null;
     }
     @Override
@@ -49,12 +50,18 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
+
+        System.out.println("INT " + ctx.getText());
+
         checkIdentifierUsage(ctx);
         return super.visitINTUSAGE(ctx);
     }
 
     @Override
     public Void visitARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx) {
+
+        System.out.println("ARRAY PID " + ctx.getText());
+
         checkArrayUsage(ctx);
         return super.visitARRAYWITHPIDUSAGE(ctx);
     }
@@ -128,7 +135,6 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
         for(GrammarParser.CommandContext command: commandsContext.command()){
             visit(command);
-            System.out.println(command.getText());
             if (command instanceof GrammarParser.ASSIGNContext assignContext){
                 //TODO: resolve problem with seeing iterator of loop
                 if (assignContext.identifier().getText().equals(iterator)){
@@ -150,6 +156,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                 parametersAndLocalVariables.addAll(symbolTable.getSymbol(procedure).getLocalVariables());
             }
         }
+
         if (parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.ARRAY))){
             errorColector.reportError("Niewłaściwe użycie tablicy " + ctx.getText(), ctx.PIDENTIFIER().getSymbol().getLine());
         }
@@ -202,6 +209,13 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             }
             if (!parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(1).getText(), Symbol.SymbolType.INT))){
                 errorColector.reportError("Niezadeklarowana zmienna " + context.PIDENTIFIER(1).getText(), context.PIDENTIFIER(1).getSymbol().getLine());
+            }
+            if (parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(1).getText(), Symbol.SymbolType.INT)) && symbolTable.getSymbol(procedure).getLocalVariables() != null){
+                for (Symbol symbol : parametersAndLocalVariables){
+                    if (context.PIDENTIFIER(1).getText().equals(symbol.getName()) && !symbol.isInitialized()){
+                        errorColector.reportError("Niezainicjowana zmienna " + symbol.getName(), context.PIDENTIFIER(1).getSymbol().getLine());
+                    }
+                }
             }
         }
     }

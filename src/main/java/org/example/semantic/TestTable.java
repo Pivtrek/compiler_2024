@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class TestTable {
     public static void main(String[] args) throws IOException {
 
-        String filePath = "examples/errors/error10.imp";
+        String filePath = "examples/errors/error2.imp";
 
         try {
             // 1. Odczyt kodu z pliku
@@ -31,7 +31,7 @@ public class TestTable {
 
             // 3. Wygeneruj drzewo składniowe
             ParseTree tree = parser.program_all(); // Dopasowanie reguły 'declarations'
-
+            System.out.println(tree.toStringTree(parser));
             // 4. Inicjalizacja SymbolTable i SymbolTableBuilder
             SymbolTable symbolTable = new SymbolTable();
             ErrorColector errorColector = new ErrorColector();

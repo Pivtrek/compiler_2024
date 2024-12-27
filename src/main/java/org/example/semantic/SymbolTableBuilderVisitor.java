@@ -132,10 +132,14 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     //Process arguments recursively with recognition of arrays and integers
     private void processArguments(GrammarParser.Args_declContext ctx, Symbol procedure){
         if (ctx instanceof GrammarParser.ARGSMULTIDECLContext argument_context) {
-            procedure.addParameter(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
+            Symbol argument = new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
+            argument.setInitialized(true);
+            procedure.addParameter(argument);
             processArguments(argument_context.args_decl(), procedure);
         } else if (ctx instanceof GrammarParser.ARGSDECLContext argument_context) {
-            procedure.addParameter(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
+            Symbol argument = new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
+            argument.setInitialized(true);
+            procedure.addParameter(argument);
         } else if (ctx instanceof GrammarParser.ARGSMUTLIARRDECLContext array_context) {
             procedure.addParameter(new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY));
             processArguments(array_context.args_decl(), procedure);
