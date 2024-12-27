@@ -116,7 +116,7 @@ public class Symbol {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Symbol{name='" + name + "', type=" + type);
+        StringBuilder sb = new StringBuilder("Symbol{name='" + name + "', type=" + type + "', initialization=" + isInitialized);
         if (type == SymbolType.ARRAY) {
             sb.append(", lowerBound=").append(lowerBound)
                     .append(", upperBound=").append(upperBound);
