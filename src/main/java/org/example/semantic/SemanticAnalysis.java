@@ -30,6 +30,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                 }
             }
         }
+        visit(ctx.identifier());
         visit(ctx.expression());
         return null;
     }
@@ -50,18 +51,12 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
-
-        System.out.println("INT " + ctx.getText());
-
         checkIdentifierUsage(ctx);
         return super.visitINTUSAGE(ctx);
     }
 
     @Override
     public Void visitARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx) {
-
-        System.out.println("ARRAY PID " + ctx.getText());
-
         checkArrayUsage(ctx);
         return super.visitARRAYWITHPIDUSAGE(ctx);
     }
@@ -116,11 +111,9 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
         for(GrammarParser.CommandContext command: commandsContext.command()){
             visit(command);
-            //TODO: resolve problem with seeing iterator of loop
-
             if (command instanceof GrammarParser.ASSIGNContext assignContext){
                 if (assignContext.identifier().getText().equals(iterator)){
-                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, 2);
+                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, command.getStart().getLine());
                 }
             }
         }
@@ -136,9 +129,8 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         for(GrammarParser.CommandContext command: commandsContext.command()){
             visit(command);
             if (command instanceof GrammarParser.ASSIGNContext assignContext){
-                //TODO: resolve problem with seeing iterator of loop
                 if (assignContext.identifier().getText().equals(iterator)){
-                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, 2);
+                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, command.getStart().getLine());
                 }
             }
         }
