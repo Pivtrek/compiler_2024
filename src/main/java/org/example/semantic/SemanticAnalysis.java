@@ -163,6 +163,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         if (parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.INT)) && symbolTable.getSymbol(procedure).getLocalVariables() != null){
             for (Symbol symbol : parametersAndLocalVariables){
                 if (ctx.getText().equals(symbol.getName()) && !symbol.isInitialized()){
+                    symbolTable.printSymbols();
                     errorColector.reportError("Niezainicjowana zmienna " + symbol.getName(), ctx.PIDENTIFIER().getSymbol().getLine());
                 }
             }
