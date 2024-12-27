@@ -153,6 +153,13 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         if (parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.ARRAY))){
             errorColector.reportError("Niewłaściwe użycie tablicy " + ctx.getText(), ctx.PIDENTIFIER().getSymbol().getLine());
         }
+        if (parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.INT)) && symbolTable.getSymbol(procedure).getLocalVariables() != null){
+            for (Symbol symbol : parametersAndLocalVariables){
+                if (ctx.getText().equals(symbol.getName()) && !symbol.isInitialized()){
+                    errorColector.reportError("Niezainicjowana zmienna " + symbol.getName(), ctx.PIDENTIFIER().getSymbol().getLine());
+                }
+            }
+        }
 
         if (!parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.INT))){
             if (isInForLoop(ctx).equals(ctx.getText())){
