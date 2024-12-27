@@ -60,12 +60,10 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         ParserRuleContext current = context;
 
         while (current != null){
-            if (current instanceof GrammarParser.FORUPContext){
-                GrammarParser.FORUPContext forupContext = (GrammarParser.FORUPContext) context;
+            if (current instanceof GrammarParser.FORUPContext forupContext){
                 return forupContext.PIDENTIFIER().getText();
 
-            } if (current instanceof GrammarParser.FORDOWNTOContext) {
-                GrammarParser.FORDOWNTOContext fordowntoContext = (GrammarParser.FORDOWNTOContext) context;
+            } if (current instanceof GrammarParser.FORDOWNTOContext fordowntoContext) {
                 return fordowntoContext.PIDENTIFIER().getText();
             }
             current = current.getParent();
@@ -87,7 +85,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
             if (command instanceof GrammarParser.ASSIGNContext assignContext){
                 if (assignContext.identifier().getText().equals(iterator)){
-                    //errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier());
+                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, 2);
                 }
             }
         }
@@ -106,7 +104,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             if (command instanceof GrammarParser.ASSIGNContext assignContext){
                 //TODO: resolve problem with seeing iterator of loop
                 if (assignContext.identifier().getText().equals(iterator)){
-                    //errorColector.reportError("Próba modyfikacji iteratora " + iterator, assignContext.identifier().getSymbol().getLine());
+                    errorColector.reportError("Próba modyfikacji iteratora " + iterator, 2);
                 }
             }
         }
@@ -129,7 +127,12 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         }
 
         if (!parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.INT))){
-            errorColector.reportError("Niezadeklarowana zmienna " + ctx.getText(), ctx.PIDENTIFIER().getSymbol().getLine());
+            if (isInForLoop(ctx).equals(ctx.getText())){
+
+            }
+            else {
+                errorColector.reportError("Niezadeklarowana zmienna " + ctx.getText(), ctx.PIDENTIFIER().getSymbol().getLine());
+            }
         }
     }
 
