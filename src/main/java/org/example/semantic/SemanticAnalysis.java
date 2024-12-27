@@ -36,6 +36,12 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     }
 
     @Override
+    public Void visitASSIGN(GrammarParser.ASSIGNContext ctx) {
+        //TODO: MARK VARIABLE AS ASSIGNED AND THEN PROCCED TO INT USAGE AND CHECK IF ITS ASSIGN IF NOT RAISE EROOR
+        return super.visitASSIGN(ctx);
+    }
+
+    @Override
     public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
         checkIdentifierUsage(ctx);
         return super.visitINTUSAGE(ctx);
