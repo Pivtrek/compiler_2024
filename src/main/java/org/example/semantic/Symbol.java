@@ -96,6 +96,10 @@ public class Symbol {
         isInitialized = initialized;
     }
 
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;                   // Ta sama referencja
