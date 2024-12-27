@@ -21,6 +21,19 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     }
 
     @Override
+    public Void visitASSIGN(GrammarParser.ASSIGNContext ctx) {
+        //TODO: MARK VARIABLE AS ASSIGNED AND THEN PROCCED TO INT USAGE AND CHECK IF ITS ASSIGN IF NOT RAISE EROOR
+        String procedure_name = findEnclosingScope(ctx);
+        if (ctx.identifier() instanceof GrammarParser.INTUSAGEContext && symbolTable.getSymbol(procedure_name).getLocalVariables() != null){
+            for (Symbol localVariable: symbolTable.getSymbol(procedure_name).getLocalVariables()){
+                if (localVariable.getName().equals(ctx.identifier().getText())){
+                    localVariable.setInitialized(true);
+                }
+            }
+        }
+        return null;
+    }
+    @Override
     public Void visitREAD(GrammarParser.READContext ctx) {
         String procedure_name = findEnclosingScope(ctx);
         if (symbolTable.containsSymbol(procedure_name)){
@@ -33,12 +46,6 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             }
         }
         return null;
-    }
-
-    @Override
-    public Void visitASSIGN(GrammarParser.ASSIGNContext ctx) {
-        //TODO: MARK VARIABLE AS ASSIGNED AND THEN PROCCED TO INT USAGE AND CHECK IF ITS ASSIGN IF NOT RAISE EROOR
-        return super.visitASSIGN(ctx);
     }
 
     @Override
