@@ -92,6 +92,9 @@ public class Symbol {
         }
     }
 
+    public void setInitialized(boolean initialized) {
+        isInitialized = initialized;
+    }
 
     @Override
     public boolean equals(Object obj) {
