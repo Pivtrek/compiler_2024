@@ -19,6 +19,7 @@ public class Symbol {
     }
     private String name;
     private SymbolType type;
+    private boolean isInitialized;
 
     //Fields for array
     private Integer lowerBound;
@@ -39,6 +40,8 @@ public class Symbol {
             this.parameters = new ArrayList<>();
         } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
             this.localVariables = new ArrayList<>();
+        } else if (type == SymbolType.INT) {
+            this.isInitialized = false;
         }
     }
 

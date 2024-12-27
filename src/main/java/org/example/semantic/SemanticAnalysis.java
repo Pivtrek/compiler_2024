@@ -19,6 +19,24 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     public void analyze(ParseTree root){
         visit(root);
     }
+
+    @Override
+    public Void visitREAD(GrammarParser.READContext ctx) {
+        String procedure_name = findEnclosingScope(ctx);
+        if (symbolTable.containsSymbol(procedure_name)){
+            if (symbolTable.getSymbol(procedure_name).getLocalVariables() != null){
+                for (Symbol symbol : symbolTable.getSymbol(procedure_name).getLocalVariables()){
+                    if (symbol.getName().equals(ctx.identifier().getText())){
+                        symbol.
+                    }
+                }
+            }
+        }
+
+
+        return null;
+    }
+
     @Override
     public Void visitINTUSAGE(GrammarParser.INTUSAGEContext ctx) {
         checkIdentifierUsage(ctx);
