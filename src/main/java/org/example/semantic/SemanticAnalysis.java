@@ -6,7 +6,7 @@ import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
 
 import java.util.ArrayList;
-//TODO: FIX USING ITERATOR FOR AS PIDENTIFIER IN ARRAY AND INITIALIZATION OF LOCAL VARIABLE BY PROCEDURE
+//TODO: FIX INITIALIZATION OF LOCAL VARIABLE BY PROCEDURE
 public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private final SymbolTable symbolTable;
     private final ErrorColector errorColector;
@@ -177,10 +177,15 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                 parametersAndLocalVariables.addAll(symbolTable.getSymbol(procedure).getParameters());
             }
             if (symbolTable.getSymbol(procedure).getLocalVariables() != null){
+                String iterator_name = isInForLoop((ParserRuleContext) ctx);
+                if (!iterator_name.equals("NO_ITERATOR")){
+                    Symbol iterator = new Symbol(iterator_name, Symbol.SymbolType.INT);
+                    iterator.setInitialized(true);
+                    symbolTable.getSymbol(procedure).addLocalVariable(iterator);
+                }
                 parametersAndLocalVariables.addAll(symbolTable.getSymbol(procedure).getLocalVariables());
             }
         }
-
         if (ctx instanceof GrammarParser.ARRAYWITHNUMUSAGEContext context){
             if (parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER().getText(), Symbol.SymbolType.INT))){
                 errorColector.reportError("Niewłaściwe użycie zmiennej " + context.PIDENTIFIER().getText(), context.PIDENTIFIER().getSymbol().getLine());
