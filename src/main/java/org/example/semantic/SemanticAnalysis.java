@@ -127,11 +127,6 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                 }
             }
         }
-        else {
-            Symbol iteratorr = new Symbol(iterator, Symbol.SymbolType.INT);
-            iteratorr.setInitialized(true);
-            symbolTable.getSymbol(procName).addLocalVariable(iteratorr);
-        }
 
         for(GrammarParser.CommandContext command: commandsContext.command()){
             visit(command);
