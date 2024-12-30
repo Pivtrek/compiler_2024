@@ -285,9 +285,24 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitValue(GrammarParser.ValueContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GrammarParser#identifier}.
+	 * Visit a parse tree produced by the {@code INTUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIdentifier(GrammarParser.IdentifierContext ctx);
+	T visitINTUSAGE(GrammarParser.INTUSAGEContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ARRAYWITHPIDUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ARRAYWITHNUMUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitARRAYWITHNUMUSAGE(GrammarParser.ARRAYWITHNUMUSAGEContext ctx);
 }

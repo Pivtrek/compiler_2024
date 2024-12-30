@@ -26,8 +26,8 @@ public class SymbolTable {
         return symbolTable.containsKey(name);
     }
 
-    public HashSet<Symbol> getALlSymbols(){
-        return symbolTable;
+    public HashMap<String, Symbol> getALlSymbols(){
+        return (HashMap<String, Symbol>) symbolTable;
     }
 
     public void printSymbols(){

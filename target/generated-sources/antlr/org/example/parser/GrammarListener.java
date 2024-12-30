@@ -476,13 +476,39 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitValue(GrammarParser.ValueContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#identifier}.
+	 * Enter a parse tree produced by the {@code INTUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
 	 * @param ctx the parse tree
 	 */
-	void enterIdentifier(GrammarParser.IdentifierContext ctx);
+	void enterINTUSAGE(GrammarParser.INTUSAGEContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#identifier}.
+	 * Exit a parse tree produced by the {@code INTUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
 	 * @param ctx the parse tree
 	 */
-	void exitIdentifier(GrammarParser.IdentifierContext ctx);
+	void exitINTUSAGE(GrammarParser.INTUSAGEContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ARRAYWITHPIDUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ARRAYWITHPIDUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitARRAYWITHPIDUSAGE(GrammarParser.ARRAYWITHPIDUSAGEContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ARRAYWITHNUMUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterARRAYWITHNUMUSAGE(GrammarParser.ARRAYWITHNUMUSAGEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ARRAYWITHNUMUSAGE}
+	 * labeled alternative in {@link GrammarParser#identifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitARRAYWITHNUMUSAGE(GrammarParser.ARRAYWITHNUMUSAGEContext ctx);
 }

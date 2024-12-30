@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class TestTable {
     public static void main(String[] args) throws IOException {
 
-        String filePath = "examples/example4.imp";
+        String filePath = "examples/example8.imp";
 
         try {
             // 1. Odczyt kodu z pliku
@@ -31,18 +31,18 @@ public class TestTable {
 
             // 3. Wygeneruj drzewo składniowe
             ParseTree tree = parser.program_all(); // Dopasowanie reguły 'declarations'
-
             // 4. Inicjalizacja SymbolTable i SymbolTableBuilder
             SymbolTable symbolTable = new SymbolTable();
             ErrorColector errorColector = new ErrorColector();
             SymbolTableBuilderVisitor visitor = new SymbolTableBuilderVisitor(symbolTable, errorColector);
-
-            // 5. Przejdź po drzewie składniowym
             visitor.visit(tree);
 
             //Analiza semantyczna
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
-            semanticAnalysis.analyze();
+            semanticAnalysis.analyze(tree);
+
+
+            // 5. Przejdź po drzewie składniowym
 
 
 
