@@ -140,7 +140,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     @Override
     public Void visitCALLPROC(GrammarParser.CALLPROCContext ctx) {
 
-        String proc_name = ctx.proc_call().PIDENTIFIER().getText();
+        String procCallName = ctx.proc_call().PIDENTIFIER().getText();
 
         System.out.println(symbolTable.getSymbol(ctx.proc_call().PIDENTIFIER().getText()));
         return super.visitCALLPROC(ctx);
@@ -172,7 +172,6 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         if (parametersAndLocalVariables.contains(new Symbol(ctx.getText(), Symbol.SymbolType.INT)) && symbolTable.getSymbol(procedure).getLocalVariables() != null){
             for (Symbol symbol : parametersAndLocalVariables){
                 if (ctx.getText().equals(symbol.getName()) && !symbol.isInitialized()){
-                    symbolTable.printSymbols();
                     errorColector.reportError("Niezainicjowana zmienna " + symbol.getName(), ctx.PIDENTIFIER().getSymbol().getLine());
                 }
             }
