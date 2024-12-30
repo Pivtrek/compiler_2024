@@ -2,10 +2,13 @@ package org.example.semantic;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.example.parser.GrammarBaseVisitor;
 import org.example.parser.GrammarParser;
 
 import java.util.ArrayList;
+import java.util.List;
+
 //TODO: FIX INITIALIZATION OF LOCAL VARIABLE BY PROCEDURE
 public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private final SymbolTable symbolTable;
@@ -142,18 +145,19 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
         String procCallName = ctx.proc_call().PIDENTIFIER().getText();
         String currentProcedureName = findEnclosingScope(ctx);
-
         System.out.println("Name of called procedure -- " + procCallName);
         System.out.println("Current Procedure -- " + currentProcedureName);
 
-
+        initializeVariablesByProcCall(procCallName, currentProcedureName, ctx.proc_call().args().PIDENTIFIER());
         symbolTable.printSymbols();
 
         return super.visitCALLPROC(ctx);
     }
 
-    private void initializeVariablesByProcCall(String procCallName, String scopeProcName){
-
+    private void initializeVariablesByProcCall(String procCallName, String scopeProcName, List<TerminalNode> arguments){
+        for (Symbol parameter: symbolTable.getSymbol(procCallName).getParameters()){
+            System.out.println(parameter.getName());
+        }
     }
 
     private void checkIdentifierUsage(GrammarParser.INTUSAGEContext ctx){
