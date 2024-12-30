@@ -34,7 +34,11 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
             }
         }
         visit(ctx.identifier());
-        visit(ctx.expression());
+
+        if (ctx.expression() != null){
+            visit(ctx.expression());
+        }
+
         return null;
     }
     @Override
