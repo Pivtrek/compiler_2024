@@ -2026,28 +2026,75 @@ public class GrammarParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class IdentifierContext extends ParserRuleContext {
+		public IdentifierContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_identifier; }
+	 
+		public IdentifierContext() { }
+		public void copyFrom(IdentifierContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ARRAYWITHPIDUSAGEContext extends IdentifierContext {
 		public List<TerminalNode> PIDENTIFIER() { return getTokens(GrammarParser.PIDENTIFIER); }
 		public TerminalNode PIDENTIFIER(int i) {
 			return getToken(GrammarParser.PIDENTIFIER, i);
 		}
 		public TerminalNode LHBRACK() { return getToken(GrammarParser.LHBRACK, 0); }
 		public TerminalNode RHBRACK() { return getToken(GrammarParser.RHBRACK, 0); }
-		public TerminalNode NUM() { return getToken(GrammarParser.NUM, 0); }
-		public IdentifierContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_identifier; }
+		public ARRAYWITHPIDUSAGEContext(IdentifierContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterIdentifier(this);
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterARRAYWITHPIDUSAGE(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitIdentifier(this);
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitARRAYWITHPIDUSAGE(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitIdentifier(this);
+			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitARRAYWITHPIDUSAGE(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class INTUSAGEContext extends IdentifierContext {
+		public TerminalNode PIDENTIFIER() { return getToken(GrammarParser.PIDENTIFIER, 0); }
+		public INTUSAGEContext(IdentifierContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterINTUSAGE(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitINTUSAGE(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitINTUSAGE(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ARRAYWITHNUMUSAGEContext extends IdentifierContext {
+		public TerminalNode PIDENTIFIER() { return getToken(GrammarParser.PIDENTIFIER, 0); }
+		public TerminalNode LHBRACK() { return getToken(GrammarParser.LHBRACK, 0); }
+		public TerminalNode NUM() { return getToken(GrammarParser.NUM, 0); }
+		public TerminalNode RHBRACK() { return getToken(GrammarParser.RHBRACK, 0); }
+		public ARRAYWITHNUMUSAGEContext(IdentifierContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).enterARRAYWITHNUMUSAGE(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof GrammarListener ) ((GrammarListener)listener).exitARRAYWITHNUMUSAGE(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GrammarVisitor ) return ((GrammarVisitor<? extends T>)visitor).visitARRAYWITHNUMUSAGE(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2060,6 +2107,7 @@ public class GrammarParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
 			case 1:
+				_localctx = new INTUSAGEContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(254);
@@ -2067,6 +2115,7 @@ public class GrammarParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new ARRAYWITHPIDUSAGEContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(255);
@@ -2080,6 +2129,7 @@ public class GrammarParser extends Parser {
 				}
 				break;
 			case 3:
+				_localctx = new ARRAYWITHNUMUSAGEContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(259);

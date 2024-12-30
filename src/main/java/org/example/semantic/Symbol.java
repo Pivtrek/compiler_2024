@@ -19,6 +19,7 @@ public class Symbol {
     }
     private String name;
     private SymbolType type;
+    private boolean isInitialized;
 
     //Fields for array
     private Integer lowerBound;
@@ -39,6 +40,8 @@ public class Symbol {
             this.parameters = new ArrayList<>();
         } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
             this.localVariables = new ArrayList<>();
+        } else if (type == SymbolType.INT) {
+            this.isInitialized = false;
         }
     }
 
@@ -85,17 +88,25 @@ public class Symbol {
         if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
             localVariables.add(localVariable);
         } else {
-            throw new UnsupportedOperationException("Tylko PROCEDURE albo MAIN może mieć zmienne lokalne!");
+            //throw new UnsupportedOperationException("Tylko PROCEDURE albo MAIN może mieć zmienne lokalne!");
         }
     }
 
+    public void setInitialized(boolean initialized) {
+        isInitialized = initialized;
+    }
+
+    public boolean isInitialized() {
+        return isInitialized;
+    }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;                   // Ta sama referencja
         if (obj == null || getClass() != obj.getClass()) return false; // Sprawdź typ
         Symbol symbol = (Symbol) obj;
-        return Objects.equals(name, symbol.name);       // Porównaj nazwe symbolu
+        return Objects.equals(name, symbol.name) &&
+        type == symbol.getType();// Porównaj nazwe symbolu
     }
 
     @Override
@@ -105,7 +116,7 @@ public class Symbol {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Symbol{name='" + name + "', type=" + type);
+        StringBuilder sb = new StringBuilder("Symbol{name='" + name + "', type=" + type + "', initialization=" + isInitialized);
         if (type == SymbolType.ARRAY) {
             sb.append(", lowerBound=").append(lowerBound)
                     .append(", upperBound=").append(upperBound);

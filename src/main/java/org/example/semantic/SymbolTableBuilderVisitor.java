@@ -42,7 +42,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         //reversing parameters to be in the right order
         Collections.reverse(procedure_without_variables.getParameters());
 
-        checkForIdentifierUsage(commandsContext, procedure_without_variables);
+        //checkForIdentifierUsage(commandsContext, procedure_without_variables);
 
         symbolTable.addSymbol(procedure_name,procedure_without_variables);
 
@@ -84,7 +84,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         Collections.reverse(procedure_with_variables.getParameters());
 
         //Check for proper variables usage
-        checkForIdentifierUsage(commandsContext, procedure_with_variables);
+        //checkForIdentifierUsage(commandsContext, procedure_with_variables);
 
         symbolTable.addSymbol(procedure_name, procedure_with_variables);
 
@@ -109,7 +109,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         //TODO FIX MAINDECLARATIONS
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_with_declarations);
-        checkForIdentifierUsage(commandsContext, main_with_declarations);
+        //checkForIdentifierUsage(commandsContext, main_with_declarations);
         symbolTable.addSymbol("PROGRAM_IS_DECLARATIONS",main_with_declarations);
 
         return null;
@@ -123,7 +123,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         visit(ctx.commands());
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         checkForUndefinedProcedureUsage(commandsContext, symbolTable, main_without_declaratations);
-        checkForIdentifierUsage(commandsContext, main_without_declaratations);
+        //checkForIdentifierUsage(commandsContext, main_without_declaratations);
         symbolTable.addSymbol("PROGRAM_IS",main_without_declaratations);
 
         return null;
@@ -132,10 +132,14 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
     //Process arguments recursively with recognition of arrays and integers
     private void processArguments(GrammarParser.Args_declContext ctx, Symbol procedure){
         if (ctx instanceof GrammarParser.ARGSMULTIDECLContext argument_context) {
-            procedure.addParameter(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
+            Symbol argument = new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
+            argument.setInitialized(true);
+            procedure.addParameter(argument);
             processArguments(argument_context.args_decl(), procedure);
         } else if (ctx instanceof GrammarParser.ARGSDECLContext argument_context) {
-            procedure.addParameter(new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT));
+            Symbol argument = new Symbol(argument_context.PIDENTIFIER().getText(), Symbol.SymbolType.INT);
+            argument.setInitialized(true);
+            procedure.addParameter(argument);
         } else if (ctx instanceof GrammarParser.ARGSMUTLIARRDECLContext array_context) {
             procedure.addParameter(new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY));
             processArguments(array_context.args_decl(), procedure);
@@ -271,6 +275,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
         }
     }
+    /*
     private void checkForIdentifierUsage(GrammarParser.CommandsContext commandsContext, Symbol procedure){
 
         ArrayList<Symbol> localVariablesAndParameters = new ArrayList<>();
@@ -329,4 +334,5 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
         }
     }
+     */
 }
