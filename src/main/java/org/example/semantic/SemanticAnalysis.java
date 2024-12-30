@@ -261,7 +261,11 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                 errorColector.reportError("Niewłaściwe użycie tablicy " + context.PIDENTIFIER(1).getText(), context.PIDENTIFIER(1).getSymbol().getLine());
             }
             if (!parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(1).getText(), Symbol.SymbolType.INT))){
-                errorColector.reportError("Niezadeklarowana zmienna " + context.PIDENTIFIER(1).getText(), context.PIDENTIFIER(1).getSymbol().getLine());
+                if(isInForLoop(context).equals(context.PIDENTIFIER(1).getText())){
+                }
+                else {
+                    errorColector.reportError("Niezadeklarowana zmienna " + context.PIDENTIFIER(1).getText(), context.PIDENTIFIER(1).getSymbol().getLine());
+                }
             }
             if (parametersAndLocalVariables.contains(new Symbol(context.PIDENTIFIER(1).getText(), Symbol.SymbolType.INT)) && symbolTable.getSymbol(procedure).getLocalVariables() != null){
                 for (Symbol symbol : parametersAndLocalVariables){
