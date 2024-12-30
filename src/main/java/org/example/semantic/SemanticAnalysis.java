@@ -142,21 +142,26 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitCALLPROC(GrammarParser.CALLPROCContext ctx) {
-
         String procCallName = ctx.proc_call().PIDENTIFIER().getText();
         String currentProcedureName = findEnclosingScope(ctx);
-        System.out.println("Name of called procedure -- " + procCallName);
-        System.out.println("Current Procedure -- " + currentProcedureName);
 
         initializeVariablesByProcCall(procCallName, currentProcedureName, ctx.proc_call().args().PIDENTIFIER());
-        symbolTable.printSymbols();
 
         return super.visitCALLPROC(ctx);
     }
 
     private void initializeVariablesByProcCall(String procCallName, String scopeProcName, List<TerminalNode> arguments){
-        for (Symbol parameter: symbolTable.getSymbol(procCallName).getParameters()){
-            System.out.println(parameter.getName());
+
+        List<Symbol> parametersOfCallProc = symbolTable.getSymbol(procCallName).getParameters();
+        symbolTable.printSymbols();
+        for (int i=0; i<parametersOfCallProc.size();i++){
+            if (parametersOfCallProc.get(i).isInitialized()){
+                for (Symbol localVariable: symbolTable.getSymbol(scopeProcName).getLocalVariables()) {
+                    if (localVariable.getName().equals(arguments.get(i).getText())){
+                        localVariable.setInitialized(true);
+                    }
+                }
+            }
         }
     }
 
