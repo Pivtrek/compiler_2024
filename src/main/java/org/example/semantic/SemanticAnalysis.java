@@ -152,6 +152,10 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         return super.visitCALLPROC(ctx);
     }
 
+    private void initializeVariablesByProcCall(String procCallName, String scopeProcName){
+
+    }
+
     private void checkIdentifierUsage(GrammarParser.INTUSAGEContext ctx){
         ArrayList<Symbol> parametersAndLocalVariables = new ArrayList<>();
         String procedure = findEnclosingScope(ctx);
