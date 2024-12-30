@@ -137,6 +137,15 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitCALLPROC(GrammarParser.CALLPROCContext ctx) {
+
+        String proc_name = ctx.proc_call().PIDENTIFIER().getText();
+
+        System.out.println(symbolTable.getSymbol(ctx.proc_call().PIDENTIFIER().getText()));
+        return super.visitCALLPROC(ctx);
+    }
+
     private void checkIdentifierUsage(GrammarParser.INTUSAGEContext ctx){
         ArrayList<Symbol> parametersAndLocalVariables = new ArrayList<>();
         String procedure = findEnclosingScope(ctx);
