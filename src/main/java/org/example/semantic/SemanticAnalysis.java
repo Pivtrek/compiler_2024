@@ -160,7 +160,6 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private void initializeVariablesByProcCall(String procCallName, String scopeProcName, List<TerminalNode> arguments){
 
         List<Symbol> parametersOfCallProc = symbolTable.getSymbol(procCallName).getParameters();
-        symbolTable.printSymbols();
         for (int i=0; i<parametersOfCallProc.size();i++){
             if (parametersOfCallProc.get(i).isInitialized()){
                 for (Symbol localVariable: symbolTable.getSymbol(scopeProcName).getLocalVariables()) {
