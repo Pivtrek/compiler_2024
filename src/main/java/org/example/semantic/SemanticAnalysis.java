@@ -145,7 +145,10 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         String procCallName = ctx.proc_call().PIDENTIFIER().getText();
         String currentProcedureName = findEnclosingScope(ctx);
 
-        initializeVariablesByProcCall(procCallName, currentProcedureName, ctx.proc_call().args().PIDENTIFIER());
+        if (symbolTable.getSymbol(currentProcedureName).getLocalVariables() != null){
+            initializeVariablesByProcCall(procCallName, currentProcedureName, ctx.proc_call().args().PIDENTIFIER());
+
+        }
 
         return super.visitCALLPROC(ctx);
     }
