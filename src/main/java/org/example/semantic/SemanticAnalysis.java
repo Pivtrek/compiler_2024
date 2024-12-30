@@ -141,8 +141,14 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     public Void visitCALLPROC(GrammarParser.CALLPROCContext ctx) {
 
         String procCallName = ctx.proc_call().PIDENTIFIER().getText();
+        String currentProcedureName = findEnclosingScope(ctx);
 
-        System.out.println(symbolTable.getSymbol(ctx.proc_call().PIDENTIFIER().getText()));
+        System.out.println("Name of called procedure -- " + procCallName);
+        System.out.println("Current Procedure -- " + currentProcedureName);
+
+
+        symbolTable.printSymbols();
+
         return super.visitCALLPROC(ctx);
     }
 
