@@ -117,6 +117,8 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         GrammarParser.CommandsContext commandsContext = ctx.commands();
         String procName = findEnclosingScope(ctx);
 
+
+
         //Setting iterator as initialized
         if (symbolTable.getSymbol(procName).getLocalVariables() != null){
             for (Symbol localVariable: symbolTable.getSymbol(procName).getLocalVariables()){
@@ -124,6 +126,11 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                     localVariable.setInitialized(true);
                 }
             }
+        }
+        else {
+            Symbol iteratorr = new Symbol(iterator, Symbol.SymbolType.INT);
+            iteratorr.setInitialized(true);
+            symbolTable.getSymbol(procName).addLocalVariable(iteratorr);
         }
 
         for(GrammarParser.CommandContext command: commandsContext.command()){
