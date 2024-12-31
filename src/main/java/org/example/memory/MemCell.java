@@ -37,4 +37,8 @@ public class MemCell {
     public inputType getType() {
         return type;
     }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }
