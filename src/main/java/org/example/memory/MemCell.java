@@ -1,7 +1,4 @@
 package org.example.memory;
-
-import java.util.Map;
-
 public class MemCell {
     private String name, scope;
     private int registerNumber, value;
