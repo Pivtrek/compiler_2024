@@ -9,7 +9,6 @@ import org.example.parser.GrammarParser;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: example 6,8
 public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private final SymbolTable symbolTable;
     private final ErrorColector errorColector;
