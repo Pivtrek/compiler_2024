@@ -24,7 +24,16 @@ public class Memory {
             String procedureName = entry.getKey();
             Symbol procedure = entry.getValue();
 
-            System.out.println(procedureName + "---" + procedure);
+            if (procedure.getLocalVariables() != null){
+                for (Symbol localVariable : procedure.getLocalVariables()){
+
+                }
+            }
+            if (procedure.getParameters() != null){
+                for (Symbol parameter : procedure.getParameters()){
+
+                }
+            }
         }
     }
 
