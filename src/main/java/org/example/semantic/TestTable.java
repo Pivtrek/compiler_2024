@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class TestTable {
     public static void main(String[] args) throws IOException {
 
-        String filePath = "examples/example8.imp";
+        String filePath = "examples/example4.imp";
 
         try {
             // 1. Odczyt kodu z pliku
@@ -40,6 +40,8 @@ public class TestTable {
             //Analiza semantyczna
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
             semanticAnalysis.analyze(tree);
+
+            symbolTable.printSymbols();
 
 
             // 5. Przejdź po drzewie składniowym
