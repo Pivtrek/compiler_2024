@@ -36,8 +36,8 @@ public class Memory {
         }
     }
 
-    private void addMemCell(String name, String scope, MemCell.inputType inputType, ){
+    private void addMemCell(String name, String scope, MemCell.inputType inputType, Integer value){
         String memName = name + ":" + scope;
-        memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, null));
+        memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
     }
 }
