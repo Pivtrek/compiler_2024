@@ -1,6 +1,8 @@
 package org.example.memory;
 import org.example.semantic.Symbol;
 import org.example.semantic.SymbolTable;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.SimpleTimeZone;
 
@@ -9,7 +11,10 @@ public class Memory {
     private Map<String, MemCell> register;
     int nextFreeAdress = 8;
 
-    public Memory() {
+    public Memory(SymbolTable symbolTable) {
+        this.memory = new HashMap<>();
+        this.register = new HashMap<>(7);
+        initializeFromSymbolTable(symbolTable);
     }
 
 
