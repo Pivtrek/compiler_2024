@@ -10,6 +10,8 @@ public class Memory {
     public Memory() {
     }
 
+
+    //Key format for name in memory 'name:scope'
     private void initializeFromSymbolTable(SymbolTable symbolTable){
 
     }
