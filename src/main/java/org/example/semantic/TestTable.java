@@ -41,6 +41,8 @@ public class TestTable {
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
             semanticAnalysis.analyze(tree);
 
+            symbolTable.printSymbols();
+
 
             // 5. Przejdź po drzewie składniowym
 
