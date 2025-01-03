@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.Vocabulary;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.example.memory.Memory;
 import org.example.parser.GrammarLexer;
 import org.example.parser.GrammarParser;
 
@@ -41,7 +42,7 @@ public class TestTable {
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
             semanticAnalysis.analyze(tree);
 
-            symbolTable.printSymbols();
+            Memory memory = new Memory(symbolTable);
 
 
             // 5. Przejdź po drzewie składniowym
