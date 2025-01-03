@@ -148,6 +148,11 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         }
     }
 
+    private void addIterator(String procedureName, GrammarParser.CommandsContext commandsContext){
+
+    }
+
+
     private void processDeclarations(GrammarParser.DeclarationsContext ctx, Symbol procedure){
         if (ctx instanceof GrammarParser.MULTISINGLEDECLARATIONContext argument_context){
 
