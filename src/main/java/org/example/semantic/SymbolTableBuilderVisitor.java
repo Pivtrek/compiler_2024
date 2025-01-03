@@ -148,6 +148,16 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
         }
     }
 
+    @Override
+    public Void visitFORUP(GrammarParser.FORUPContext ctx) {
+        return super.visitFORUP(ctx);
+    }
+
+    @Override
+    public Void visitFORDOWNTO(GrammarParser.FORDOWNTOContext ctx) {
+        return super.visitFORDOWNTO(ctx);
+    }
+
     private void processDeclarations(GrammarParser.DeclarationsContext ctx, Symbol procedure){
         if (ctx instanceof GrammarParser.MULTISINGLEDECLARATIONContext argument_context){
 
