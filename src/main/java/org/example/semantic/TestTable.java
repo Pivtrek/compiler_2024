@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 public class TestTable {
     public static void main(String[] args) throws IOException {
 
-        String filePath = "examples/example4.imp";
+        String filePath = "examples/example6.imp";
 
         try {
             // 1. Odczyt kodu z pliku

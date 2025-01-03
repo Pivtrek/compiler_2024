@@ -26,6 +26,9 @@ public class Memory {
             if (procedure.getLocalVariables() != null){
                 for (Symbol localVariable : procedure.getLocalVariables()){
 
+                    if (localVariable.getType().equals(Symbol.SymbolType.INT) || localVariable.getType().equals(Symbol.SymbolType.ITERATOR))
+                    //TODO: ADDING ARRAYS AND VARIABLES
+                    addMemCell(localVariable.getName(), entry.getKey(), localVariable.getType());
                 }
             }
             if (procedure.getParameters() != null){
