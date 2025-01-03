@@ -21,7 +21,6 @@ public class Memory {
     //Key format for name in memory 'name:scope'
     private void initializeFromSymbolTable(SymbolTable symbolTable){
         for (Map.Entry<String, Symbol> entry: symbolTable.getALlSymbols().entrySet()){
-            String procedureName = entry.getKey();
             Symbol procedure = entry.getValue();
 
             if (procedure.getLocalVariables() != null){
@@ -37,7 +36,8 @@ public class Memory {
         }
     }
 
-    private void addMemCell(){
-
+    private void addMemCell(String name, String scope, MemCell.inputType inputType, ){
+        String memName = name + ":" + scope;
+        memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, null));
     }
 }
