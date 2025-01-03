@@ -1,7 +1,8 @@
 package org.example.memory;
 public class MemCell {
     private String name, scope;
-    private int registerNumber, value;
+    private Integer value;
+    private int registerNumber;
     private inputType type;
 
     public enum inputType{
@@ -10,7 +11,7 @@ public class MemCell {
         REGISTER
     }
 
-    public MemCell(String name, String scope, inputType type, int registerNumber, int value) {
+    public MemCell(String name, String scope, inputType type, int registerNumber, Integer value) {
         this.name = name;
         this.scope = scope;
         this.type = type;
