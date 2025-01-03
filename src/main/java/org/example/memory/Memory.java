@@ -5,7 +5,7 @@ import java.util.Map;
 public class Memory {
     private Map<Integer, MemCell> memory;
     private Map<Integer, MemCell> register;
-    int nextFreeAdress;
+    int nextFreeAdress = 8;
 
     public Memory() {
     }
