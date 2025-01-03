@@ -73,7 +73,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
         return super.visitARRAYWITHNUMUSAGE(ctx);
     }
 
-    public String findEnclosingScope(ParserRuleContext context){
+    public static String findEnclosingScope(ParserRuleContext context){
         ParserRuleContext current = context;
         while (current != null){
             if (current instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext){
