@@ -10,7 +10,7 @@ public class Memory {
     public Memory() {
     }
 
-    public void initializeFromSymbolTable(SymbolTable symbolTable){
+    private void initializeFromSymbolTable(SymbolTable symbolTable){
 
     }
 
