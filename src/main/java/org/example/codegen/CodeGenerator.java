@@ -25,6 +25,7 @@ public class CodeGenerator {
         if (node==null) return;
         
         if (node instanceof GrammarParser.READContext){
+
             
         } else if (node instanceof GrammarParser.WRITEContext) {
 
@@ -36,8 +37,12 @@ public class CodeGenerator {
     }
 
     private void generateRead(GrammarParser.READContext readContext){
-        String memName = findEnclosingScope(readContext) + ":" + readContext.identifier().getText();
-        
+
+        String scope = findEnclosingScope(readContext);
+        String name = readContext.identifier().getText();
+        int registerNumber = memory.resolveMemory(name, scope);
+
+        instructionList.addInstruction(new Instruction("GET", registerNumber));
     }
 
     public String getCode(){
