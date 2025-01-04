@@ -1,5 +1,6 @@
 package org.example.codegen;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.memory.Memory;
 import org.example.parser.GrammarParser;
@@ -34,8 +35,33 @@ public class CodeGenerator {
         }
     }
 
+    private void generateRead(GrammarParser.READContext readContext){
+        String memName = findEnclosingScope(readContext) + ":" + readContext.identifier().getText();
+        
+    }
+
     public String getCode(){
         return code;
+    }
+
+    public static String findEnclosingScope(ParserRuleContext context){
+        ParserRuleContext current = context;
+        while (current != null){
+            if (current instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext){
+                return ((GrammarParser.PROCEDUREWITHDECLARATIONSContext) current).proc_head().PIDENTIFIER().getText();
+            }
+            if (current instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext){
+                return ((GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext) current).proc_head().PIDENTIFIER().getText();
+            }
+            if (current instanceof GrammarParser.MAINDECLARATIONSContext){
+                return "PROGRAM_IS_DECLARATIONS";
+            }
+            if (current instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext){
+                return "PROGRAM_IS";
+            }
+            current = current.getParent();
+        }
+        return "UKNOWN SCOPE";
     }
 
 }
