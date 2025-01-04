@@ -34,6 +34,7 @@ public class Main {
             semanticAnalysis.analyze(tree);
             Memory memory = new Memory(symbolTable);
             CodeGenerator codeGen = new CodeGenerator(memory, tree);
+            codeGen.genereteCode();
 
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
