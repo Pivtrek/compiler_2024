@@ -25,12 +25,10 @@ public class CodeGenerator {
         if (node==null) return;
         
         if (node instanceof GrammarParser.READContext){
-
-            
+            generateRead((GrammarParser.READContext) node);
         } else if (node instanceof GrammarParser.WRITEContext) {
-
+            genereteWrite((GrammarParser.WRITEContext) node);
         }
-
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
         }
