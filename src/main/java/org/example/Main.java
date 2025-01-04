@@ -35,7 +35,7 @@ public class Main {
             Memory memory = new Memory(symbolTable);
             CodeGenerator codeGen = new CodeGenerator(memory, tree);
             codeGen.genereteCode();
-
+            codeGen.getInstructionList().writeToFile("examples/output/ex1.mr");
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
 
