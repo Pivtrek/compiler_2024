@@ -6,11 +6,13 @@ import org.example.memory.Memory;
 public class CodeGenerator {
     private Memory memory;
     private ParseTree tree;
+    private InstructionList instructionList;
     private String code;
 
     public CodeGenerator(Memory memory, ParseTree tree) {
         this.memory = memory;
         this.tree = tree;
+        this.instructionList = new InstructionList();
     }
 
     public void genereteCode(){
