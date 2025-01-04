@@ -3,6 +3,7 @@ package org.example;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.example.codegen.CodeGenerator;
 import org.example.memory.Memory;
 import org.example.parser.GrammarLexer;
 import org.example.parser.GrammarParser;

@@ -14,7 +14,11 @@ public class CodeGenerator {
     }
 
     public void genereteCode(){
+        traverse(tree);
+    }
 
+    private void traverse(ParseTree node){
+        //Traversing
     }
 
     public String getCode(){
