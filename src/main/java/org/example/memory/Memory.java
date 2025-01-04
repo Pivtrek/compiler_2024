@@ -58,4 +58,14 @@ public class Memory {
         memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
         nextFreeAdress+=1;
     }
+    public int resolveMemory(String name, String scope){
+        String key = name + ":" + scope;
+        MemCell memCell = memory.get(key);
+
+        if (memCell == null){
+            throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+        }
+
+        return memCell.getRegisterNumber();
+    }
 }
