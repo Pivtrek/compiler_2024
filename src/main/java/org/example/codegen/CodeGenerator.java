@@ -35,7 +35,7 @@ public class CodeGenerator {
         } else if (node instanceof GrammarParser.WRITEContext) {
             generateWrite((GrammarParser.WRITEContext) node);
         } else if (node instanceof GrammarParser.ASSIGNContext){
-            generateAssign();
+            generateAssign((GrammarParser.ASSIGNContext) node);
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
@@ -66,10 +66,32 @@ public class CodeGenerator {
         int registerNumber = memory.resolveMemory(targetName, scope);
 
         GrammarParser.ExpressionContext expressionContext = assignContext.expression();
-        //TODO: handling expressionContext
+        handleExpressionContext(expressionContext);
 
         //after completing handling right hand side of assign, value of it its in p0 and goes to variable
         instructionList.addInstruction(new Instruction("STORE", registerNumber));
+    }
+
+    //Handling rhs of assign, storing result to acc
+    private void handleExpressionContext(GrammarParser.ExpressionContext expressionContext){
+        if (expressionContext instanceof GrammarParser.VALEXPRContext){
+
+        } else if (expressionContext instanceof GrammarParser.ADDContext) {
+
+        }
+        else if (expressionContext instanceof GrammarParser.SUBContext) {
+
+        }
+        else if (expressionContext instanceof GrammarParser.MULContext) {
+
+        }
+        else if (expressionContext instanceof GrammarParser.DIVContext) {
+
+        }
+        else if (expressionContext instanceof GrammarParser.MODContext) {
+
+        }
+
     }
 
 
