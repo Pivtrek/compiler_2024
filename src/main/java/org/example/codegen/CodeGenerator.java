@@ -33,8 +33,9 @@ public class CodeGenerator {
         if (node instanceof GrammarParser.READContext){
             generateRead((GrammarParser.READContext) node);
         } else if (node instanceof GrammarParser.WRITEContext) {
-            genereteWrite((GrammarParser.WRITEContext) node);
+            generateWrite((GrammarParser.WRITEContext) node);
         } else if (node instanceof GrammarParser.ASSIGNContext){
+            generateAssign();
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
@@ -50,13 +51,17 @@ public class CodeGenerator {
         instructionList.addInstruction(new Instruction("GET", registerNumber));
     }
 
-    private void genereteWrite(GrammarParser.WRITEContext writeContext){
+    private void generateWrite(GrammarParser.WRITEContext writeContext){
 
         String scope = findEnclosingScope(writeContext);
         String name = writeContext.value().identifier().getText();
         int registerNumber = memory.resolveMemory(name, scope);
 
         instructionList.addInstruction(new Instruction("PUT", registerNumber));
+    }
+
+    private void generateAssign(GrammarParser.ASSIGNContext assignContext){
+
     }
 
 
