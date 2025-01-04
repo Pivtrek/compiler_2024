@@ -61,7 +61,15 @@ public class CodeGenerator {
     }
 
     private void generateAssign(GrammarParser.ASSIGNContext assignContext){
+        String targetName = assignContext.identifier().getText();
+        String scope = findEnclosingScope(assignContext);
+        int registerNumber = memory.resolveMemory(targetName, scope);
 
+        GrammarParser.ExpressionContext expressionContext = assignContext.expression();
+        //TODO: handling expressionContext
+
+        //after completing handling right hand side of assign, value of it its in p0 and goes to variable
+        instructionList.addInstruction(new Instruction("STORE", registerNumber));
     }
 
 
