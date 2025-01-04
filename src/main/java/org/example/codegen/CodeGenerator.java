@@ -19,6 +19,7 @@ public class CodeGenerator {
 
     public void genereteCode(){
         traverse(tree);
+        instructionList.addInstruction(new Instruction("HALT"));
     }
 
     private void traverse(ParseTree node){
