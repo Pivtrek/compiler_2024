@@ -9,7 +9,6 @@ public class CodeGenerator {
     private Memory memory;
     private ParseTree tree;
     private InstructionList instructionList;
-    private String code;
 
     public CodeGenerator(Memory memory, ParseTree tree) {
         this.memory = memory;
@@ -53,9 +52,6 @@ public class CodeGenerator {
         instructionList.addInstruction(new Instruction("PUT", registerNumber));
     }
 
-    public String getCode(){
-        return code;
-    }
 
     public static String findEnclosingScope(ParserRuleContext context){
         ParserRuleContext current = context;
