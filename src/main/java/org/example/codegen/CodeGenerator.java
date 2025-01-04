@@ -34,6 +34,7 @@ public class CodeGenerator {
             generateRead((GrammarParser.READContext) node);
         } else if (node instanceof GrammarParser.WRITEContext) {
             genereteWrite((GrammarParser.WRITEContext) node);
+        } else if (node instanceof GrammarParser.ASSIGNContext){
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
