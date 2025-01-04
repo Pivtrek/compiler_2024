@@ -25,10 +25,14 @@ public class Memory {
 
             if (procedure.getLocalVariables() != null){
                 for (Symbol localVariable : procedure.getLocalVariables()){
-
-                    if (localVariable.getType().equals(Symbol.SymbolType.INT) || localVariable.getType().equals(Symbol.SymbolType.ITERATOR))
-                    //TODO: ADDING ARRAYS AND VARIABLES
-                    addMemCell(localVariable.getName(), entry.getKey(), localVariable.getType());
+                    if (localVariable.getType().equals(Symbol.SymbolType.INT) || localVariable.getType().equals(Symbol.SymbolType.ITERATOR)){
+                        addMemCell(localVariable.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
+                    } else if (localVariable.getType().equals(Symbol.SymbolType.ARRAY)) {
+                        for (int i=localVariable.getLowerBound(); i<=localVariable.getUpperBound();i++){
+                            String name = localVariable.getName() + "[" + i + "]";
+                            addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
+                        }
+                    }
                 }
             }
             if (procedure.getParameters() != null){
