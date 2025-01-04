@@ -5,6 +5,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.example.memory.Memory;
 import org.example.parser.GrammarParser;
 
+import java.util.List;
+
 public class CodeGenerator {
     private Memory memory;
     private ParseTree tree;
@@ -19,6 +21,10 @@ public class CodeGenerator {
     public void genereteCode(){
         traverse(tree);
         instructionList.addInstruction(new Instruction("HALT"));
+    }
+
+    public InstructionList getInstructionList() {
+        return instructionList;
     }
 
     private void traverse(ParseTree node){
