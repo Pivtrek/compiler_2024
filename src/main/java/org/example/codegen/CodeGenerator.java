@@ -45,6 +45,15 @@ public class CodeGenerator {
         instructionList.addInstruction(new Instruction("GET", registerNumber));
     }
 
+    private void genereteWrite(GrammarParser.WRITEContext writeContext){
+
+        String scope = findEnclosingScope(writeContext);
+        String name = writeContext.value().identifier().getText();
+        int registerNumber = memory.resolveMemory(name, scope);
+
+        instructionList.addInstruction(new Instruction("PUT", registerNumber));
+    }
+
     public String getCode(){
         return code;
     }
