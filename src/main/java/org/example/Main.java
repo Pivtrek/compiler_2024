@@ -3,6 +3,7 @@ package org.example;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.example.codegen.CodeGenerator;
 import org.example.memory.Memory;
 import org.example.parser.GrammarLexer;
 import org.example.parser.GrammarParser;
@@ -33,7 +34,8 @@ public class Main {
             semanticAnalysis.analyze(tree);
             Memory memory = new Memory(symbolTable);
             CodeGenerator codeGen = new CodeGenerator(memory, tree);
-
+            codeGen.genereteCode();
+            codeGen.getInstructionList().writeToFile("examples/output/ex1.mr");
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
 

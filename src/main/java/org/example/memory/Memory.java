@@ -17,7 +17,6 @@ public class Memory {
         this.register = new HashMap<>(8);
         initializeRegister();
         initializeFromSymbolTable(symbolTable);
-        System.out.println(register.size());
     }
 
 
