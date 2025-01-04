@@ -14,8 +14,10 @@ public class Memory {
 
     public Memory(SymbolTable symbolTable) {
         this.memory = new HashMap<>();
-        this.register = new HashMap<>(7);
+        this.register = new HashMap<>(8);
+        initializeRegister();
         initializeFromSymbolTable(symbolTable);
+        System.out.println(register.size());
     }
 
 
@@ -41,6 +43,13 @@ public class Memory {
                     //TODO: Mapping parameters to other MemCells
                 }
             }
+        }
+    }
+
+    private void initializeRegister(){
+        for (int i=0; i<nextFreeAdress; i++){
+            String regName = "p" + i;
+            register.put(regName, new MemCell(regName, "GLOBAL", MemCell.inputType.REGISTER, i, null));
         }
     }
 
