@@ -38,7 +38,8 @@ public class Symbol {
             this.localVariables = new ArrayList<>();
         } else if (type == SymbolType.PROCEDURE_WITHOUT_LOCAL_VARIABLES) {
             this.parameters = new ArrayList<>();
-        } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
+            this.localVariables = new ArrayList<>();
+        } else if (type == SymbolType.MAIN_WITH_LOCAL_VARIABLES || type == SymbolType.MAIN_WITHOUT_LOCAL_VARIABLES) {
             this.localVariables = new ArrayList<>();
         } else if (type == SymbolType.INT) {
             this.isInitialized = false;
@@ -85,11 +86,7 @@ public class Symbol {
     }
 
     public void addLocalVariable(Symbol localVariable) {
-        if (type == SymbolType.PROCEDURE_WITH_LOCAL_VARIABLES || type == SymbolType.MAIN_WITH_LOCAL_VARIABLES) {
-            localVariables.add(localVariable);
-        } else {
-            //throw new UnsupportedOperationException("Tylko PROCEDURE albo MAIN może mieć zmienne lokalne!");
-        }
+        localVariables.add(localVariable);
     }
 
     public void setInitialized(boolean initialized) {
