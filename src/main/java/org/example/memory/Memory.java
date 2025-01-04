@@ -8,6 +8,7 @@ import java.util.SimpleTimeZone;
 
 public class Memory {
     private Map<String, MemCell> memory;
+    private Map<String, MemCell> referenceMap;
     private Map<String, MemCell> register;
     int nextFreeAdress = 8;
 
@@ -37,7 +38,7 @@ public class Memory {
             }
             if (procedure.getParameters() != null){
                 for (Symbol parameter : procedure.getParameters()){
-
+                    //TODO: Mapping parameters to other MemCells
                 }
             }
         }
