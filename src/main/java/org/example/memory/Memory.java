@@ -1,4 +1,5 @@
 package org.example.memory;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.example.semantic.Symbol;
 import org.example.semantic.SymbolTable;
 
@@ -57,14 +58,18 @@ public class Memory {
         memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
         nextFreeAdress+=1;
     }
-    public int resolveMemory(String name, String scope){
-        String key = name + ":" + scope;
-        MemCell memCell = memory.get(key);
+    public int resolveMemory(String name, String scope, ParserRuleContext context){
+        if (!name.contains("[")){
+            String key = name + ":" + scope;
+            MemCell memCell = memory.get(key);
 
-        if (memCell == null){
-            throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+            if (memCell == null){
+                throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+            }
+
+            return memCell.getRegisterNumber();
         }
-
-        return memCell.getRegisterNumber();
+        //handling array acces with variable or num a[b] or a[2]
+        String arrayName = name.substring(0, name.indexOf("["));
     }
 }

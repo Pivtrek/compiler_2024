@@ -46,7 +46,7 @@ public class CodeGenerator {
 
         String scope = findEnclosingScope(readContext);
         String name = readContext.identifier().getText();
-        int registerNumber = memory.resolveMemory(name, scope);
+        int registerNumber = memory.resolveMemory(name, scope, readContext.identifier());
 
         instructionList.addInstruction(new Instruction("GET", registerNumber));
     }
@@ -54,8 +54,8 @@ public class CodeGenerator {
     private void generateWrite(GrammarParser.WRITEContext writeContext){
 
         String scope = findEnclosingScope(writeContext);
-        String name = writeContext.value().identifier().getText();
-        int registerNumber = memory.resolveMemory(name, scope);
+        String name = writeContext.value().getText();
+        int registerNumber = memory.resolveMemory(name, scope, writeContext.value());
 
         instructionList.addInstruction(new Instruction("PUT", registerNumber));
     }
@@ -63,7 +63,7 @@ public class CodeGenerator {
     private void generateAssign(GrammarParser.ASSIGNContext assignContext){
         String targetName = assignContext.identifier().getText();
         String scope = findEnclosingScope(assignContext);
-        int registerNumber = memory.resolveMemory(targetName, scope);
+        int registerNumber = memory.resolveMemory(targetName, scope, assignContext.identifier());
 
         GrammarParser.ExpressionContext expressionContext = assignContext.expression();
         handleExpressionContext(expressionContext);
@@ -84,7 +84,7 @@ public class CodeGenerator {
             } else if (value.identifier() != null) { //variable
                 String varName = value.identifier().getText();
                 String scope = findEnclosingScope(valexprContext);
-                int registerNumber = memory.resolveMemory(varName, scope);
+                int registerNumber = memory.resolveMemory(varName, scope, value.identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
 
