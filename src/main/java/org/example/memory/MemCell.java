@@ -31,7 +31,7 @@ public class MemCell {
         return registerNumber;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 

@@ -72,48 +72,117 @@ public class CodeGenerator {
 
         String targetName = assignContext.identifier().getText();
         String scope = findEnclosingScope(assignContext);
-        MemCell memCell = memory.getMemCell(targetName, scope);
         int registerNumber = memory.resolveMemory(targetName, scope, assignContext.identifier());
-
-        GrammarParser.ExpressionContext expressionContext = assignContext.expression();
-        handleExpressionContext(expressionContext, memCell);
+        handleExpressionContext(assignContext, targetName, scope);
 
         //after completing handling right hand side of assign, value of it its in p0 and goes to variable
         instructionList.addInstruction(new Instruction("STORE", registerNumber));
     }
 
     //Handling rhs of assign, storing result to acc
-    private void handleExpressionContext(GrammarParser.ExpressionContext expressionContext, MemCell memCell){
-        if (expressionContext instanceof GrammarParser.VALEXPRContext valexprContext){
+    private void handleExpressionContext(GrammarParser.ASSIGNContext assignContext, String targetName, String scope){
+        if (assignContext.expression() instanceof GrammarParser.VALEXPRContext valexprContext){
             //number or variable
             GrammarParser.ValueContext value = valexprContext.value();
             //its number
             if (value.NUM() != null){
                 int num = Integer.parseInt(value.NUM().getText());
-                memCell.setValue(num);
+                memory.getMemCell(assignContext.identifier(), scope).setValue(num);
                 instructionList.addInstruction(new Instruction("SET", num));
             } else if (value.identifier() != null) { //variable
                 String varName = value.identifier().getText();
-                String scope = findEnclosingScope(valexprContext);
-                int registerNumber = memory.resolveMemory(varName, scope, value.identifier());
-                memCell.setValue(memory.getMemCell(varName, scope).getValue());
+                String scopeOfVariable = findEnclosingScope(valexprContext);
+                int registerNumber = memory.resolveMemory(varName, scopeOfVariable, value.identifier());
+                if (memory.getMemCell(value.identifier(), scopeOfVariable).getValue()!= null){
+                    memory.getMemCell(assignContext.identifier(), scope).setValue(memory.getMemCell(value.identifier(), scopeOfVariable).getValue());
+                }
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
+        } else if (assignContext.expression() instanceof GrammarParser.ADDContext addContext ) {
+            boolean first = false, second = false;
+            int firstV=0,secondV = 0;
+
+            if (addContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                first = true;
+                firstV = Integer.parseInt(addContext.value(0).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(addContext.value(0));
+                int registerNumber = memory.resolveMemory(addContext.value(0).identifier().getText(), scopeOfVariable, addContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    first = true;
+                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+            if (addContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(1).NUM().getText())));
+                second = true;
+                secondV = Integer.parseInt(addContext.value(1).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(addContext.value(1));
+                int registerNumber = memory.resolveMemory(addContext.value(1).identifier().getText(), scopeOfVariable, addContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    second = true;
+                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+            instructionList.addInstruction(new Instruction("ADD", 1));
+            if (first && second){
+                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV+secondV);
+            }
+        } else if (assignContext.expression() instanceof GrammarParser.SUBContext subContext) {
+            boolean first = false, second = false;
+            int firstV=0,secondV = 0;
 
 
-        } else if (expressionContext instanceof GrammarParser.ADDContext) {
+            if (subContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(1).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                second = true;
+                secondV = Integer.parseInt(subContext.value(1).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(subContext.value(1));
+                int registerNumber = memory.resolveMemory(subContext.value(1).identifier().getText(), scopeOfVariable, subContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    second = true;
+                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+            if (subContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(0).NUM().getText())));
+                first = true;
+                firstV = Integer.parseInt(subContext.value(0).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(subContext.value(0));
+                int registerNumber = memory.resolveMemory(subContext.value(0).identifier().getText(), scopeOfVariable, subContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    first = true;
+                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            if (first && second){
+                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV-secondV);
+            }
+
+        } else if (assignContext.expression() instanceof GrammarParser.MULContext) {
 
         }
-        else if (expressionContext instanceof GrammarParser.SUBContext) {
+        else if (assignContext.expression() instanceof GrammarParser.DIVContext) {
 
         }
-        else if (expressionContext instanceof GrammarParser.MULContext) {
-
-        }
-        else if (expressionContext instanceof GrammarParser.DIVContext) {
-
-        }
-        else if (expressionContext instanceof GrammarParser.MODContext) {
+        else if (assignContext.expression() instanceof GrammarParser.MODContext) {
 
         }
 

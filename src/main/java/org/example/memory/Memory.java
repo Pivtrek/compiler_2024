@@ -4,9 +4,7 @@ import org.example.parser.GrammarParser;
 import org.example.semantic.Symbol;
 import org.example.semantic.SymbolTable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SimpleTimeZone;
+import java.util.*;
 
 public class Memory {
     private Map<String, MemCell> memory;
@@ -64,6 +62,20 @@ public class Memory {
         String memName = name + ":" + scope;
         return memory.get(memName);
     }
+
+    public MemCell getMemCell(GrammarParser.IdentifierContext identifierContext, String scope){
+        if (identifierContext instanceof GrammarParser.INTUSAGEContext || identifierContext instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
+            String key = identifierContext.getText() + ":" + scope;
+            return memory.get(key);
+        } else if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arraywithpidusageContext) {
+            String indexKey = arraywithpidusageContext.PIDENTIFIER(1).getText() + ":" + scope;
+            String indexValue = String.valueOf(memory.get(indexKey).getValue());
+            String arrayKey = arraywithpidusageContext.PIDENTIFIER(0).getText() + "[" + indexValue + "]" + ":" + scope;
+            return memory.get(arrayKey);
+        }
+        return null;
+    }
+
     public int resolveMemory(String name, String scope, GrammarParser.IdentifierContext identifierContext){
         if (identifierContext instanceof GrammarParser.INTUSAGEContext || identifierContext instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
             String key = name + ":" + scope;
@@ -76,9 +88,8 @@ public class Memory {
         } else if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arraywithpidusageContext) {
             String indexKey = arraywithpidusageContext.PIDENTIFIER(1).getText() + ":" + scope;
             String indexValue = String.valueOf(memory.get(indexKey).getValue());
-            String arrayKey = arraywithpidusageContext.PIDENTIFIER(0).getText() + "[" + indexValue + "]";
+            String arrayKey = arraywithpidusageContext.PIDENTIFIER(0).getText() + "[" + indexValue + "]" + ":" + scope;
             MemCell memCell = memory.get(arrayKey);
-
             if (memCell == null){
                 throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
             }
