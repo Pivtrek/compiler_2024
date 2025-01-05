@@ -60,8 +60,9 @@ public class Memory {
         nextFreeAdress+=1;
     }
 
-    public MemCell getMemcell(String name){
-        return memory.get(name);
+    public MemCell getMemcell(String name, String scope){
+        String memName = name + ":" + scope;
+        return memory.get(memName);
     }
     public int resolveMemory(String name, String scope, GrammarParser.IdentifierContext identifierContext){
         if (identifierContext instanceof GrammarParser.INTUSAGEContext || identifierContext instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
