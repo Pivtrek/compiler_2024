@@ -74,7 +74,20 @@ public class CodeGenerator {
 
     //Handling rhs of assign, storing result to acc
     private void handleExpressionContext(GrammarParser.ExpressionContext expressionContext){
-        if (expressionContext instanceof GrammarParser.VALEXPRContext){
+        if (expressionContext instanceof GrammarParser.VALEXPRContext valexprContext){
+            //number or variable
+            GrammarParser.ValueContext value = valexprContext.value();
+            //its number
+            if (value.NUM() != null){
+                int num = Integer.parseInt(value.NUM().getText());
+                instructionList.addInstruction(new Instruction("SET", num));
+            } else if (value.identifier() != null) { //variable
+                String varName = value.identifier().getText();
+                String scope = findEnclosingScope(valexprContext);
+                int registerNumber = memory.resolveMemory(varName, scope);
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            }
+
 
         } else if (expressionContext instanceof GrammarParser.ADDContext) {
 
