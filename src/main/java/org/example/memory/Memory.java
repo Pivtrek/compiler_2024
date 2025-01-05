@@ -59,8 +59,12 @@ public class Memory {
         memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
         nextFreeAdress+=1;
     }
+
+    public MemCell getMemcell(String name){
+        return memory.get(name);
+    }
     public int resolveMemory(String name, String scope, GrammarParser.IdentifierContext identifierContext){
-        if (!name.contains("[")){
+        if (identifierContext instanceof GrammarParser.INTUSAGEContext || identifierContext instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
             String key = name + ":" + scope;
             MemCell memCell = memory.get(key);
 
@@ -69,8 +73,9 @@ public class Memory {
             }
 
             return memCell.getRegisterNumber();
+        } else if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arraywithpidusageContext) {
+            
         }
-        //handling array acces with variable or num a[b] or a[2]
-        String arrayName = name.substring(0, name.indexOf("["));
+        throw new RuntimeException("CANNOT RESOLVE MEMORY ACCESS");
     }
 }

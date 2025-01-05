@@ -2,6 +2,7 @@ package org.example.codegen;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.example.memory.MemCell;
 import org.example.memory.Memory;
 import org.example.parser.GrammarParser;
 
