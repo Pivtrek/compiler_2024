@@ -62,7 +62,7 @@ public class CodeGenerator {
         } else if (writeContext.value().identifier() != null) {
             String scope = findEnclosingScope(writeContext);
             String name = writeContext.value().getText();
-            int registerNumber = memory.resolveMemory(name, scope, writeContext.value());
+            int registerNumber = memory.resolveMemory(name, scope, writeContext.value().identifier());
             instructionList.addInstruction(new Instruction("PUT", registerNumber));
         }
     }

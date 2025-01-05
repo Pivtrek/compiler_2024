@@ -1,5 +1,6 @@
 package org.example.memory;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.example.parser.GrammarParser;
 import org.example.semantic.Symbol;
 import org.example.semantic.SymbolTable;
 
@@ -58,7 +59,7 @@ public class Memory {
         memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
         nextFreeAdress+=1;
     }
-    public int resolveMemory(String name, String scope, ParserRuleContext context){
+    public int resolveMemory(String name, String scope, GrammarParser.IdentifierContext identifierContext){
         if (!name.contains("[")){
             String key = name + ":" + scope;
             MemCell memCell = memory.get(key);
