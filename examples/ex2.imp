@@ -1,0 +1,16 @@
+PROGRAM IS
+    a, b, c[0:3], d,e
+BEGIN
+    a:=1;
+    b:=2;
+    d:=b;
+    e:=3;
+    c[0]:=a;
+    c[a]:=b;
+    c[d]:=3;
+    c[e]:=c[d];
+    WRITE c[0];
+    WRITE c[1];
+    WRITE c[2];
+    WRITE c[3];
+END;

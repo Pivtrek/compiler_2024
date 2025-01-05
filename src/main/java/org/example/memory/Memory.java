@@ -1,10 +1,10 @@
 package org.example.memory;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.example.parser.GrammarParser;
 import org.example.semantic.Symbol;
 import org.example.semantic.SymbolTable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SimpleTimeZone;
+import java.util.*;
 
 public class Memory {
     private Map<String, MemCell> memory;
@@ -57,14 +57,44 @@ public class Memory {
         memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
         nextFreeAdress+=1;
     }
-    public int resolveMemory(String name, String scope){
-        String key = name + ":" + scope;
-        MemCell memCell = memory.get(key);
 
-        if (memCell == null){
-            throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+    public MemCell getMemCell(String name, String scope){
+        String memName = name + ":" + scope;
+        return memory.get(memName);
+    }
+
+    public MemCell getMemCell(GrammarParser.IdentifierContext identifierContext, String scope){
+        if (identifierContext instanceof GrammarParser.INTUSAGEContext || identifierContext instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
+            String key = identifierContext.getText() + ":" + scope;
+            return memory.get(key);
+        } else if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arraywithpidusageContext) {
+            String indexKey = arraywithpidusageContext.PIDENTIFIER(1).getText() + ":" + scope;
+            String indexValue = String.valueOf(memory.get(indexKey).getValue());
+            String arrayKey = arraywithpidusageContext.PIDENTIFIER(0).getText() + "[" + indexValue + "]" + ":" + scope;
+            return memory.get(arrayKey);
         }
+        return null;
+    }
 
-        return memCell.getRegisterNumber();
+    public int resolveMemory(String name, String scope, GrammarParser.IdentifierContext identifierContext){
+        if (identifierContext instanceof GrammarParser.INTUSAGEContext || identifierContext instanceof GrammarParser.ARRAYWITHNUMUSAGEContext){
+            String key = name + ":" + scope;
+            MemCell memCell = memory.get(key);
+
+            if (memCell == null){
+                throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+            }
+            return memCell.getRegisterNumber();
+        } else if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arraywithpidusageContext) {
+            String indexKey = arraywithpidusageContext.PIDENTIFIER(1).getText() + ":" + scope;
+            String indexValue = String.valueOf(memory.get(indexKey).getValue());
+            String arrayKey = arraywithpidusageContext.PIDENTIFIER(0).getText() + "[" + indexValue + "]" + ":" + scope;
+            MemCell memCell = memory.get(arrayKey);
+            if (memCell == null){
+                throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+            }
+            return memCell.getRegisterNumber();
+        }
+        throw new RuntimeException("CANNOT RESOLVE MEMORY ACCESS");
     }
 }
