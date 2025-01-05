@@ -72,10 +72,17 @@ public class Memory {
             if (memCell == null){
                 throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
             }
-
             return memCell.getRegisterNumber();
         } else if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arraywithpidusageContext) {
-            
+            String indexKey = arraywithpidusageContext.PIDENTIFIER(1).getText() + ":" + scope;
+            String indexValue = String.valueOf(memory.get(indexKey).getValue());
+            String arrayKey = arraywithpidusageContext.PIDENTIFIER(0).getText() + "[" + indexValue + "]";
+            MemCell memCell = memory.get(arrayKey);
+
+            if (memCell == null){
+                throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+            }
+            return memCell.getRegisterNumber();
         }
         throw new RuntimeException("CANNOT RESOLVE MEMORY ACCESS");
     }

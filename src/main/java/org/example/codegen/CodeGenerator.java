@@ -69,6 +69,7 @@ public class CodeGenerator {
     }
 
     private void generateAssign(GrammarParser.ASSIGNContext assignContext){
+
         String targetName = assignContext.identifier().getText();
         String scope = findEnclosingScope(assignContext);
         int registerNumber = memory.resolveMemory(targetName, scope, assignContext.identifier());
