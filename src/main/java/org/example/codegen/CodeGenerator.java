@@ -53,18 +53,18 @@ public class CodeGenerator {
 
     private void generateWrite(GrammarParser.WRITEContext writeContext){
 
+        // WRITE 123
         if (writeContext.value().NUM() != null){
             int number = Integer.parseInt(writeContext.value().NUM().getText());
             //Setting given number in acc and showing it on console
             instructionList.addInstruction(new Instruction("SET", number));
             instructionList.addInstruction(new Instruction("PUT", 0));
+        } else if (writeContext.value().identifier() != null) {
+            String scope = findEnclosingScope(writeContext);
+            String name = writeContext.value().getText();
+            int registerNumber = memory.resolveMemory(name, scope, writeContext.value());
+            instructionList.addInstruction(new Instruction("PUT", registerNumber));
         }
-
-        String scope = findEnclosingScope(writeContext);
-        String name = writeContext.value().getText();
-        int registerNumber = memory.resolveMemory(name, scope, writeContext.value());
-
-        instructionList.addInstruction(new Instruction("PUT", registerNumber));
     }
 
     private void generateAssign(GrammarParser.ASSIGNContext assignContext){
