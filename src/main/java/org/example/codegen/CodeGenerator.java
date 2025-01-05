@@ -72,28 +72,31 @@ public class CodeGenerator {
 
         String targetName = assignContext.identifier().getText();
         String scope = findEnclosingScope(assignContext);
+        MemCell memCell = memory.getMemCell(targetName, scope);
         int registerNumber = memory.resolveMemory(targetName, scope, assignContext.identifier());
 
         GrammarParser.ExpressionContext expressionContext = assignContext.expression();
-        handleExpressionContext(expressionContext);
+        handleExpressionContext(expressionContext, memCell);
 
         //after completing handling right hand side of assign, value of it its in p0 and goes to variable
         instructionList.addInstruction(new Instruction("STORE", registerNumber));
     }
 
     //Handling rhs of assign, storing result to acc
-    private void handleExpressionContext(GrammarParser.ExpressionContext expressionContext){
+    private void handleExpressionContext(GrammarParser.ExpressionContext expressionContext, MemCell memCell){
         if (expressionContext instanceof GrammarParser.VALEXPRContext valexprContext){
             //number or variable
             GrammarParser.ValueContext value = valexprContext.value();
             //its number
             if (value.NUM() != null){
                 int num = Integer.parseInt(value.NUM().getText());
+                memCell.setValue(num);
                 instructionList.addInstruction(new Instruction("SET", num));
             } else if (value.identifier() != null) { //variable
                 String varName = value.identifier().getText();
                 String scope = findEnclosingScope(valexprContext);
                 int registerNumber = memory.resolveMemory(varName, scope, value.identifier());
+                memCell.setValue(memory.getMemCell(varName, scope).getValue());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
 

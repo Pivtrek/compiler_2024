@@ -60,7 +60,7 @@ public class Memory {
         nextFreeAdress+=1;
     }
 
-    public MemCell getMemcell(String name, String scope){
+    public MemCell getMemCell(String name, String scope){
         String memName = name + ":" + scope;
         return memory.get(memName);
     }
