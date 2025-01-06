@@ -8,6 +8,6 @@ BEGIN
     WRITE c[2];
     READ d;
     READ e;
-    c[1]:=e/d;
+    c[1]:=d/e;
     WRITE c[1];
 END;
