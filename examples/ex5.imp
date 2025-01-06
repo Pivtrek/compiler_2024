@@ -1,0 +1,13 @@
+#Testing DIV
+PROGRAM IS
+    a, b, c[0:3], d, e
+BEGIN
+    READ a;
+    READ b;
+    c[2]:=a/b;
+    WRITE c[2];
+    READ d;
+    READ e;
+    c[1]:=e/d;
+    WRITE c[1];
+END;
