@@ -176,7 +176,59 @@ public class CodeGenerator {
                 memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV-secondV);
             }
 
-        } else if (assignContext.expression() instanceof GrammarParser.MULContext) {
+        } else if (assignContext.expression() instanceof GrammarParser.MULContext mulContext) {
+            /*
+            r0 - acc
+            r1 - multiplier
+            r2 - multiplicand
+            r3 - result
+            r4-r7 - for temporary calculations
+            at the end result goes to acc - r0
+             */
+
+            boolean first = false, second = false;
+            int firstV=0,secondV = 0;
+
+            //First part, storing multiplier and multiplicand to r1 and r2
+            if (mulContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                first = true;
+                firstV = Integer.parseInt(mulContext.value(0).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(mulContext.value(0));
+                int registerNumber = memory.resolveMemory(mulContext.value(0).identifier().getText(), scopeOfVariable, mulContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    first = true;
+                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+            if (mulContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(1).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 2));
+                second = true;
+                secondV = Integer.parseInt(mulContext.value(1).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(mulContext.value(1));
+                int registerNumber = memory.resolveMemory(mulContext.value(1).identifier().getText(), scopeOfVariable, mulContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 2));
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    second = true;
+                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+
+            //If we know values of both m's we save result to the variable in compiler memory
+            if (first && second){
+                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
+            }
+
+
 
         }
         else if (assignContext.expression() instanceof GrammarParser.DIVContext) {
