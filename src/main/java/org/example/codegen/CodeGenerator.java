@@ -306,6 +306,16 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
         }
         else if (assignContext.expression() instanceof GrammarParser.DIVContext) {
+            /*
+            r0 - acc
+            r1 - dividend
+            r2 - divisor
+            r3 - result
+            r4 - =0 r1 is positive =-1 is negative
+            r4 - =0 r2 is positive =-1 is negative
+            r6 - if 0 result should be positive, else negative
+            at the end result goes to acc - r0
+             */
 
         }
         else if (assignContext.expression() instanceof GrammarParser.MODContext) {
