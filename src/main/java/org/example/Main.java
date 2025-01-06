@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         try {
-            String filePath = "examples/ex3.imp";
+            String filePath = "examples/ex4.imp";
             String code = Files.readString(Paths.get(filePath));
             GrammarLexer lexer = new GrammarLexer(CharStreams.fromString(code));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -35,7 +35,7 @@ public class Main {
             Memory memory = new Memory(symbolTable);
             CodeGenerator codeGen = new CodeGenerator(memory, tree);
             codeGen.genereteCode();
-            codeGen.getInstructionList().writeToFile("examples/output/ex3.mr");
+            codeGen.getInstructionList().writeToFile("examples/output/ex4.mr");
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
 
