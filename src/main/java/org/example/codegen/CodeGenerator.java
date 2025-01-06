@@ -619,7 +619,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("LOAD", 6));
             instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
             instructionList.addInstruction(new Instruction("SET", 0));
-            instructionList.addInstruction(new Instruction("SUB", 1)); //r3 --> acc
+            instructionList.addInstruction(new Instruction("SUB", 1)); //r1 --> acc
             instructionList.addInstruction(new Instruction("STORE", 1));
             instructionList.addInstruction(new Instruction("LOAD", 1));//exit from loop here, loading result to acc
 
