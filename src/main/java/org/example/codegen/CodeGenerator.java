@@ -472,7 +472,125 @@ public class CodeGenerator {
 
             //TODO: cant provoke to negative result TO DEBUG
         }
-        else if (assignContext.expression() instanceof GrammarParser.MODContext) {
+        else if (assignContext.expression() instanceof GrammarParser.MODContext modContext) {
+             /*
+            r0 - acc
+            r1 - multiplier
+            r2 - multiplicand
+            r3 - result
+            r4 - =0 r1 is positive =-1 is negative
+            r4 - =0 r2 is positive =-1 is negative
+            r6 - if 0 result should be positive, else negative
+            at the end result goes to acc - r0
+             */
+
+            boolean first = false, second = false;
+            int firstV=0,secondV = 0;
+            //setting result as 0
+            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
+            instructionList.addInstruction(new Instruction("STORE", 3));
+
+            //First part, storing multiplier and multiplicand to r1 and r2
+            //TODO: OPTIMALIZATION --- while m1 and m2 in acc check for multiplying by 0 and 1 and jump to the end with correct result
+            if (modContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                //saving information about sign of number to register
+                if (Integer.parseInt(modContext.value(0).NUM().getText()) < 0){
+                    instructionList.addInstruction(new Instruction("SET", -1));
+                    instructionList.addInstruction(new Instruction("LOAD", 4));
+                }
+                else {
+                    instructionList.addInstruction(new Instruction("LOAD", 3));
+                    instructionList.addInstruction(new Instruction("STORE", 4));
+                }
+                first = true;
+                firstV = Integer.parseInt(modContext.value(0).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(modContext.value(0));
+                int registerNumber = memory.resolveMemory(modContext.value(0).identifier().getText(), scopeOfVariable, modContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                instructionList.addInstruction(new Instruction("JNEG", 4));
+                instructionList.addInstruction(new Instruction("LOAD", 3));
+                instructionList.addInstruction(new Instruction("STORE", 4));
+                instructionList.addInstruction(new Instruction("JUMP", 3));
+                instructionList.addInstruction(new Instruction("SET", -1));
+                instructionList.addInstruction(new Instruction("STORE", 4));
+
+
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    first = true;
+                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+            if (modContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(1).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 2));
+                //saving information about sign of number to register
+                if (Integer.parseInt(modContext.value(1).NUM().getText()) < 0){
+                    instructionList.addInstruction(new Instruction("SET", -1));
+                    instructionList.addInstruction(new Instruction("LOAD", 5));
+                }
+                else {
+                    instructionList.addInstruction(new Instruction("LOAD", 3));
+                    instructionList.addInstruction(new Instruction("STORE", 5));
+                }
+                second = true;
+                secondV = Integer.parseInt(modContext.value(1).NUM().getText());
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(modContext.value(1));
+                int registerNumber = memory.resolveMemory(modContext.value(1).identifier().getText(), scopeOfVariable, modContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 2));
+                instructionList.addInstruction(new Instruction("JNEG", 4));
+                instructionList.addInstruction(new Instruction("LOAD", 3));
+                instructionList.addInstruction(new Instruction("STORE", 5));
+                instructionList.addInstruction(new Instruction("JUMP", 3));
+                instructionList.addInstruction(new Instruction("SET", -1));
+                instructionList.addInstruction(new Instruction("STORE", 5));
+                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
+                    second = true;
+                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
+                }
+            }
+            //If we know values of both m's we save result to the variable in compiler memory
+            if (first && second){
+                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
+            }
+            //Checking if result of multiplying should be + or - and saving it to r6
+            instructionList.addInstruction(new Instruction("LOAD", 4));
+            instructionList.addInstruction(new Instruction("SUB", 5));
+            instructionList.addInstruction(new Instruction("STORE", 6));
+            instructionList.addInstruction(new Instruction("LOAD", 1)); //check r1 if negative change its value to positive
+            instructionList.addInstruction(new Instruction("JZERO", 5));
+            instructionList.addInstruction(new Instruction("JPOS", 4));
+            instructionList.addInstruction(new Instruction("LOAD", 3));
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("JZERO", 5));
+            instructionList.addInstruction(new Instruction("JPOS", 4));
+            instructionList.addInstruction(new Instruction("LOAD", 3));
+            instructionList.addInstruction(new Instruction("SUB", 2));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+
+
+            //MODULO THINGS
+
+            //TODO: think how to use divison logic to get rest
+
+
+
+            //Checking if result should be with + or - and saving it to acc
+            instructionList.addInstruction(new Instruction("LOAD", 6));
+            instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("SUB", 1)); //r1 --> acc
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            instructionList.addInstruction(new Instruction("LOAD", 1));//exit from loop here, loading result to acc
 
         }
 

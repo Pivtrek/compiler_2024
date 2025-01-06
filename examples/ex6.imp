@@ -1,0 +1,13 @@
+#Testing MOD
+PROGRAM IS
+    a, b, c[0:3], d, e
+BEGIN
+    READ a;
+    READ b;
+    c[2]:=a%b;
+    WRITE c[2];
+    READ d;
+    READ e;
+    c[1]:=d%e;
+    WRITE c[1];
+END;
