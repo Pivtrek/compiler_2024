@@ -1,15 +1,13 @@
 #Testing MUL
 PROGRAM IS
-    a, b, c[0:3]
+    a, b, c[0:3], d, e
 BEGIN
-    a:=20;
-    b:=31;
-    c[0]:=b*a;
-    c[1]:=a*b;
-    a:=1234567;
-    b:=1234567;
+    READ a;
+    READ b;
     c[2]:=a*b;
-    WRITE c[0];
-    WRITE c[1];
     WRITE c[2];
+    READ d;
+    READ e;
+    c[1]:=e*d;
+    WRITE c[1];
 END;
