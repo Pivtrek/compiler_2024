@@ -228,6 +228,9 @@ public class CodeGenerator {
                 memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
             }
 
+            //Setting r3 result as 0
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
 
 
         }
