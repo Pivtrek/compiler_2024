@@ -190,6 +190,7 @@ public class CodeGenerator {
             int firstV=0,secondV = 0;
 
             //First part, storing multiplier and multiplicand to r1 and r2
+            //TODO: while m1 and m2 in acc check for multiplying by 0 and 1 and jump to the end with correct result
             if (mulContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(0).NUM().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
