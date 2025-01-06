@@ -579,6 +579,41 @@ public class CodeGenerator {
 
 
             //MODULO THINGS
+            instructionList.addInstruction(new Instruction("SET", 1));
+            instructionList.addInstruction(new Instruction("STORE", 4));  // Waga (rozpoczyna się od 1)
+
+            instructionList.addInstruction(new Instruction("LOAD", 2));   // Ładujemy dzielnik
+            instructionList.addInstruction(new Instruction("STORE", 7));  // Przechowujemy dzielnik w r7
+            instructionList.addInstruction(new Instruction("LOAD", 1));   // Ładujemy dzielną
+            instructionList.addInstruction(new Instruction("SUB", 7));    // Sprawdzamy, czy r7 > r1
+            instructionList.addInstruction(new Instruction("JNEG", 8));   // Jeśli r7 > r1, wyjdź z pętli
+            instructionList.addInstruction(new Instruction("LOAD", 7));   // Podwajamy r7
+            instructionList.addInstruction(new Instruction("ADD", 7));
+            instructionList.addInstruction(new Instruction("STORE", 7));
+            instructionList.addInstruction(new Instruction("LOAD", 4));   // Podwajamy wagę
+            instructionList.addInstruction(new Instruction("ADD", 4));
+            instructionList.addInstruction(new Instruction("STORE", 4));
+            instructionList.addInstruction(new Instruction("JUMP", -9));  // Powrót do początku pętli
+
+            instructionList.addInstruction(new Instruction("LOAD", 7));    // Ładujemy dzielnik
+            instructionList.addInstruction(new Instruction("JZERO", 24));  // Jeśli r7 == 0, wyjdź z pętli
+            instructionList.addInstruction(new Instruction("SUB", 1));     // Sprawdzamy, czy r7 <= r1
+            instructionList.addInstruction(new Instruction("JPOS", 14));   // Jeśli r7 > r1, pomiń odejmowanie
+            instructionList.addInstruction(new Instruction("LOAD", 1));    // Odejmujemy r7 od r1
+            instructionList.addInstruction(new Instruction("SUB", 7));
+            instructionList.addInstruction(new Instruction("STORE", 1));   // Zapisujemy nową wartość r1
+            instructionList.addInstruction(new Instruction("LOAD", 3));    // Dodajemy wagę r4 do ilorazu
+            instructionList.addInstruction(new Instruction("ADD", 4));
+            instructionList.addInstruction(new Instruction("STORE", 3));   // Zapisujemy iloraz
+
+            instructionList.addInstruction(new Instruction("LOAD", 4));    // Zmniejszamy wagę o połowę
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 4));
+            instructionList.addInstruction(new Instruction("LOAD", 7));    // Zmniejszamy dzielnik o połowę
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 7));
+            instructionList.addInstruction(new Instruction("JUMP", -16));  // Powrót do początku pętli
+
 
             //Checking if result should be with + or - and saving it to acc
             instructionList.addInstruction(new Instruction("LOAD", 6));
