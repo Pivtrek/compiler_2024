@@ -229,9 +229,24 @@ public class CodeGenerator {
                 memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
             }
 
-            //Setting r3 result as 0
-            instructionList.addInstruction(new Instruction("SET", 0));
+            //Multiplying
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 15));//exit number
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("ADD", 0));
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 4)); //r0 = 0, not odd do not
+            instructionList.addInstruction(new Instruction("LOAD", 3));
+            instructionList.addInstruction(new Instruction("ADD", 2));
             instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("LOAD", 2));//double r2
+            instructionList.addInstruction(new Instruction("ADD", 0));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+            instructionList.addInstruction(new Instruction("LOAD", 1));//Halve r1
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            instructionList.addInstruction(new Instruction("JUMP", (-15)));
+            instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
 
 
         }
