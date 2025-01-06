@@ -228,7 +228,8 @@ public class CodeGenerator {
             if (first && second){
                 memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
             }
-
+            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
+            instructionList.addInstruction(new Instruction("STORE", 3));
             //Multiplying
             instructionList.addInstruction(new Instruction("LOAD", 1));
             instructionList.addInstruction(new Instruction("JZERO", 15));//exit number
