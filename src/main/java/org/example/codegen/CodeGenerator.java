@@ -436,7 +436,6 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("HALF"));
             instructionList.addInstruction(new Instruction("STORE", 4));
 
-
             instructionList.addInstruction(new Instruction("LOAD", 7));
             instructionList.addInstruction(new Instruction("JZERO", 24)); //JUMP OUT OF DIVISION
             instructionList.addInstruction(new Instruction("SUB", 1));
@@ -470,7 +469,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 3));
             instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
 
-            //TODO: cant provoke to negative result TO DEBUG
+            //TODO: cant provoke to negative result TO DEBUG, WHY THATS NOT WORK ?
         }
         else if (assignContext.expression() instanceof GrammarParser.MODContext modContext) {
              /*
@@ -578,19 +577,106 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 2));
 
 
-            //MODULO THINGS
+            //Saving r1 to r5
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("STORE", 5));
 
-            //TODO: think how to use divison logic to get rest
+            //division
 
+            instructionList.addInstruction(new Instruction("SET", 1));
+            instructionList.addInstruction(new Instruction("STORE", 4));
 
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("STORE", 7));
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("SUB", 7));
+            instructionList.addInstruction(new Instruction("JNEG", 8));
+            instructionList.addInstruction(new Instruction("LOAD", 7));
+            instructionList.addInstruction(new Instruction("ADD", 7));
+            instructionList.addInstruction(new Instruction("STORE", 7));
+            instructionList.addInstruction(new Instruction("LOAD", 4));
+            instructionList.addInstruction(new Instruction("ADD", 4));
+            instructionList.addInstruction(new Instruction("STORE", 4));
+            instructionList.addInstruction(new Instruction("JUMP", -9));
 
-            //Checking if result should be with + or - and saving it to acc
+            instructionList.addInstruction(new Instruction("LOAD", 7));
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 7));
+
+            instructionList.addInstruction(new Instruction("LOAD", 4));
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 4));
+
+            instructionList.addInstruction(new Instruction("LOAD", 7));
+            instructionList.addInstruction(new Instruction("JZERO", 24)); //JUMP OUT OF DIVISION
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JPOS", 14));
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("SUB", 7));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            instructionList.addInstruction(new Instruction("LOAD", 3));
+            instructionList.addInstruction(new Instruction("ADD", 4));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("LOAD", 4));
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 4));
+            instructionList.addInstruction(new Instruction("LOAD", 7));
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 7));
+            instructionList.addInstruction(new Instruction("JUMP", -16));
+            instructionList.addInstruction(new Instruction("LOAD", 7));
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 7));
+            instructionList.addInstruction(new Instruction("LOAD", 4));
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 4));
+            instructionList.addInstruction(new Instruction("JUMP", -23));
+
             instructionList.addInstruction(new Instruction("LOAD", 6));
             instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
             instructionList.addInstruction(new Instruction("SET", 0));
-            instructionList.addInstruction(new Instruction("SUB", 1)); //r1 --> acc
+            instructionList.addInstruction(new Instruction("SUB", 3));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
+
+
+            // a/b -- a-r5 b-r2, a/b floor is in r3
+
+
             instructionList.addInstruction(new Instruction("STORE", 1));
-            instructionList.addInstruction(new Instruction("LOAD", 1));//exit from loop here, loading result to acc
+
+
+            // r1 - multiplier
+            // r2 - multiplicand
+            // r3 - result
+
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+
+
+            //Multiplying
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 15));//exit number
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("ADD", 0));
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 4)); //r0 = 0, not odd do not
+            instructionList.addInstruction(new Instruction("LOAD", 3));
+            instructionList.addInstruction(new Instruction("ADD", 2));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("LOAD", 2));//double r2
+            instructionList.addInstruction(new Instruction("ADD", 0));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+            instructionList.addInstruction(new Instruction("LOAD", 1));//Halve r1
+            instructionList.addInstruction(new Instruction("HALF"));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            instructionList.addInstruction(new Instruction("JUMP", (-15)));
+
+            instructionList.addInstruction(new Instruction("LOAD", 5));
+            instructionList.addInstruction(new Instruction("SUB", 3));
+
+
+            //TODO negative result, using 0, and using bigger divisor than dividend
 
         }
 
