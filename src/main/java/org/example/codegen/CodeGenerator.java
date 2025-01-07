@@ -83,10 +83,18 @@ public class CodeGenerator {
 
     private void generateIf(GrammarParser.IFContext ifContext){
 
-
-        
-        
+        //if acc >0 we do skip, condition not true, if acc =0 we do the condition
         generateCondition(ifContext.condition());
+        instructionList.addInstruction(new Instruction("JPOS", 1));
+
+        int skipIfLabel = instructionList.getInstructions().size();
+        instructionList.addInstruction(new Instruction("JPOS", 1));
+        traverse(ifContext.commands());
+        int afterIfIndex = instructionList.getInstructions().size();
+        instructionList.getInstructions().set(skipIfLabel, new Instruction("JPOS", afterIfIndex-skipIfLabel));
+
+        //TODO: INDEXES AND ARE WE REPLACING GOOD CONDITION ?
+
 
     }
 
