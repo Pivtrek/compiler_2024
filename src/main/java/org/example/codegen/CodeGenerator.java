@@ -92,23 +92,134 @@ public class CodeGenerator {
 
     private void generateCondition(GrammarParser.ConditionContext conditionContext){
 
-
+        //first value stored in r1, second in acc
 
         if (conditionContext instanceof GrammarParser.EQContext eqContext){
+            if (eqContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(eqContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(eqContext.value(0));
+                int registerNumber = memory.resolveMemory(eqContext.value(0).identifier().getText(), scopeOfVariable, eqContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
 
+            }
+            if (eqContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(eqContext.value(1).NUM().getText())));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(eqContext.value(1));
+                int registerNumber = memory.resolveMemory(eqContext.value(1).identifier().getText(), scopeOfVariable, eqContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            }
 
-        } else if (conditionContext instanceof GrammarParser.NEQContext) {
+        } else if (conditionContext instanceof GrammarParser.NEQContext neqContext) {
+            if (neqContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(neqContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(neqContext.value(0));
+                int registerNumber = memory.resolveMemory(neqContext.value(0).identifier().getText(), scopeOfVariable, neqContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
 
-        }else if (conditionContext instanceof GrammarParser.GTContext) {
+            }
+            if (neqContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(neqContext.value(1).NUM().getText())));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(neqContext.value(1));
+                int registerNumber = memory.resolveMemory(neqContext.value(1).identifier().getText(), scopeOfVariable, neqContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            }
+            
+        }else if (conditionContext instanceof GrammarParser.GTContext gtContext) {
+            if (gtContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(gtContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(gtContext.value(0));
+                int registerNumber = memory.resolveMemory(gtContext.value(0).identifier().getText(), scopeOfVariable, gtContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
 
-        }else if (conditionContext instanceof GrammarParser.LTContext) {
+            }
+            if (gtContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(gtContext.value(1).NUM().getText())));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(gtContext.value(1));
+                int registerNumber = memory.resolveMemory(gtContext.value(1).identifier().getText(), scopeOfVariable, gtContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            }
 
-        }else if (conditionContext instanceof GrammarParser.GEQContext) {
+        }else if (conditionContext instanceof GrammarParser.LTContext ltContext) {
+            if (ltContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(ltContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(ltContext.value(0));
+                int registerNumber = memory.resolveMemory(ltContext.value(0).identifier().getText(), scopeOfVariable, ltContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
 
-        }else if (conditionContext instanceof GrammarParser.LEQContext) {
+            }
+            if (ltContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(ltContext.value(1).NUM().getText())));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(ltContext.value(1));
+                int registerNumber = memory.resolveMemory(ltContext.value(1).identifier().getText(), scopeOfVariable, ltContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            }
 
+        }else if (conditionContext instanceof GrammarParser.GEQContext geqContext) {
+            if (geqContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(geqContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(geqContext.value(0));
+                int registerNumber = memory.resolveMemory(geqContext.value(0).identifier().getText(), scopeOfVariable, geqContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+
+            }
+            if (geqContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(geqContext.value(1).NUM().getText())));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(geqContext.value(1));
+                int registerNumber = memory.resolveMemory(geqContext.value(1).identifier().getText(), scopeOfVariable, geqContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            }
+
+        }else if (conditionContext instanceof GrammarParser.LEQContext leqContext) {
+            if (leqContext.value(0).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(leqContext.value(0).NUM().getText())));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(leqContext.value(0));
+                int registerNumber = memory.resolveMemory(leqContext.value(0).identifier().getText(), scopeOfVariable, leqContext.value(0).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+
+            }
+            if (leqContext.value(1).NUM() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(leqContext.value(1).NUM().getText())));
+            }
+            else {
+                String scopeOfVariable = findEnclosingScope(leqContext.value(1));
+                int registerNumber = memory.resolveMemory(leqContext.value(1).identifier().getText(), scopeOfVariable, leqContext.value(1).identifier());
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            }
         }
-
     }
 
     //Handling rhs of assign, storing result to acc
