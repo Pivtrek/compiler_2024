@@ -83,11 +83,31 @@ public class CodeGenerator {
 
     private void generateIf(GrammarParser.IFContext ifContext){
 
+
+        
+        
         generateCondition(ifContext.condition());
 
     }
 
     private void generateCondition(GrammarParser.ConditionContext conditionContext){
+
+
+
+        if (conditionContext instanceof GrammarParser.EQContext eqContext){
+
+
+        } else if (conditionContext instanceof GrammarParser.NEQContext) {
+
+        }else if (conditionContext instanceof GrammarParser.GTContext) {
+
+        }else if (conditionContext instanceof GrammarParser.LTContext) {
+
+        }else if (conditionContext instanceof GrammarParser.GEQContext) {
+
+        }else if (conditionContext instanceof GrammarParser.LEQContext) {
+
+        }
 
     }
 
