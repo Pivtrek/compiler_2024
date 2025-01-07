@@ -37,6 +37,8 @@ public class CodeGenerator {
             generateWrite((GrammarParser.WRITEContext) node);
         } else if (node instanceof GrammarParser.ASSIGNContext){
             generateAssign((GrammarParser.ASSIGNContext) node);
+        } else if (node instanceof GrammarParser.IFContext) {
+            generateIf((GrammarParser.IFContext) node);
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
@@ -77,6 +79,10 @@ public class CodeGenerator {
 
         //after completing handling right hand side of assign, value of it its in p0 and goes to variable
         instructionList.addInstruction(new Instruction("STORE", registerNumber));
+    }
+
+    private void generateIf(GrammarParser.IFContext ifContext){
+
     }
 
     //Handling rhs of assign, storing result to acc
