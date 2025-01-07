@@ -83,6 +83,12 @@ public class CodeGenerator {
 
     private void generateIf(GrammarParser.IFContext ifContext){
 
+        generateCondition(ifContext.condition());
+
+    }
+
+    private void generateCondition(GrammarParser.ConditionContext conditionContext){
+
     }
 
     //Handling rhs of assign, storing result to acc
