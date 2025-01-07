@@ -93,6 +93,7 @@ public class CodeGenerator {
     private void generateCondition(GrammarParser.ConditionContext conditionContext){
 
         //first value stored in r1, second in acc
+        //if acc >0 we do skip, condition not true, if acc =0 we do the condition
 
         if (conditionContext instanceof GrammarParser.EQContext eqContext){
             if (eqContext.value(0).NUM() != null){
@@ -115,6 +116,11 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
 
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 2));
+            instructionList.addInstruction(new Instruction("SET", 1));
+
+
         } else if (conditionContext instanceof GrammarParser.NEQContext neqContext) {
             if (neqContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(neqContext.value(0).NUM().getText())));
@@ -135,6 +141,11 @@ public class CodeGenerator {
                 int registerNumber = memory.resolveMemory(neqContext.value(1).identifier().getText(), scopeOfVariable, neqContext.value(1).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 3));
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("JZERO", 2));
+            instructionList.addInstruction(new Instruction("SET", 1));
             
         }else if (conditionContext instanceof GrammarParser.GTContext gtContext) {
             if (gtContext.value(0).NUM() != null){
@@ -157,6 +168,12 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
 
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JNEG", 3));
+            instructionList.addInstruction(new Instruction("SET", 1));
+            instructionList.addInstruction(new Instruction("JPOS", 2));
+            instructionList.addInstruction(new Instruction("SET", 0));
+
         }else if (conditionContext instanceof GrammarParser.LTContext ltContext) {
             if (ltContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(ltContext.value(0).NUM().getText())));
@@ -177,6 +194,12 @@ public class CodeGenerator {
                 int registerNumber = memory.resolveMemory(ltContext.value(1).identifier().getText(), scopeOfVariable, ltContext.value(1).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
+
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JPOS", 3));
+            instructionList.addInstruction(new Instruction("SET", 1));
+            instructionList.addInstruction(new Instruction("JPOS", 2));
+            instructionList.addInstruction(new Instruction("SET", 0));
 
         }else if (conditionContext instanceof GrammarParser.GEQContext geqContext) {
             if (geqContext.value(0).NUM() != null){
@@ -199,6 +222,14 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
 
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 5)); //jump to set 0, 0 is already in acc just jump out of condition
+            instructionList.addInstruction(new Instruction("JNEG", 3)); //jump to set 0
+            instructionList.addInstruction(new Instruction("SET", 1));
+            instructionList.addInstruction(new Instruction("JPOS", 2));
+            instructionList.addInstruction(new Instruction("SET", 0));
+
+
         }else if (conditionContext instanceof GrammarParser.LEQContext leqContext) {
             if (leqContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(leqContext.value(0).NUM().getText())));
@@ -219,6 +250,13 @@ public class CodeGenerator {
                 int registerNumber = memory.resolveMemory(leqContext.value(1).identifier().getText(), scopeOfVariable, leqContext.value(1).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
+
+            instructionList.addInstruction(new Instruction("SUB", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 5)); //jump to set 0, 0 is already in acc just jump out of condition
+            instructionList.addInstruction(new Instruction("JPOS", 3)); //jump to set 0
+            instructionList.addInstruction(new Instruction("SET", 1));
+            instructionList.addInstruction(new Instruction("JPOS", 2));
+            instructionList.addInstruction(new Instruction("SET", 0));
         }
     }
 
