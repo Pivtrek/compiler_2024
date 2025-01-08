@@ -10,11 +10,11 @@ public class Memory {
     private Map<String, MemCell> memory;
     private Map<String, MemCell> referenceMap;
     private Map<String, MemCell> register;
-    int nextFreeAdress = 8;
+    int nextFreeAdress = 10;
 
     public Memory(SymbolTable symbolTable) {
         this.memory = new HashMap<>();
-        this.register = new HashMap<>(8);
+        this.register = new HashMap<>(10);
         initializeRegister();
         initializeFromSymbolTable(symbolTable);
     }
