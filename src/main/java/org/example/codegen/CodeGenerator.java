@@ -39,6 +39,7 @@ public class CodeGenerator {
             generateAssign((GrammarParser.ASSIGNContext) node);
         } else if (node instanceof GrammarParser.IFContext) {
             generateIf((GrammarParser.IFContext) node);
+            return; //without return commands inside if commands are produced twice
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
@@ -86,15 +87,10 @@ public class CodeGenerator {
         //if acc >0 we do skip, condition not true, if acc =0 we do the condition
         generateCondition(ifContext.condition());
         instructionList.addInstruction(new Instruction("JPOS", 1));
-
         int skipIfLabel = instructionList.getInstructions().size();
-        instructionList.addInstruction(new Instruction("JPOS", 1));
         traverse(ifContext.commands());
         int afterIfIndex = instructionList.getInstructions().size();
-        instructionList.getInstructions().set(skipIfLabel, new Instruction("JPOS", afterIfIndex-skipIfLabel));
-
-        //TODO: INDEXES AND ARE WE REPLACING GOOD CONDITION ?
-
+        instructionList.getInstructions().set(skipIfLabel-1, new Instruction("JPOS", afterIfIndex-skipIfLabel+1));
 
     }
 
