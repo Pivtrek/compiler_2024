@@ -92,9 +92,7 @@ public class CodeGenerator {
         //taking iterator and giving him first value
         String scope = findEnclosingScope(forupContext);
         int iteratorRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText(), scope);
-
         //saving from value to r1 and to value to r2
-
         if (forupContext.value(0).NUM() != null){
             instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(0).NUM().getText())));
             instructionList.addInstruction(new Instruction("STORE", 1));
@@ -118,6 +116,10 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 2));
         }
 
+        instructionList.addInstruction(new Instruction("SET", 1));
+        instructionList.addInstruction(new Instruction("STORE", 8)); //storing value "1" for loop iteration
+        instructionList.addInstruction(new Instruction("LOAD", 1));
+        instructionList.addInstruction(new Instruction("STORE", iteratorRegister));
 
 
         //TODO: check if forupcontext pidentifier in resolve memory is working, and then find it in memory and assign value and continue bla bla bla

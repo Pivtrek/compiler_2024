@@ -275,6 +275,7 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             }
             if (commandsContext.command(i) instanceof GrammarParser.FORDOWNTOContext fordowntoContext){
                 procedure.addLocalVariable(new Symbol(fordowntoContext.PIDENTIFIER().getText(), Symbol.SymbolType.ITERATOR));
+                //TODO
                 checkForUndefinedProcedureUsage(fordowntoContext.commands(), symbolTable, procedure);
             }
             if (commandsContext.command(i) instanceof GrammarParser.FORUPContext forupContext){
