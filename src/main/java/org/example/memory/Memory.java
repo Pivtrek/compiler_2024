@@ -97,4 +97,13 @@ public class Memory {
         }
         throw new RuntimeException("CANNOT RESOLVE MEMORY ACCESS");
     }
+    public int resolveMemory(String name, String scope) {
+        String key = name + ":" + scope;
+        MemCell memCell = memory.get(key);
+
+        if (memCell == null) {
+            throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+        }
+        return memCell.getRegisterNumber();
+    }
 }

@@ -45,6 +45,7 @@ public class CodeGenerator {
             return; ////without return commands inside if else commands are produced twice
         } else if (node instanceof GrammarParser.FORUPContext){
             generateForUp((GrammarParser.FORUPContext) node);
+            return;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
@@ -88,7 +89,38 @@ public class CodeGenerator {
     }
 
     private void generateForUp(GrammarParser.FORUPContext forupContext){
+        //taking iterator and giving him first value
+        String scope = findEnclosingScope(forupContext);
+        int iteratorRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText(), scope);
 
+        //saving from value to r1 and to value to r2
+
+        if (forupContext.value(0).NUM() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(0).NUM().getText())));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            
+        }
+        else {
+            String scopeOfVariable = findEnclosingScope(forupContext.value(0));
+            int registerNumber = memory.resolveMemory(forupContext.value(0).identifier().getText(), scopeOfVariable, forupContext.value(0).identifier());
+            instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            
+        }
+        if (forupContext.value(1).NUM() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(1).NUM().getText())));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+        }
+        else {
+            String scopeOfVariable = findEnclosingScope(forupContext.value(1));
+            int registerNumber = memory.resolveMemory(forupContext.value(1).identifier().getText(), scopeOfVariable, forupContext.value(1).identifier());
+            instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+        }
+
+
+
+        //TODO: check if forupcontext pidentifier in resolve memory is working, and then find it in memory and assign value and continue bla bla bla
     }
 
     private void generateIfElse(GrammarParser.IFELSEContext ifelseContext){
