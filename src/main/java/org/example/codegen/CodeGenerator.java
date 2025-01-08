@@ -41,7 +41,7 @@ public class CodeGenerator {
             generateIf((GrammarParser.IFContext) node);
             return; //without return commands inside if commands are produced twice
         } else if (node instanceof GrammarParser.IFELSEContext) {
-            genereteIfElse((GrammarParser.IFELSEContext) node);
+            generateIfElse((GrammarParser.IFELSEContext) node);
             return; ////without return commands inside if else commands are produced twice
         }
         for (int i = 0; i < node.getChildCount(); i++) {
@@ -85,8 +85,20 @@ public class CodeGenerator {
         instructionList.addInstruction(new Instruction("STORE", registerNumber));
     }
 
-    private void genereteIfElse(GrammarParser.IFELSEContext ifelseContext){
-
+    private void generateIfElse(GrammarParser.IFELSEContext ifelseContext){
+        //if acc >0 we go to else, condition not true, if acc =0 we do the if condition and skip else
+        generateCondition(ifelseContext.condition());
+        instructionList.addInstruction(new Instruction("JPOS", 1));
+        int skipIfLabel = instructionList.getInstructions().size();
+        traverse(ifelseContext.commands(0)); //generate if commands
+        int afterIfIndex = instructionList.getInstructions().size();//if commands
+        instructionList.getInstructions().set(skipIfLabel-1, new Instruction("JPOS", afterIfIndex-skipIfLabel+2));
+        instructionList.addInstruction(new Instruction("SET", 0));//on the last step need to set acc to 0 because its telling to skip else
+        instructionList.addInstruction(new Instruction("JZERO", 1));
+        int skipElseLabel = instructionList.getInstructions().size();
+        traverse(ifelseContext.commands(1)); //generate else commands
+        int elseIndex = instructionList.getInstructions().size();
+        instructionList.getInstructions().set(skipElseLabel-1, new Instruction("JZERO", elseIndex-skipElseLabel+1));
     }
 
     private void generateIf(GrammarParser.IFContext ifContext){
