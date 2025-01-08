@@ -40,6 +40,9 @@ public class CodeGenerator {
         } else if (node instanceof GrammarParser.IFContext) {
             generateIf((GrammarParser.IFContext) node);
             return; //without return commands inside if commands are produced twice
+        } else if (node instanceof GrammarParser.IFELSEContext) {
+            genereteIfElse((GrammarParser.IFELSEContext) node);
+            return; ////without return commands inside if else commands are produced twice
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
@@ -80,6 +83,10 @@ public class CodeGenerator {
 
         //after completing handling right hand side of assign, value of it its in p0 and goes to variable
         instructionList.addInstruction(new Instruction("STORE", registerNumber));
+    }
+
+    private void genereteIfElse(GrammarParser.IFELSEContext ifelseContext){
+
     }
 
     private void generateIf(GrammarParser.IFContext ifContext){
