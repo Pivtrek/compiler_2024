@@ -799,7 +799,6 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 3));
             instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
 
-            //TODO: cant provoke to negative result TO DEBUG, WHY THATS NOT WORK ?
         }
         else if (assignContext.expression() instanceof GrammarParser.MODContext modContext) {
              /*
@@ -808,7 +807,7 @@ public class CodeGenerator {
             r2 - multiplicand
             r3 - result
             r4 - =0 r1 is positive =-1 is negative
-            r4 - =0 r2 is positive =-1 is negative
+            r5 - =0 r2 is positive =-1 is negative
             r6 - if 0 result should be positive, else negative
             at the end result goes to acc - r0
              */
@@ -889,10 +888,20 @@ public class CodeGenerator {
             if (first && second){
                 memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
             }
-            //Checking if result of multiplying should be + or - and saving it to r6
-            instructionList.addInstruction(new Instruction("LOAD", 4));
-            instructionList.addInstruction(new Instruction("SUB", 5));
+            //checking if we are multiplying by 0
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 93));
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("JZERO", 95));
+
+            //Checking if result of mod should be + or - and saving it to r6
+            instructionList.addInstruction(new Instruction("LOAD", 5));
+            instructionList.addInstruction(new Instruction("JZERO", 4));
+            instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("STORE", 6));
+            instructionList.addInstruction(new Instruction("JUMP", 2));
+            instructionList.addInstruction(new Instruction("STORE", 6));
+
             instructionList.addInstruction(new Instruction("LOAD", 1)); //check r1 if negative change its value to positive
             instructionList.addInstruction(new Instruction("JZERO", 5));
             instructionList.addInstruction(new Instruction("JPOS", 4));
@@ -911,7 +920,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("LOAD", 1));
             instructionList.addInstruction(new Instruction("STORE", 5));
 
-            //division
+            //modulo
 
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("STORE", 4));
@@ -1004,6 +1013,25 @@ public class CodeGenerator {
 
             instructionList.addInstruction(new Instruction("LOAD", 5));
             instructionList.addInstruction(new Instruction("SUB", 3));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("JUMP", 4));
+
+            //Place for setting result to 0 if result
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("JUMP", 7));
+
+            //Checking and changing result to negative if neccesery
+            //Checking if result should be with + or - and saving it to acc
+            instructionList.addInstruction(new Instruction("LOAD", 6));
+            instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("SUB", 3));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("LOAD", 3));
+
+
+
 
 
             //TODO negative result, using 0, and using bigger divisor than dividend
