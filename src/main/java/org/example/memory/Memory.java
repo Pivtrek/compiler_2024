@@ -30,6 +30,8 @@ public class Memory {
                     if (localVariable.getType().equals(Symbol.SymbolType.INT) || localVariable.getType().equals(Symbol.SymbolType.ITERATOR)){
                         addMemCell(localVariable.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
                     } else if (localVariable.getType().equals(Symbol.SymbolType.ARRAY)) {
+                        String nameLowerBound = localVariable.getName()+":lowerbound";
+                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, localVariable.getLowerBound());
                         for (int i=localVariable.getLowerBound(); i<=localVariable.getUpperBound();i++){
                             String name = localVariable.getName() + "[" + i + "]";
                             addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);

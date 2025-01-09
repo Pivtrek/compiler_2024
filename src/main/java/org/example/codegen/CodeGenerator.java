@@ -46,10 +46,31 @@ public class CodeGenerator {
         } else if (node instanceof GrammarParser.FORUPContext){
             generateForUp((GrammarParser.FORUPContext) node);
             return;
+        } else if (node instanceof GrammarParser.CALLPROCContext) {
+            generateProcCall((GrammarParser.CALLPROCContext) node);
+        } else if (node instanceof GrammarParser.WHILEContext) {
+            generateWhile((GrammarParser.WHILEContext) node);
+            return;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
         }
+    }
+
+    private void generateWhile(GrammarParser.WHILEContext whileContext){
+        //if acc >0 we do skip, condition not true, if acc =0 we do the condition
+        int startOfCondition = instructionList.getInstructions().size();
+        generateCondition(whileContext.condition());
+        instructionList.addInstruction(new Instruction("JPOS", 1));
+        int beforeCommands = instructionList.getInstructions().size();
+        traverse(whileContext.commands());
+        int afterCommands = instructionList.getInstructions().size();
+        instructionList.getInstructions().set(beforeCommands-1, new Instruction("JPOS", afterCommands-beforeCommands+2));
+        instructionList.addInstruction(new Instruction("JUMP", -(afterCommands - startOfCondition +1)));
+    }
+
+    private void generateProcCall(GrammarParser.CALLPROCContext callprocContext){
+
     }
 
     private void generateRead(GrammarParser.READContext readContext){
@@ -92,18 +113,19 @@ public class CodeGenerator {
         //taking iterator and giving him first value
         String scope = findEnclosingScope(forupContext);
         int iteratorRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText(), scope);
+        int forLenRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText() + "LEN", scope);
         //saving from value to r1 and to value to r2
         if (forupContext.value(0).NUM() != null){
             instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(0).NUM().getText())));
             instructionList.addInstruction(new Instruction("STORE", 1));
-            
+            memory.getMemCell(forupContext.PIDENTIFIER().getText(), scope).setValue(Integer.parseInt(forupContext.value(0).NUM().getText()));
         }
         else {
             String scopeOfVariable = findEnclosingScope(forupContext.value(0));
             int registerNumber = memory.resolveMemory(forupContext.value(0).identifier().getText(), scopeOfVariable, forupContext.value(0).identifier());
             instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             instructionList.addInstruction(new Instruction("STORE", 1));
-            
+            //TODO: IF STARTING VALUE IS IN MEMORY OF COMPILER ASSIGN IT TO INTEGER
         }
         if (forupContext.value(1).NUM() != null){
             instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(1).NUM().getText())));
@@ -116,13 +138,29 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 2));
         }
 
+        //before array there is memory with saved lowerbound of array
+        //TODO: HOW THE FUCK HANDLE USAGE OF ITERATOR ASS INDEX OF ARRAY
+
         instructionList.addInstruction(new Instruction("SET", 1));
         instructionList.addInstruction(new Instruction("STORE", 8)); //storing value "1" for loop iteration
         instructionList.addInstruction(new Instruction("LOAD", 1));
         instructionList.addInstruction(new Instruction("STORE", iteratorRegister));
-
-
-        //TODO: check if forupcontext pidentifier in resolve memory is working, and then find it in memory and assign value and continue bla bla bla
+        instructionList.addInstruction(new Instruction("LOAD", 2));
+        instructionList.addInstruction(new Instruction("SUB", 1));
+        instructionList.addInstruction(new Instruction("ADD", 8));
+        instructionList.addInstruction(new Instruction("STORE", forLenRegister)); //storing how many times loop should go
+        instructionList.addInstruction(new Instruction("JZERO", 1));
+        int beforeCommands = instructionList.getInstructions().size();
+        traverse(forupContext.commands());
+        instructionList.addInstruction(new Instruction("LOAD", iteratorRegister));
+        instructionList.addInstruction(new Instruction("ADD", 8));
+        instructionList.addInstruction(new Instruction("STORE", iteratorRegister));
+        instructionList.addInstruction(new Instruction("LOAD", forLenRegister));
+        instructionList.addInstruction(new Instruction("SUB", 8));
+        instructionList.addInstruction(new Instruction("STORE", forLenRegister));
+        int afterCommands = instructionList.getInstructions().size();
+        instructionList.addInstruction(new Instruction("JUMP",-(afterCommands-beforeCommands+1)));
+        instructionList.getInstructions().set(beforeCommands-1, new Instruction("JZERO", afterCommands-beforeCommands+2));
     }
 
     private void generateIfElse(GrammarParser.IFELSEContext ifelseContext){
@@ -383,7 +421,6 @@ public class CodeGenerator {
         } else if (assignContext.expression() instanceof GrammarParser.SUBContext subContext) {
             boolean first = false, second = false;
             int firstV=0,secondV = 0;
-
 
             if (subContext.value(1).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(1).NUM().getText())));
