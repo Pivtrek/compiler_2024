@@ -19,6 +19,7 @@ public class Memory {
         this.callProcNumber = callProcNumber;
         initializeRegister();
         initializeFromSymbolTable(symbolTable);
+        initializeStack();
     }
 
 
@@ -62,6 +63,13 @@ public class Memory {
         for (int i=0; i<nextFreeAdress; i++){
             String regName = "p" + i;
             register.put(regName, new MemCell(regName, "GLOBAL", MemCell.inputType.REGISTER, i, null));
+        }
+    }
+
+    private void initializeStack(){
+        for (int i=0; i<callProcNumber; i++){
+            String name = "stack:" + String.valueOf(i);
+            addMemCell(name, "GLOBAL", MemCell.inputType.INTEGER, null);
         }
     }
 

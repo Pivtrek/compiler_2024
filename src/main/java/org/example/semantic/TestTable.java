@@ -42,7 +42,7 @@ public class TestTable {
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
             semanticAnalysis.analyze(tree);
 
-            Memory memory = new Memory(symbolTable);
+            //Memory memory = new Memory(symbolTable);
 
 
             // 5. Przejdź po drzewie składniowym
