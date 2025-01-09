@@ -66,7 +66,7 @@ public class CodeGenerator {
         traverse(whileContext.commands());
         int afterCommands = instructionList.getInstructions().size();
         instructionList.getInstructions().set(beforeCommands-1, new Instruction("JPOS", afterCommands-beforeCommands+2));
-        instructionList.addInstruction(new Instruction("JUMP", -(afterCommands - startOfCondition +1)));
+        instructionList.addInstruction(new Instruction("JUMP", -(afterCommands - startOfCondition)));
     }
 
     private void generateProcCall(GrammarParser.CALLPROCContext callprocContext){
