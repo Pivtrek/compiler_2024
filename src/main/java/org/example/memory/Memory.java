@@ -11,10 +11,12 @@ public class Memory {
     private Map<String, MemCell> referenceMap;
     private Map<String, MemCell> register;
     private int nextFreeAdress = 11;
+    private Integer callProcNumber;
 
-    public Memory(SymbolTable symbolTable) {
+    public Memory(SymbolTable symbolTable, Integer callProcNumber) {
         this.memory = new HashMap<>();
         this.register = new HashMap<>(nextFreeAdress);
+        this.callProcNumber = callProcNumber;
         initializeRegister();
         initializeFromSymbolTable(symbolTable);
     }
