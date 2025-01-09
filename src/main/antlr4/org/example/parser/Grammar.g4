@@ -45,6 +45,7 @@ args_decl: args_decl COMMA T PIDENTIFIER #ARGSMUTLIARRDECL
 args: PIDENTIFIER (',' PIDENTIFIER)*;
 
 expression: value   #VALEXPR
+            | '-' value #NEGATE
             | value '+' value   #ADD
             | value '-' value   #SUB
             | value '*' value   #MUL
@@ -75,7 +76,7 @@ PROCEDURE: 'PROCEDURE';
 COMMA: ',';
 T: 'T';
 PIDENTIFIER: [_a-z]+;
-NUM: '-'? ('0' | [1-9] [0-9]*);
+NUM: ('0' | [1-9] [0-9]*);
 
 NOTEQUAL: '!=';
 LHBRACK: '[';

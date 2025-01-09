@@ -334,6 +334,18 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitVALEXPR(GrammarParser.VALEXPRContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code NEGATE}
+	 * labeled alternative in {@link GrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNEGATE(GrammarParser.NEGATEContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code NEGATE}
+	 * labeled alternative in {@link GrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNEGATE(GrammarParser.NEGATEContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ADD}
 	 * labeled alternative in {@link GrammarParser#expression}.
 	 * @param ctx the parse tree

@@ -202,6 +202,13 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVALEXPR(GrammarParser.VALEXPRContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code NEGATE}
+	 * labeled alternative in {@link GrammarParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNEGATE(GrammarParser.NEGATEContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ADD}
 	 * labeled alternative in {@link GrammarParser#expression}.
 	 * @param ctx the parse tree

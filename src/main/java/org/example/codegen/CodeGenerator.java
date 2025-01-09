@@ -380,6 +380,17 @@ public class CodeGenerator {
                 }
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
+        } else if (assignContext.expression() instanceof GrammarParser.NEGATEContext negateContext) {
+            if (negateContext.value().NUM() != null){
+                int num = Integer.parseInt(negateContext.value().NUM().getText());
+                memory.getMemCell(assignContext.identifier(), scope).setValue(-num);
+                instructionList.addInstruction(new Instruction("SET", -num));
+
+            } else if (negateContext.value().identifier() != null) {
+
+            }
+
+
         } else if (assignContext.expression() instanceof GrammarParser.ADDContext addContext ) {
             boolean first = false, second = false;
             int firstV=0,secondV = 0;
