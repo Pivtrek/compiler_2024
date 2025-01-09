@@ -33,7 +33,7 @@ public class Main {
             visitor.visit(tree);
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
             semanticAnalysis.analyze(tree);
-            Memory memory = new Memory(symbolTable);
+            Memory memory = new Memory(symbolTable, semanticAnalysis.getProcCallNumber());
             CodeGenerator codeGen = new CodeGenerator(memory, tree);
             codeGen.genereteCode();
             //codeGen.getInstructionList().writeToFile("examples/output/ex9.mr");
