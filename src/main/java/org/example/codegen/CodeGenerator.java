@@ -83,7 +83,7 @@ public class CodeGenerator {
     }
 
     private void generateProcCall(GrammarParser.CALLPROCContext callprocContext){
-
+        callprocContext.proc_call().PIDENTIFIER().getText();
     }
 
     private void generateRead(GrammarParser.READContext readContext){

@@ -41,7 +41,16 @@ public class Memory {
             }
             if (procedure.getParameters() != null){
                 for (Symbol parameter : procedure.getParameters()){
-                    //TODO: Mapping parameters to other MemCells
+                    if (parameter.getType().equals(Symbol.SymbolType.INT) || parameter.getType().equals(Symbol.SymbolType.ITERATOR)){
+                        addMemCell(parameter.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
+                    } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY)) {
+                        String nameLowerBound = parameter.getName()+":lowerbound";
+                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, parameter.getLowerBound());
+                        for (int i=parameter.getLowerBound(); i<=parameter.getUpperBound();i++){
+                            String name = parameter.getName() + "[" + i + "]";
+                            addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
+                        }
+                    }
                 }
             }
         }
