@@ -631,7 +631,7 @@ public class CodeGenerator {
             r2 - divisor
             r3 - result
             r4 - =0 r1 is positive =-1 is negative
-            r4 - =0 r2 is positive =-1 is negative
+            r5 - =0 r2 is positive =-1 is negative
             r6 - if 0 result should be positive, else negative
             at the end result goes to acc - r0
              */
@@ -737,7 +737,6 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("JZERO", 45));
 
             //Division
-
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("STORE", 4));
 
@@ -763,7 +762,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 4));
 
             instructionList.addInstruction(new Instruction("LOAD", 7));
-            instructionList.addInstruction(new Instruction("JZERO", 27)); //JUMP OUT OF DIVISION
+            instructionList.addInstruction(new Instruction("JZERO", 26)); //JUMP OUT OF DIVISION
             instructionList.addInstruction(new Instruction("SUB", 1));
             instructionList.addInstruction(new Instruction("JPOS", 14));
             instructionList.addInstruction(new Instruction("LOAD", 1));
