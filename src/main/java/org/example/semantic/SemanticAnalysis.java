@@ -167,6 +167,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitCALLPROC(GrammarParser.CALLPROCContext ctx) {
+        System.out.println("PROC CALL!!!");
         String procCallName = ctx.proc_call().PIDENTIFIER().getText();
         String currentProcedureName = findEnclosingScope(ctx);
 

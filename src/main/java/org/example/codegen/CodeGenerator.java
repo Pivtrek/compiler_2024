@@ -2,24 +2,30 @@ package org.example.codegen;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.example.memory.MemCell;
 import org.example.memory.Memory;
 import org.example.parser.GrammarParser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CodeGenerator {
     private Memory memory;
     private ParseTree tree;
     private InstructionList instructionList;
+    private Map<String, Integer> procedureAdresses;
 
     public CodeGenerator(Memory memory, ParseTree tree) {
         this.memory = memory;
         this.tree = tree;
         this.instructionList = new InstructionList();
+        this.procedureAdresses = new HashMap<>();
     }
 
     public void genereteCode(){
+        instructionList.addInstruction(new Instruction("JUMP", 0));
         traverse(tree);
         instructionList.addInstruction(new Instruction("HALT"));
     }
@@ -54,12 +60,53 @@ public class CodeGenerator {
         } else if (node instanceof GrammarParser.REPEATUNTILContext) {
             generateRepeatUntil((GrammarParser.REPEATUNTILContext) node);
             return;
+        } else if (node instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext ||
+                node instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext) {
+            generateProcedure(node);
+            return;
+        } else if (node instanceof GrammarParser.MAINDECLARATIONSContext || node instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext) {
+            generateMainProgram(node);
+            return;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
         }
     }
 
+    private void generateMainProgram(ParseTree node){
+        int mainProgramJumpAdress = instructionList.getInstructions().size();
+        instructionList.getInstructions().set(0,new Instruction("JUMP", mainProgramJumpAdress));
+        if (node instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext mainwithoutdeclarationsContext){
+            traverse(mainwithoutdeclarationsContext.commands());
+        } else if (node instanceof GrammarParser.MAINDECLARATIONSContext maindeclarationsContext) {
+            traverse(maindeclarationsContext.commands());
+        }
+    }
+
+    private void generateProcedure(ParseTree node){
+        if (node instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext procedureContext){
+            int procedureStartAdress = instructionList.getInstructions().size();
+            procedureAdresses.put(procedureContext.proc_head().PIDENTIFIER().getText(), procedureStartAdress);
+            traverse(procedureContext.commands());
+            //
+            instructionList.addInstruction(new Instruction("RTRN", 10));
+
+        } else if (node instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext procedureContext) {
+            int procedureStartAdress = instructionList.getInstructions().size();
+            procedureAdresses.put(procedureContext.proc_head().PIDENTIFIER().getText(), procedureStartAdress);
+            traverse(procedureContext.commands());
+            instructionList.addInstruction(new Instruction("RTRN", 10));
+        }
+    }
+
+    private void generateProcCall(GrammarParser.CALLPROCContext callprocContext){
+        String procedureName = callprocContext.proc_call().PIDENTIFIER().getText();
+        String currentScope = findEnclosingScope(callprocContext);
+        int procedureAdress = procedureAdresses.get(procedureName);
+        int currentLength = instructionList.getInstructions().size();
+        instructionList.addInstruction(new Instruction("JUMP", -(currentLength-procedureAdress)));
+
+    }
     private void generateRepeatUntil(GrammarParser.REPEATUNTILContext repeatuntilContext){
         //Repeat until condition has condition on the bottom of repeat commands, so it will turn on minimum once
         int beforeCommands = instructionList.getInstructions().size();
@@ -80,10 +127,6 @@ public class CodeGenerator {
         int afterCommands = instructionList.getInstructions().size();
         instructionList.getInstructions().set(beforeCommands-1, new Instruction("JPOS", afterCommands-beforeCommands+2));
         instructionList.addInstruction(new Instruction("JUMP", -(afterCommands - startOfCondition)));
-    }
-
-    private void generateProcCall(GrammarParser.CALLPROCContext callprocContext){
-        callprocContext.proc_call().PIDENTIFIER().getText();
     }
 
     private void generateRead(GrammarParser.READContext readContext){
