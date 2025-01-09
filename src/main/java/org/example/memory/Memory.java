@@ -10,7 +10,7 @@ public class Memory {
     private Map<String, MemCell> memory;
     private Map<String, MemCell> referenceMap;
     private Map<String, MemCell> register;
-    int nextFreeAdress = 11;
+    private int nextFreeAdress = 11;
 
     public Memory(SymbolTable symbolTable) {
         this.memory = new HashMap<>();
