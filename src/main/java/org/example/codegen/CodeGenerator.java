@@ -51,10 +51,23 @@ public class CodeGenerator {
         } else if (node instanceof GrammarParser.WHILEContext) {
             generateWhile((GrammarParser.WHILEContext) node);
             return;
+        } else if (node instanceof GrammarParser.REPEATUNTILContext) {
+            generateRepeatUntil((GrammarParser.REPEATUNTILContext) node);
+            return;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
         }
+    }
+
+    private void generateRepeatUntil(GrammarParser.REPEATUNTILContext repeatuntilContext){
+        //Repeat until condition has condition on the bottom of repeat commands, so it will turn on minimum once
+        int beforeCommands = instructionList.getInstructions().size();
+        traverse(repeatuntilContext.commands());
+        generateCondition(repeatuntilContext.condition());
+        int afterCommandsConditions = instructionList.getInstructions().size();
+        //if acc=0 -> repeat commands
+        instructionList.addInstruction(new Instruction("JPOS", -(afterCommandsConditions - beforeCommands )));
     }
 
     private void generateWhile(GrammarParser.WHILEContext whileContext){
