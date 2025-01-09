@@ -585,9 +585,16 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("LOAD", 3));
             instructionList.addInstruction(new Instruction("SUB", 2));
             instructionList.addInstruction(new Instruction("STORE", 2));
+
+            //checking if we are multiplying by 0
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 19));
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("JZERO", 17));
+
             //Multiplying
             instructionList.addInstruction(new Instruction("LOAD", 1));
-            instructionList.addInstruction(new Instruction("JZERO", 15));//exit number
+            instructionList.addInstruction(new Instruction("JZERO", 18));//exit number
             instructionList.addInstruction(new Instruction("HALF"));
             instructionList.addInstruction(new Instruction("ADD", 0));
             instructionList.addInstruction(new Instruction("SUB", 1));
@@ -602,6 +609,13 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("HALF"));
             instructionList.addInstruction(new Instruction("STORE", 1));
             instructionList.addInstruction(new Instruction("JUMP", (-15)));
+
+            //Place for setting result to 0 if result
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("JUMP", 7));
+
+
             //Checking if result should be with + or - and saving it to acc
             instructionList.addInstruction(new Instruction("LOAD", 6));
             instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
