@@ -13,6 +13,8 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
     private final SymbolTable symbolTable;
     private final ErrorColector errorColector;
 
+    private int procCallNumber = 0;
+
     public SemanticAnalysis(SymbolTable symbolTable, ErrorColector errorColector) {
         this.symbolTable = symbolTable;
         this.errorColector = errorColector;
@@ -167,6 +169,7 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
 
     @Override
     public Void visitCALLPROC(GrammarParser.CALLPROCContext ctx) {
+        procCallNumber +=1;
         String procCallName = ctx.proc_call().PIDENTIFIER().getText();
         String currentProcedureName = findEnclosingScope(ctx);
 
@@ -222,6 +225,10 @@ public class SemanticAnalysis extends GrammarBaseVisitor<Void> {
                 }
             }
         }
+    }
+
+    public int getProcCallNumber() {
+        return procCallNumber;
     }
 
     private void checkArrayUsage(Object ctx){

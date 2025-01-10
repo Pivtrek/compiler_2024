@@ -10,13 +10,16 @@ public class Memory {
     private Map<String, MemCell> memory;
     private Map<String, MemCell> referenceMap;
     private Map<String, MemCell> register;
-    int nextFreeAdress = 8;
+    private int nextFreeAdress = 11;
+    private Integer callProcNumber;
 
-    public Memory(SymbolTable symbolTable) {
+    public Memory(SymbolTable symbolTable, Integer callProcNumber) {
         this.memory = new HashMap<>();
-        this.register = new HashMap<>(8);
+        this.register = new HashMap<>(nextFreeAdress);
+        this.callProcNumber = callProcNumber;
         initializeRegister();
         initializeFromSymbolTable(symbolTable);
+        initializeStack();
     }
 
 
@@ -30,6 +33,8 @@ public class Memory {
                     if (localVariable.getType().equals(Symbol.SymbolType.INT) || localVariable.getType().equals(Symbol.SymbolType.ITERATOR)){
                         addMemCell(localVariable.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
                     } else if (localVariable.getType().equals(Symbol.SymbolType.ARRAY)) {
+                        String nameLowerBound = localVariable.getName()+":lowerbound";
+                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, localVariable.getLowerBound());
                         for (int i=localVariable.getLowerBound(); i<=localVariable.getUpperBound();i++){
                             String name = localVariable.getName() + "[" + i + "]";
                             addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
@@ -39,7 +44,18 @@ public class Memory {
             }
             if (procedure.getParameters() != null){
                 for (Symbol parameter : procedure.getParameters()){
-                    //TODO: Mapping parameters to other MemCells
+                    if (parameter.getType().equals(Symbol.SymbolType.INT) || parameter.getType().equals(Symbol.SymbolType.ITERATOR)){
+                        addMemCell(parameter.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
+                    } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY)) {
+                        String nameLowerBound = parameter.getName()+":lowerbound";
+                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, parameter.getLowerBound());
+//                        cannot create memcells for array, dont know how many are needed,
+//                        they are produced in calling procedure, there we have range of array
+//                        for (int i=parameter.getLowerBound(); i<=parameter.getUpperBound();i++){
+//                            String name = parameter.getName() + "[" + i + "]";
+//                            addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
+//                        }
+                    }
                 }
             }
         }
@@ -52,7 +68,14 @@ public class Memory {
         }
     }
 
-    private void addMemCell(String name, String scope, MemCell.inputType inputType, Integer value){
+    private void initializeStack(){
+        for (int i=0; i<=callProcNumber; i++){
+            String name = "stack:" + String.valueOf(i);
+            addMemCell(name, "GLOBAL", MemCell.inputType.INTEGER, null);
+        }
+    }
+
+    public void addMemCell(String name, String scope, MemCell.inputType inputType, Integer value){
         String memName = name + ":" + scope;
         memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
         nextFreeAdress+=1;
@@ -96,5 +119,14 @@ public class Memory {
             return memCell.getRegisterNumber();
         }
         throw new RuntimeException("CANNOT RESOLVE MEMORY ACCESS");
+    }
+    public int resolveMemory(String name, String scope) {
+        String key = name + ":" + scope;
+        MemCell memCell = memory.get(key);
+
+        if (memCell == null) {
+            throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
+        }
+        return memCell.getRegisterNumber();
     }
 }

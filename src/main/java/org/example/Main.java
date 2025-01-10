@@ -21,7 +21,7 @@ public class Main {
 
         try {
 
-            String filePath = "examples/ex7.imp";
+            String filePath = "examples/example7.imp";
             String code = Files.readString(Paths.get(filePath));
             GrammarLexer lexer = new GrammarLexer(CharStreams.fromString(code));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -33,10 +33,10 @@ public class Main {
             visitor.visit(tree);
             SemanticAnalysis semanticAnalysis = new SemanticAnalysis(symbolTable, errorColector);
             semanticAnalysis.analyze(tree);
-            Memory memory = new Memory(symbolTable);
-            CodeGenerator codeGen = new CodeGenerator(memory, tree);
+            Memory memory = new Memory(symbolTable, semanticAnalysis.getProcCallNumber());
+            CodeGenerator codeGen = new CodeGenerator(memory, tree, symbolTable);
             codeGen.genereteCode();
-            codeGen.getInstructionList().writeToFile("examples/output/ex7.mr");
+            codeGen.getInstructionList().writeToFile("examples/output/example7.mr");
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
 

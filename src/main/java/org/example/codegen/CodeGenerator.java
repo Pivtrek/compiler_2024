@@ -2,24 +2,39 @@ package org.example.codegen;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.example.memory.MemCell;
 import org.example.memory.Memory;
 import org.example.parser.GrammarParser;
+import org.example.semantic.Symbol;
+import org.example.semantic.SymbolTable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CodeGenerator {
     private Memory memory;
     private ParseTree tree;
     private InstructionList instructionList;
+    private Map<String, Integer> procedureAdresses;
+    private SymbolTable symbolTable;
 
-    public CodeGenerator(Memory memory, ParseTree tree) {
+    private int stackIndex = 1;
+
+    public CodeGenerator(Memory memory, ParseTree tree, SymbolTable symbolTable) {
         this.memory = memory;
         this.tree = tree;
         this.instructionList = new InstructionList();
+        this.procedureAdresses = new HashMap<>();
+        this.symbolTable = symbolTable;
     }
 
     public void genereteCode(){
+        instructionList.addInstruction(new Instruction("SET",stackIndex));
+        int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
+        instructionList.addInstruction(new Instruction("STORE",stackPointerRegister));
+        instructionList.addInstruction(new Instruction("JUMP", 0));
         traverse(tree);
         instructionList.addInstruction(new Instruction("HALT"));
     }
@@ -43,10 +58,156 @@ public class CodeGenerator {
         } else if (node instanceof GrammarParser.IFELSEContext) {
             generateIfElse((GrammarParser.IFELSEContext) node);
             return; ////without return commands inside if else commands are produced twice
+        } else if (node instanceof GrammarParser.FORUPContext){
+            generateForUp((GrammarParser.FORUPContext) node);
+            return;
+        } else if (node instanceof GrammarParser.CALLPROCContext) {
+            generateProcCall((GrammarParser.CALLPROCContext) node);
+        } else if (node instanceof GrammarParser.WHILEContext) {
+            generateWhile((GrammarParser.WHILEContext) node);
+            return;
+        } else if (node instanceof GrammarParser.REPEATUNTILContext) {
+            generateRepeatUntil((GrammarParser.REPEATUNTILContext) node);
+            return;
+        } else if (node instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext ||
+                node instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext) {
+            generateProcedure(node);
+            return;
+        } else if (node instanceof GrammarParser.MAINDECLARATIONSContext || node instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext) {
+            generateMainProgram(node);
+            return;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             traverse(node.getChild(i));
         }
+    }
+
+    private void generateMainProgram(ParseTree node){
+        int mainProgramJumpAdress = instructionList.getInstructions().size()-2;
+        instructionList.getInstructions().set(2,new Instruction("JUMP", mainProgramJumpAdress));
+        if (node instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext mainwithoutdeclarationsContext){
+            traverse(mainwithoutdeclarationsContext.commands());
+        } else if (node instanceof GrammarParser.MAINDECLARATIONSContext maindeclarationsContext) {
+            traverse(maindeclarationsContext.commands());
+        }
+    }
+
+    private void generateProcedure(ParseTree node){
+        if (node instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext procedureContext){
+            int procedureStartAdress = instructionList.getInstructions().size();
+            procedureAdresses.put(procedureContext.proc_head().PIDENTIFIER().getText(), procedureStartAdress);
+            traverse(procedureContext.commands());
+
+            //getting back from procedure
+            int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
+            instructionList.addInstruction(new Instruction("SET",-1));
+            instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
+            instructionList.addInstruction(new Instruction("STORE", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("SET", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("ADD", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("LOADI", 0));
+            instructionList.addInstruction(new Instruction("STORE", 10));
+            instructionList.addInstruction(new Instruction("RTRN", 10));
+
+        } else if (node instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext procedureContext) {
+            int procedureStartAdress = instructionList.getInstructions().size();
+            procedureAdresses.put(procedureContext.proc_head().PIDENTIFIER().getText(), procedureStartAdress);
+            traverse(procedureContext.commands());
+            //getting back from procedure
+            int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
+            instructionList.addInstruction(new Instruction("SET",-1));
+            instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
+            instructionList.addInstruction(new Instruction("STORE", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("SET", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("ADD", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("LOADI", 0));
+            instructionList.addInstruction(new Instruction("STORE", 10));
+            instructionList.addInstruction(new Instruction("RTRN", 10));
+        }
+    }
+
+    private void generateProcCall(GrammarParser.CALLPROCContext callprocContext){
+        String procedureName = callprocContext.proc_call().PIDENTIFIER().getText();
+        String currentScope = findEnclosingScope(callprocContext);
+        int procedureAdress = procedureAdresses.get(procedureName);
+
+        //Set parameters of procedured called with given values
+        int lenghtBeforeAssignment = instructionList.getInstructions().size();
+        for (int i = 0; i < symbolTable.getSymbol(procedureName).getParameters().size(); i++) {
+            Symbol parameter = symbolTable.getSymbol(procedureName).getParameters().get(i);
+            if(parameter.getType().equals(Symbol.SymbolType.INT)){
+                String argumentName = callprocContext.proc_call().args().PIDENTIFIER(i).getText();
+                String parameterName = parameter.getName();
+                int argumentRegister = memory.getMemCell(argumentName, currentScope).getRegisterNumber();
+                int parameterRegister = memory.getMemCell(parameterName, procedureName).getRegisterNumber();
+                instructionList.addInstruction(new Instruction("LOAD", argumentRegister));
+                instructionList.addInstruction(new Instruction("STORE", parameterRegister));
+            } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY) && symbolTable.getSymbol(currentScope).getLocalVariables() != null) {
+                String argumentName = callprocContext.proc_call().args().PIDENTIFIER(i).getText();
+                String parameterName = parameter.getName();
+                for (Symbol array: symbolTable.getSymbol(currentScope).getLocalVariables()) {
+                    if (array.getType().equals(Symbol.SymbolType.ARRAY) && array.getName().equals(argumentName)){
+                        for (int j = array.getLowerBound(); j <= array.getUpperBound(); j++) {
+                            String arrayName = parameterName + "[" + j + "]";
+                            memory.addMemCell(arrayName, procedureName, MemCell.inputType.ARRAY, null);
+                            String argumentArray = argumentName + "[" + j + "]";
+                            int argumentRegister = memory.resolveMemory(argumentArray, currentScope);
+                            int parameterRegister = memory.resolveMemory(arrayName, procedureName);
+                            instructionList.addInstruction(new Instruction("LOAD", argumentRegister));
+                            instructionList.addInstruction(new Instruction("STORE", parameterRegister));
+                        }
+                    }
+                }
+            }
+        }
+        int lengthAfterAssignment = instructionList.getInstructions().size();
+        //getting rtrn adress to p10 and stack
+        int getBackAdress = instructionList.getInstructions().size() + 10;
+        int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
+        instructionList.addInstruction(new Instruction("SET", stackPointerRegister));
+        instructionList.addInstruction(new Instruction("ADD", stackPointerRegister));
+        instructionList.addInstruction(new Instruction("STORE", 9));
+        instructionList.addInstruction(new Instruction("SET", getBackAdress));
+        instructionList.addInstruction(new Instruction("STORE",10));
+        instructionList.addInstruction(new Instruction("STOREI",9));
+
+        //Stack pointer +1
+        instructionList.addInstruction(new Instruction("SET",1));
+        instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
+        instructionList.addInstruction(new Instruction("STORE", stackPointerRegister));
+
+        //jump to procedure
+        int currentLength = instructionList.getInstructions().size();
+        instructionList.addInstruction(new Instruction("JUMP", -(currentLength-procedureAdress)));
+
+        //Writing parameters again to arguments in program
+        for (int i = lenghtBeforeAssignment; i <lengthAfterAssignment ; i=i+2) {
+            int loadRegister = instructionList.getInstructions().get(i).getOperand();
+            int storeRegister = instructionList.getInstructions().get(i+1).getOperand();
+            instructionList.addInstruction(new Instruction("LOAD", storeRegister));
+            instructionList.addInstruction(new Instruction("STORE", loadRegister));
+        }
+    }
+    private void generateRepeatUntil(GrammarParser.REPEATUNTILContext repeatuntilContext){
+        //Repeat until condition has condition on the bottom of repeat commands, so it will turn on minimum once
+        int beforeCommands = instructionList.getInstructions().size();
+        traverse(repeatuntilContext.commands());
+        generateCondition(repeatuntilContext.condition());
+        int afterCommandsConditions = instructionList.getInstructions().size();
+        //if acc=0 -> repeat commands
+        instructionList.addInstruction(new Instruction("JPOS", -(afterCommandsConditions - beforeCommands )));
+    }
+
+    private void generateWhile(GrammarParser.WHILEContext whileContext){
+        //if acc >0 we do skip, condition not true, if acc =0 we do the condition
+        int startOfCondition = instructionList.getInstructions().size();
+        generateCondition(whileContext.condition());
+        instructionList.addInstruction(new Instruction("JPOS", 1));
+        int beforeCommands = instructionList.getInstructions().size();
+        traverse(whileContext.commands());
+        int afterCommands = instructionList.getInstructions().size();
+        instructionList.getInstructions().set(beforeCommands-1, new Instruction("JPOS", afterCommands-beforeCommands+2));
+        instructionList.addInstruction(new Instruction("JUMP", -(afterCommands - startOfCondition)));
     }
 
     private void generateRead(GrammarParser.READContext readContext){
@@ -83,6 +244,60 @@ public class CodeGenerator {
 
         //after completing handling right hand side of assign, value of it its in p0 and goes to variable
         instructionList.addInstruction(new Instruction("STORE", registerNumber));
+    }
+
+    private void generateForUp(GrammarParser.FORUPContext forupContext){
+        //taking iterator and giving him first value
+        String scope = findEnclosingScope(forupContext);
+        int iteratorRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText(), scope);
+        int forLenRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText() + "LEN", scope);
+        //saving from value to r1 and to value to r2
+        if (forupContext.value(0).NUM() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(0).NUM().getText())));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            memory.getMemCell(forupContext.PIDENTIFIER().getText(), scope).setValue(Integer.parseInt(forupContext.value(0).NUM().getText()));
+        }
+        else {
+            String scopeOfVariable = findEnclosingScope(forupContext.value(0));
+            int registerNumber = memory.resolveMemory(forupContext.value(0).identifier().getText(), scopeOfVariable, forupContext.value(0).identifier());
+            instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            //TODO: IF STARTING VALUE IS IN MEMORY OF COMPILER ASSIGN IT TO INTEGER
+        }
+        if (forupContext.value(1).NUM() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(1).NUM().getText())));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+        }
+        else {
+            String scopeOfVariable = findEnclosingScope(forupContext.value(1));
+            int registerNumber = memory.resolveMemory(forupContext.value(1).identifier().getText(), scopeOfVariable, forupContext.value(1).identifier());
+            instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+        }
+
+        //before array there is memory with saved lowerbound of array
+        //TODO: HOW THE FUCK HANDLE USAGE OF ITERATOR ASS INDEX OF ARRAY
+
+        instructionList.addInstruction(new Instruction("SET", 1));
+        instructionList.addInstruction(new Instruction("STORE", 8)); //storing value "1" for loop iteration
+        instructionList.addInstruction(new Instruction("LOAD", 1));
+        instructionList.addInstruction(new Instruction("STORE", iteratorRegister));
+        instructionList.addInstruction(new Instruction("LOAD", 2));
+        instructionList.addInstruction(new Instruction("SUB", 1));
+        instructionList.addInstruction(new Instruction("ADD", 8));
+        instructionList.addInstruction(new Instruction("STORE", forLenRegister)); //storing how many times loop should go
+        instructionList.addInstruction(new Instruction("JZERO", 1));
+        int beforeCommands = instructionList.getInstructions().size();
+        traverse(forupContext.commands());
+        instructionList.addInstruction(new Instruction("LOAD", iteratorRegister));
+        instructionList.addInstruction(new Instruction("ADD", 8));
+        instructionList.addInstruction(new Instruction("STORE", iteratorRegister));
+        instructionList.addInstruction(new Instruction("LOAD", forLenRegister));
+        instructionList.addInstruction(new Instruction("SUB", 8));
+        instructionList.addInstruction(new Instruction("STORE", forLenRegister));
+        int afterCommands = instructionList.getInstructions().size();
+        instructionList.addInstruction(new Instruction("JUMP",-(afterCommands-beforeCommands+1)));
+        instructionList.getInstructions().set(beforeCommands-1, new Instruction("JZERO", afterCommands-beforeCommands+2));
     }
 
     private void generateIfElse(GrammarParser.IFELSEContext ifelseContext){
@@ -302,6 +517,17 @@ public class CodeGenerator {
                 }
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
+        } else if (assignContext.expression() instanceof GrammarParser.NEGATEContext negateContext) {
+            if (negateContext.value().NUM() != null){
+                int num = Integer.parseInt(negateContext.value().NUM().getText());
+                memory.getMemCell(assignContext.identifier(), scope).setValue(-num);
+                instructionList.addInstruction(new Instruction("SET", -num));
+
+            } else if (negateContext.value().identifier() != null) {
+
+            }
+
+
         } else if (assignContext.expression() instanceof GrammarParser.ADDContext addContext ) {
             boolean first = false, second = false;
             int firstV=0,secondV = 0;
@@ -343,7 +569,6 @@ public class CodeGenerator {
         } else if (assignContext.expression() instanceof GrammarParser.SUBContext subContext) {
             boolean first = false, second = false;
             int firstV=0,secondV = 0;
-
 
             if (subContext.value(1).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(1).NUM().getText())));
@@ -484,9 +709,16 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("LOAD", 3));
             instructionList.addInstruction(new Instruction("SUB", 2));
             instructionList.addInstruction(new Instruction("STORE", 2));
+
+            //checking if we are multiplying by 0
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 19));
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("JZERO", 17));
+
             //Multiplying
             instructionList.addInstruction(new Instruction("LOAD", 1));
-            instructionList.addInstruction(new Instruction("JZERO", 15));//exit number
+            instructionList.addInstruction(new Instruction("JZERO", 18));//exit number
             instructionList.addInstruction(new Instruction("HALF"));
             instructionList.addInstruction(new Instruction("ADD", 0));
             instructionList.addInstruction(new Instruction("SUB", 1));
@@ -501,6 +733,13 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("HALF"));
             instructionList.addInstruction(new Instruction("STORE", 1));
             instructionList.addInstruction(new Instruction("JUMP", (-15)));
+
+            //Place for setting result to 0 if result
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("JUMP", 7));
+
+
             //Checking if result should be with + or - and saving it to acc
             instructionList.addInstruction(new Instruction("LOAD", 6));
             instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
@@ -516,7 +755,7 @@ public class CodeGenerator {
             r2 - divisor
             r3 - result
             r4 - =0 r1 is positive =-1 is negative
-            r4 - =0 r2 is positive =-1 is negative
+            r5 - =0 r2 is positive =-1 is negative
             r6 - if 0 result should be positive, else negative
             at the end result goes to acc - r0
              */
@@ -614,8 +853,14 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("LOAD", 3));
             instructionList.addInstruction(new Instruction("SUB", 2));
             instructionList.addInstruction(new Instruction("STORE", 2));
-            //Division
 
+            //checking if we are multiplying by 0
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 47));
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("JZERO", 45));
+
+            //Division
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("STORE", 4));
 
@@ -641,7 +886,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 4));
 
             instructionList.addInstruction(new Instruction("LOAD", 7));
-            instructionList.addInstruction(new Instruction("JZERO", 24)); //JUMP OUT OF DIVISION
+            instructionList.addInstruction(new Instruction("JZERO", 26)); //JUMP OUT OF DIVISION
             instructionList.addInstruction(new Instruction("SUB", 1));
             instructionList.addInstruction(new Instruction("JPOS", 14));
             instructionList.addInstruction(new Instruction("LOAD", 1));
@@ -665,6 +910,11 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 4));
             instructionList.addInstruction(new Instruction("JUMP", -23));
 
+            //Place for setting result to 0 if result
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("JUMP", 7));
+
             //Checking if result should be with + or - and saving it to acc
             instructionList.addInstruction(new Instruction("LOAD", 6));
             instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
@@ -673,7 +923,6 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 3));
             instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
 
-            //TODO: cant provoke to negative result TO DEBUG, WHY THATS NOT WORK ?
         }
         else if (assignContext.expression() instanceof GrammarParser.MODContext modContext) {
              /*
@@ -682,7 +931,7 @@ public class CodeGenerator {
             r2 - multiplicand
             r3 - result
             r4 - =0 r1 is positive =-1 is negative
-            r4 - =0 r2 is positive =-1 is negative
+            r5 - =0 r2 is positive =-1 is negative
             r6 - if 0 result should be positive, else negative
             at the end result goes to acc - r0
              */
@@ -763,10 +1012,20 @@ public class CodeGenerator {
             if (first && second){
                 memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
             }
-            //Checking if result of multiplying should be + or - and saving it to r6
-            instructionList.addInstruction(new Instruction("LOAD", 4));
-            instructionList.addInstruction(new Instruction("SUB", 5));
+            //checking if we are multiplying by 0
+            instructionList.addInstruction(new Instruction("LOAD", 1));
+            instructionList.addInstruction(new Instruction("JZERO", 93));
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("JZERO", 95));
+
+            //Checking if result of mod should be + or - and saving it to r6
+            instructionList.addInstruction(new Instruction("LOAD", 5));
+            instructionList.addInstruction(new Instruction("JZERO", 4));
+            instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("STORE", 6));
+            instructionList.addInstruction(new Instruction("JUMP", 2));
+            instructionList.addInstruction(new Instruction("STORE", 6));
+
             instructionList.addInstruction(new Instruction("LOAD", 1)); //check r1 if negative change its value to positive
             instructionList.addInstruction(new Instruction("JZERO", 5));
             instructionList.addInstruction(new Instruction("JPOS", 4));
@@ -785,7 +1044,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("LOAD", 1));
             instructionList.addInstruction(new Instruction("STORE", 5));
 
-            //division
+            //modulo
 
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("STORE", 4));
@@ -878,9 +1137,22 @@ public class CodeGenerator {
 
             instructionList.addInstruction(new Instruction("LOAD", 5));
             instructionList.addInstruction(new Instruction("SUB", 3));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("JUMP", 4));
 
+            //Place for setting result to 0 if result
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("JUMP", 7));
 
-            //TODO negative result, using 0, and using bigger divisor than dividend
+            //Checking and changing result to negative if neccesery
+            //Checking if result should be with + or - and saving it to acc
+            instructionList.addInstruction(new Instruction("LOAD", 6));
+            instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("SUB", 3));
+            instructionList.addInstruction(new Instruction("STORE", 3));
+            instructionList.addInstruction(new Instruction("LOAD", 3));
 
         }
 
