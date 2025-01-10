@@ -49,10 +49,12 @@ public class Memory {
                     } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY)) {
                         String nameLowerBound = parameter.getName()+":lowerbound";
                         addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, parameter.getLowerBound());
-                        for (int i=parameter.getLowerBound(); i<=parameter.getUpperBound();i++){
-                            String name = parameter.getName() + "[" + i + "]";
-                            addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
-                        }
+//                        cannot create memcells for array, dont know how many are needed,
+//                        they are produced in calling procedure, there we have range of array
+//                        for (int i=parameter.getLowerBound(); i<=parameter.getUpperBound();i++){
+//                            String name = parameter.getName() + "[" + i + "]";
+//                            addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
+//                        }
                     }
                 }
             }
@@ -73,7 +75,7 @@ public class Memory {
         }
     }
 
-    private void addMemCell(String name, String scope, MemCell.inputType inputType, Integer value){
+    public void addMemCell(String name, String scope, MemCell.inputType inputType, Integer value){
         String memName = name + ":" + scope;
         memory.put(memName, new MemCell(name, scope, inputType, nextFreeAdress, value));
         nextFreeAdress+=1;

@@ -6,6 +6,8 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.example.memory.MemCell;
 import org.example.memory.Memory;
 import org.example.parser.GrammarParser;
+import org.example.semantic.Symbol;
+import org.example.semantic.SymbolTable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +18,14 @@ public class CodeGenerator {
     private ParseTree tree;
     private InstructionList instructionList;
     private Map<String, Integer> procedureAdresses;
+    private SymbolTable symbolTable;
 
-    public CodeGenerator(Memory memory, ParseTree tree) {
+    public CodeGenerator(Memory memory, ParseTree tree, SymbolTable symbolTable) {
         this.memory = memory;
         this.tree = tree;
         this.instructionList = new InstructionList();
         this.procedureAdresses = new HashMap<>();
+        this.symbolTable = symbolTable;
     }
 
     public void genereteCode(){
@@ -88,7 +92,6 @@ public class CodeGenerator {
             int procedureStartAdress = instructionList.getInstructions().size();
             procedureAdresses.put(procedureContext.proc_head().PIDENTIFIER().getText(), procedureStartAdress);
             traverse(procedureContext.commands());
-            //
             instructionList.addInstruction(new Instruction("RTRN", 10));
 
         } else if (node instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext procedureContext) {
@@ -103,6 +106,37 @@ public class CodeGenerator {
         String procedureName = callprocContext.proc_call().PIDENTIFIER().getText();
         String currentScope = findEnclosingScope(callprocContext);
         int procedureAdress = procedureAdresses.get(procedureName);
+
+        //Set parameters of procedured called with given values
+
+        for (int i = 0; i < symbolTable.getSymbol(procedureName).getParameters().size(); i++) {
+            Symbol parameter = symbolTable.getSymbol(procedureName).getParameters().get(i);
+            if(parameter.getType().equals(Symbol.SymbolType.INT)){
+                String argumentName = callprocContext.proc_call().args().PIDENTIFIER(i).getText();
+                String parameterName = parameter.getName();
+                int argumentRegister = memory.getMemCell(argumentName, currentScope).getRegisterNumber();
+                int parameterRegister = memory.getMemCell(parameterName, procedureName).getRegisterNumber();
+                instructionList.addInstruction(new Instruction("LOAD", argumentRegister));
+                instructionList.addInstruction(new Instruction("STORE", parameterRegister));
+            } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY) && symbolTable.getSymbol(currentScope).getLocalVariables() != null) {
+                String argumentName = callprocContext.proc_call().args().PIDENTIFIER(i).getText();
+                String parameterName = parameter.getName();
+                for (Symbol array: symbolTable.getSymbol(currentScope).getLocalVariables()) {
+                    if (array.getType().equals(Symbol.SymbolType.ARRAY) && array.getName().equals(argumentName)){
+                        for (int j = array.getLowerBound(); j <= array.getUpperBound(); j++) {
+                            String arrayName = parameterName + "[" + j + "]";
+                            memory.addMemCell(arrayName, procedureName, MemCell.inputType.ARRAY, null);
+                            String argumentArray = argumentName + "[" + j + "]";
+                            int argumentRegister = memory.resolveMemory(argumentArray, currentScope);
+                            int parameterRegister = memory.resolveMemory(arrayName, procedureName);
+                            instructionList.addInstruction(new Instruction("LOAD", argumentRegister));
+                            instructionList.addInstruction(new Instruction("STORE", parameterRegister));
+                        }
+                    }
+                }
+            }
+        }
+
         int currentLength = instructionList.getInstructions().size();
         instructionList.addInstruction(new Instruction("JUMP", -(currentLength-procedureAdress)));
 
