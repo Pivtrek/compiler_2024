@@ -20,6 +20,8 @@ public class CodeGenerator {
     private Map<String, Integer> procedureAdresses;
     private SymbolTable symbolTable;
 
+    private int stackIndex = 1;
+
     public CodeGenerator(Memory memory, ParseTree tree, SymbolTable symbolTable) {
         this.memory = memory;
         this.tree = tree;
@@ -29,6 +31,9 @@ public class CodeGenerator {
     }
 
     public void genereteCode(){
+        instructionList.addInstruction(new Instruction("SET",stackIndex));
+        int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
+        instructionList.addInstruction(new Instruction("STORE",stackPointerRegister));
         instructionList.addInstruction(new Instruction("JUMP", 0));
         traverse(tree);
         instructionList.addInstruction(new Instruction("HALT"));
@@ -79,7 +84,7 @@ public class CodeGenerator {
 
     private void generateMainProgram(ParseTree node){
         int mainProgramJumpAdress = instructionList.getInstructions().size();
-        instructionList.getInstructions().set(0,new Instruction("JUMP", mainProgramJumpAdress));
+        instructionList.getInstructions().set(3,new Instruction("JUMP", mainProgramJumpAdress));
         if (node instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext mainwithoutdeclarationsContext){
             traverse(mainwithoutdeclarationsContext.commands());
         } else if (node instanceof GrammarParser.MAINDECLARATIONSContext maindeclarationsContext) {
@@ -148,6 +153,14 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", loadRegister));
 
         }
+
+        int getBackAdress = instructionList.getInstructions().size() + 5;
+        int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
+        int stackRegister = memory.resolveMemory("stack:"+stackIndex,"GLOBAL");
+        instructionList.addInstruction(new Instruction("SET", getBackAdress));
+        instructionList.addInstruction(new Instruction("STORE",10));
+
+        instructionList.addInstruction(new Instruction("LOAD", stackPointerRegister));
 
     }
     private void generateRepeatUntil(GrammarParser.REPEATUNTILContext repeatuntilContext){
