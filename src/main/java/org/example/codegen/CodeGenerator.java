@@ -108,7 +108,7 @@ public class CodeGenerator {
         int procedureAdress = procedureAdresses.get(procedureName);
 
         //Set parameters of procedured called with given values
-
+        int lenghtBeforeAssignment = instructionList.getInstructions().size();
         for (int i = 0; i < symbolTable.getSymbol(procedureName).getParameters().size(); i++) {
             Symbol parameter = symbolTable.getSymbol(procedureName).getParameters().get(i);
             if(parameter.getType().equals(Symbol.SymbolType.INT)){
@@ -139,6 +139,15 @@ public class CodeGenerator {
 
         int currentLength = instructionList.getInstructions().size();
         instructionList.addInstruction(new Instruction("JUMP", -(currentLength-procedureAdress)));
+        //Writing parameters again to arguments in program
+        for (int i = lenghtBeforeAssignment; i < currentLength; i=i+2) {
+            int loadRegister = instructionList.getInstructions().get(i).getOperand();
+            int storeRegister = instructionList.getInstructions().get(i+1).getOperand();
+
+            instructionList.addInstruction(new Instruction("LOAD", storeRegister));
+            instructionList.addInstruction(new Instruction("STORE", loadRegister));
+
+        }
 
     }
     private void generateRepeatUntil(GrammarParser.REPEATUNTILContext repeatuntilContext){
