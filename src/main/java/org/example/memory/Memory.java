@@ -69,7 +69,7 @@ public class Memory {
     }
 
     private void initializeStack(){
-        for (int i=0; i<callProcNumber; i++){
+        for (int i=0; i<=callProcNumber; i++){
             String name = "stack:" + String.valueOf(i);
             addMemCell(name, "GLOBAL", MemCell.inputType.INTEGER, null);
         }
