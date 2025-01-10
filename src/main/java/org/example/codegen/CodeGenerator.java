@@ -1116,12 +1116,6 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 3));
             instructionList.addInstruction(new Instruction("LOAD", 3));
 
-
-
-
-
-            //TODO negative result, using 0, and using bigger divisor than dividend
-
         }
 
     }
