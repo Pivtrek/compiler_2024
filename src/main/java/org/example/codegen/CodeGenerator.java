@@ -83,7 +83,7 @@ public class CodeGenerator {
     }
 
     private void generateMainProgram(ParseTree node){
-        int mainProgramJumpAdress = instructionList.getInstructions().size();
+        int mainProgramJumpAdress = instructionList.getInstructions().size()-2;
         instructionList.getInstructions().set(2,new Instruction("JUMP", mainProgramJumpAdress));
         if (node instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext mainwithoutdeclarationsContext){
             traverse(mainwithoutdeclarationsContext.commands());
@@ -99,7 +99,6 @@ public class CodeGenerator {
             traverse(procedureContext.commands());
 
             //getting back from procedure
-            stackIndex-=1;
             int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
             instructionList.addInstruction(new Instruction("SET",-1));
             instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
@@ -111,7 +110,6 @@ public class CodeGenerator {
             procedureAdresses.put(procedureContext.proc_head().PIDENTIFIER().getText(), procedureStartAdress);
             traverse(procedureContext.commands());
             //getting back from procedure
-            stackIndex-=1;
             int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
             instructionList.addInstruction(new Instruction("SET",-1));
             instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
@@ -154,17 +152,18 @@ public class CodeGenerator {
                 }
             }
         }
-
+        int lengthAfterAssignment = instructionList.getInstructions().size();
         //getting rtrn adress to p10 and stack
-        int getBackAdress = instructionList.getInstructions().size() + 7;
+        int getBackAdress = instructionList.getInstructions().size() + 10;
         int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
-        int currentStackRegister = memory.resolveMemory("stack:"+stackIndex,"GLOBAL");
+        instructionList.addInstruction(new Instruction("SET", stackPointerRegister));
+        instructionList.addInstruction(new Instruction("ADD", stackPointerRegister));
+        instructionList.addInstruction(new Instruction("STORE", 9));
         instructionList.addInstruction(new Instruction("SET", getBackAdress));
         instructionList.addInstruction(new Instruction("STORE",10));
-        instructionList.addInstruction(new Instruction("STORE",currentStackRegister));
+        instructionList.addInstruction(new Instruction("STOREI",9));
 
         //Stack pointer +1
-        stackIndex+=1; //in memory
         instructionList.addInstruction(new Instruction("SET",1));
         instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
         instructionList.addInstruction(new Instruction("STORE", stackPointerRegister));
@@ -174,13 +173,11 @@ public class CodeGenerator {
         instructionList.addInstruction(new Instruction("JUMP", -(currentLength-procedureAdress)));
 
         //Writing parameters again to arguments in program
-        for (int i = lenghtBeforeAssignment; i < currentLength; i=i+2) {
+        for (int i = lenghtBeforeAssignment; i <lengthAfterAssignment ; i=i+2) {
             int loadRegister = instructionList.getInstructions().get(i).getOperand();
             int storeRegister = instructionList.getInstructions().get(i+1).getOperand();
-
             instructionList.addInstruction(new Instruction("LOAD", storeRegister));
             instructionList.addInstruction(new Instruction("STORE", loadRegister));
-
         }
     }
     private void generateRepeatUntil(GrammarParser.REPEATUNTILContext repeatuntilContext){
