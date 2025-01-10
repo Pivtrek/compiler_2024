@@ -103,6 +103,10 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("SET",-1));
             instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
             instructionList.addInstruction(new Instruction("STORE", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("SET", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("ADD", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("LOADI", 0));
+            instructionList.addInstruction(new Instruction("STORE", 10));
             instructionList.addInstruction(new Instruction("RTRN", 10));
 
         } else if (node instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext procedureContext) {
@@ -114,6 +118,10 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("SET",-1));
             instructionList.addInstruction(new Instruction("ADD",stackPointerRegister));
             instructionList.addInstruction(new Instruction("STORE", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("SET", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("ADD", stackPointerRegister));
+            instructionList.addInstruction(new Instruction("LOADI", 0));
+            instructionList.addInstruction(new Instruction("STORE", 10));
             instructionList.addInstruction(new Instruction("RTRN", 10));
         }
     }
