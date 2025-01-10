@@ -36,7 +36,6 @@ public class Main {
             Memory memory = new Memory(symbolTable, semanticAnalysis.getProcCallNumber());
             CodeGenerator codeGen = new CodeGenerator(memory, tree, symbolTable);
             codeGen.genereteCode();
-            symbolTable.printSymbols();
             codeGen.getInstructionList().writeToFile("examples/output/ex9.mr");
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
