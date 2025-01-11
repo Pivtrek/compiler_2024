@@ -61,6 +61,9 @@ public class CodeGenerator {
         } else if (node instanceof GrammarParser.FORUPContext){
             generateForUp((GrammarParser.FORUPContext) node);
             return;
+        } else if (node instanceof GrammarParser.FORDOWNTOContext) {
+            generateForDown((GrammarParser.FORDOWNTOContext) node);
+            return;
         } else if (node instanceof GrammarParser.CALLPROCContext) {
             generateProcCall((GrammarParser.CALLPROCContext) node);
         } else if (node instanceof GrammarParser.WHILEContext) {
@@ -302,7 +305,9 @@ public class CodeGenerator {
         instructionList.getInstructions().set(beforeCommands-1, new Instruction("JZERO", afterCommands-beforeCommands+2));
     }
 
+    private void generateForDown(GrammarParser.FORDOWNTOContext fordowntoContext){
 
+    }
 
     private void generateIfElse(GrammarParser.IFELSEContext ifelseContext){
         //if acc >0 we go to else, condition not true, if acc =0 we do the if condition and skip else
