@@ -33,8 +33,6 @@ public class Memory {
                     if (localVariable.getType().equals(Symbol.SymbolType.INT) || localVariable.getType().equals(Symbol.SymbolType.ITERATOR)){
                         addMemCell(localVariable.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
                     } else if (localVariable.getType().equals(Symbol.SymbolType.ARRAY)) {
-//                        String nameLowerBound = localVariable.getName()+":lowerbound";
-//                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, localVariable.getLowerBound());
                         for (int i=localVariable.getLowerBound(); i<=localVariable.getUpperBound();i++){
                             String name = localVariable.getName() + "[" + i + "]";
                             addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
@@ -42,8 +40,17 @@ public class Memory {
 
                         //We will store one extra parameter for array, it will be memory address of t[0], even if it doesn't exist,
                         //because with any iterator given in array we can easily get register cell for given index of array
-                        if (memory.containsKey(localVariable.getName() + "[0]" )){
-                            System.out.println("Znalazłem tablice z indeksem 0");
+
+                        String nameIndex0 = localVariable.getName() + "[0]:" + entry.getKey();
+                        String baseAdressName = localVariable.getName()+ ":" + entry.getKey() + ":baseAdress";
+                        if (memory.containsKey(nameIndex0)){
+                            MemCell indexMemCell = memory.get(nameIndex0);
+                            addMemCell(baseAdressName, entry.getKey(), MemCell.inputType.ARRAY, indexMemCell.getRegisterNumber());
+                        }else {
+                            //example t[1:5], or t[-10:-1]. Works equally
+                            String firstArrayName = localVariable.getName() + "[" + localVariable.getLowerBound() + "]";
+                            MemCell firstArrayRegister = getMemCell(firstArrayName, entry.getKey());
+                            addMemCell(baseAdressName, entry.getKey(), MemCell.inputType.ARRAY, firstArrayRegister.getRegisterNumber()-localVariable.getLowerBound());
                         }
                     }
                 }
