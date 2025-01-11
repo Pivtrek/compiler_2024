@@ -142,4 +142,19 @@ public class Memory {
         }
         return memCell.getRegisterNumber();
     }
+
+    private String isInForLoop(ParserRuleContext context){
+        ParserRuleContext current = context;
+
+        while (current != null){
+            if (current instanceof GrammarParser.FORUPContext forupContext){
+                return forupContext.PIDENTIFIER().getText();
+
+            } if (current instanceof GrammarParser.FORDOWNTOContext fordowntoContext) {
+                return fordowntoContext.PIDENTIFIER().getText();
+            }
+            current = current.getParent();
+        }
+        return "NO_ITERATOR";
+    }
 }
