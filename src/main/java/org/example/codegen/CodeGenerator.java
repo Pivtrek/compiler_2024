@@ -1238,30 +1238,27 @@ public class CodeGenerator {
     public int resolveMemory(String name, String scope, GrammarParser.IdentifierContext identifierContext){
 
         String iterator = isInForLoop(identifierContext);
-        if (iterator.equals("NO_ITERATOR")){
-            return memory.resolveMemory(name, scope, identifierContext);
-        }
-        else {
-            if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arrayContext){
-                if (arrayContext.PIDENTIFIER(1).getText().equals(iterator)){
-                    //Handling array access with iterator, storing value in r11
+        if (identifierContext instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arrayContext){
+            String scopeOfArray = findEnclosingScope(arrayContext);
+            if (arrayContext.PIDENTIFIER(1).getText().equals(iterator) || memory.getMemCell(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray).getValue() == null){
+                //Handling array access with iterator, storing value in r11
 
-                    String scopeOfArray = findEnclosingScope(arrayContext);
-                    String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
-                    int baseAdress = memory.getMemCell(baseAdressName, scopeOfArray).getValue();
-                    int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray);
+                String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
+                System.out.println(baseAdressName);
+                int baseAdress = memory.getMemCell(baseAdressName, scopeOfArray).getValue();
+                int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray);
 
-                    instructionList.addInstruction(new Instruction("SET",baseAdress));
-                    instructionList.addInstruction(new Instruction("ADD",iteratorRegister));
-                    instructionList.addInstruction(new Instruction("LOADI",0));
-                    instructionList.addInstruction(new Instruction("STORE",11));
+                instructionList.addInstruction(new Instruction("SET",baseAdress));
+                instructionList.addInstruction(new Instruction("ADD",iteratorRegister));
+                instructionList.addInstruction(new Instruction("PUT",0));
+                instructionList.addInstruction(new Instruction("LOADI",0));
+                instructionList.addInstruction(new Instruction("STORE",11));
 
-                    return 11;
-                }
-                return memory.resolveMemory(name, scope, identifierContext);
+                return 11;
             }
             return memory.resolveMemory(name, scope, identifierContext);
         }
+        return memory.resolveMemory(name, scope, identifierContext);
     }
 
     private String isInForLoop(ParserRuleContext context){
