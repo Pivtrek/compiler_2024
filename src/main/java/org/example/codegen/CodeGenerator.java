@@ -281,7 +281,6 @@ public class CodeGenerator {
         }
 
         //before array there is memory with saved lowerbound of array
-        //TODO: HOW THE FUCK HANDLE USAGE OF ITERATOR ASS INDEX OF ARRAY
 
         instructionList.addInstruction(new Instruction("SET", 1));
         instructionList.addInstruction(new Instruction("STORE", 8)); //storing value "1" for loop iteration
@@ -306,6 +305,54 @@ public class CodeGenerator {
     }
 
     private void generateForDown(GrammarParser.FORDOWNTOContext fordowntoContext){
+        //taking iterator and giving him first value
+        String scope = findEnclosingScope(fordowntoContext);
+        int iteratorRegister = memory.resolveMemory(fordowntoContext.PIDENTIFIER().getText(), scope);
+        int forLenRegister = memory.resolveMemory(fordowntoContext.PIDENTIFIER().getText() + "LEN", scope);
+        //saving from value to r1 and to value to r2
+        if (fordowntoContext.value(0).NUM() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(fordowntoContext.value(0).NUM().getText())));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            memory.getMemCell(fordowntoContext.PIDENTIFIER().getText(), scope).setValue(Integer.parseInt(fordowntoContext.value(0).NUM().getText()));
+        }
+        else {
+            String scopeOfVariable = findEnclosingScope(fordowntoContext.value(0));
+            int registerNumber = resolveMemory(fordowntoContext.value(0).identifier().getText(), scopeOfVariable, fordowntoContext.value(0).identifier());
+            instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            instructionList.addInstruction(new Instruction("STORE", 1));
+            //TODO: IF STARTING VALUE IS IN MEMORY OF COMPILER ASSIGN IT TO INTEGER
+        }
+        if (fordowntoContext.value(1).NUM() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(fordowntoContext.value(1).NUM().getText())));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+        }
+        else {
+            String scopeOfVariable = findEnclosingScope(fordowntoContext.value(1));
+            int registerNumber = resolveMemory(fordowntoContext.value(1).identifier().getText(), scopeOfVariable, fordowntoContext.value(1).identifier());
+            instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+            instructionList.addInstruction(new Instruction("STORE", 2));
+        }
+
+        instructionList.addInstruction(new Instruction("SET", -1));
+        instructionList.addInstruction(new Instruction("STORE", 8)); //storing value "1" for loop iteration
+        instructionList.addInstruction(new Instruction("LOAD", 1));
+        instructionList.addInstruction(new Instruction("STORE", iteratorRegister));
+        instructionList.addInstruction(new Instruction("LOAD", 2));
+        instructionList.addInstruction(new Instruction("SUB", 1));
+        instructionList.addInstruction(new Instruction("ADD", 8));
+        instructionList.addInstruction(new Instruction("STORE", forLenRegister)); //storing how many times loop should go
+        instructionList.addInstruction(new Instruction("JZERO", 1));
+        int beforeCommands = instructionList.getInstructions().size();
+        traverse(fordowntoContext.commands());
+        instructionList.addInstruction(new Instruction("LOAD", iteratorRegister));
+        instructionList.addInstruction(new Instruction("ADD", 8));
+        instructionList.addInstruction(new Instruction("STORE", iteratorRegister));
+        instructionList.addInstruction(new Instruction("LOAD", forLenRegister));
+        instructionList.addInstruction(new Instruction("SUB", 8));
+        instructionList.addInstruction(new Instruction("STORE", forLenRegister));
+        int afterCommands = instructionList.getInstructions().size();
+        instructionList.addInstruction(new Instruction("JUMP",-(afterCommands-beforeCommands+1)));
+        instructionList.getInstructions().set(beforeCommands-1, new Instruction("JZERO", afterCommands-beforeCommands+2));
 
     }
 

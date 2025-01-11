@@ -21,7 +21,7 @@ public class Main {
 
         try {
 
-            String name = "exampleA";
+            String name = "ex7";
             String filePath = "examples/" + name +".imp";
             String code = Files.readString(Paths.get(filePath));
             GrammarLexer lexer = new GrammarLexer(CharStreams.fromString(code));
