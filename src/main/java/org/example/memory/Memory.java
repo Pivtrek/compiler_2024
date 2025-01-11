@@ -10,7 +10,7 @@ public class Memory {
     private Map<String, MemCell> memory;
     private Map<String, MemCell> referenceMap;
     private Map<String, MemCell> register;
-    private int nextFreeAdress = 11;
+    private int nextFreeAdress = 12;
     private Integer callProcNumber;
 
     public Memory(SymbolTable symbolTable, Integer callProcNumber) {
@@ -42,15 +42,15 @@ public class Memory {
                         //because with any iterator given in array we can easily get register cell for given index of array
 
                         String nameIndex0 = localVariable.getName() + "[0]:" + entry.getKey();
-                        String baseAdressName = localVariable.getName()+ ":" + entry.getKey() + ":baseAdress";
+                        String baseAddressName = localVariable.getName() + ":baseAddress";
                         if (memory.containsKey(nameIndex0)){
                             MemCell indexMemCell = memory.get(nameIndex0);
-                            addMemCell(baseAdressName, entry.getKey(), MemCell.inputType.ARRAY, indexMemCell.getRegisterNumber());
+                            addMemCell(baseAddressName, entry.getKey(), MemCell.inputType.ARRAY, indexMemCell.getRegisterNumber());
                         }else {
                             //example t[1:5], or t[-10:-1]. Works equally
                             String firstArrayName = localVariable.getName() + "[" + localVariable.getLowerBound() + "]";
                             MemCell firstArrayRegister = getMemCell(firstArrayName, entry.getKey());
-                            addMemCell(baseAdressName, entry.getKey(), MemCell.inputType.ARRAY, firstArrayRegister.getRegisterNumber()-localVariable.getLowerBound());
+                            addMemCell(baseAddressName, entry.getKey(), MemCell.inputType.ARRAY, firstArrayRegister.getRegisterNumber()-localVariable.getLowerBound());
                         }
                     }
                 }
@@ -141,20 +141,5 @@ public class Memory {
             throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
         }
         return memCell.getRegisterNumber();
-    }
-
-    private String isInForLoop(ParserRuleContext context){
-        ParserRuleContext current = context;
-
-        while (current != null){
-            if (current instanceof GrammarParser.FORUPContext forupContext){
-                return forupContext.PIDENTIFIER().getText();
-
-            } if (current instanceof GrammarParser.FORDOWNTOContext fordowntoContext) {
-                return fordowntoContext.PIDENTIFIER().getText();
-            }
-            current = current.getParent();
-        }
-        return "NO_ITERATOR";
     }
 }
