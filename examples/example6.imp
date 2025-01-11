@@ -20,6 +20,6 @@ BEGIN
 	f[j] := f[k] + f[l];
         s[j] := s[k] * i[j];
     ENDFOR
-    WRITE s[n];20
+    WRITE s[n];
     WRITE f[n];
 END
