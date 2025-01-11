@@ -33,11 +33,17 @@ public class Memory {
                     if (localVariable.getType().equals(Symbol.SymbolType.INT) || localVariable.getType().equals(Symbol.SymbolType.ITERATOR)){
                         addMemCell(localVariable.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
                     } else if (localVariable.getType().equals(Symbol.SymbolType.ARRAY)) {
-                        String nameLowerBound = localVariable.getName()+":lowerbound";
-                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, localVariable.getLowerBound());
+//                        String nameLowerBound = localVariable.getName()+":lowerbound";
+//                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, localVariable.getLowerBound());
                         for (int i=localVariable.getLowerBound(); i<=localVariable.getUpperBound();i++){
                             String name = localVariable.getName() + "[" + i + "]";
                             addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
+                        }
+
+                        //We will store one extra parameter for array, it will be memory address of t[0], even if it doesn't exist,
+                        //because with any iterator given in array we can easily get register cell for given index of array
+                        if (memory.containsKey(localVariable.getName() + "[0]" )){
+                            System.out.println("Znalazłem tablice z indeksem 0");
                         }
                     }
                 }
