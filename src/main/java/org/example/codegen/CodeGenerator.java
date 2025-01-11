@@ -152,10 +152,8 @@ public class CodeGenerator {
                     if (array.getType().equals(Symbol.SymbolType.ARRAY) && array.getName().equals(argumentName)){
                         for (int j = array.getLowerBound(); j <= array.getUpperBound(); j++) {
                             String arrayName = parameterName + "[" + j + "]";
-                            System.out.println(arrayName);
                             memory.addMemCell(arrayName, procedureName, MemCell.inputType.ARRAY, null);
                             String argumentArray = argumentName + "[" + j + "]";
-                            System.out.println(argumentName);
                             int argumentRegister = memory.resolveMemory(argumentArray, currentScope);
                             int parameterRegister = memory.resolveMemory(arrayName, procedureName);
                             instructionList.addInstruction(new Instruction("LOAD", argumentRegister));
@@ -585,81 +583,58 @@ public class CodeGenerator {
 
 
         } else if (assignContext.expression() instanceof GrammarParser.ADDContext addContext ) {
-            boolean first = false, second = false;
-            int firstV=0,secondV = 0;
+
 
             if (addContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(0).NUM().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
-                first = true;
-                firstV = Integer.parseInt(addContext.value(0).NUM().getText());
+
             }
             else {
                 String scopeOfVariable = findEnclosingScope(addContext.value(0));
                 int registerNumber = resolveMemory(addContext.value(0).identifier().getText(), scopeOfVariable, addContext.value(0).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
                 instructionList.addInstruction(new Instruction("STORE", 1));
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    first = true;
-                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
+
             }
             if (addContext.value(1).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(1).NUM().getText())));
-                second = true;
-                secondV = Integer.parseInt(addContext.value(1).NUM().getText());
+
             }
             else {
                 String scopeOfVariable = findEnclosingScope(addContext.value(1));
                 int registerNumber = resolveMemory(addContext.value(1).identifier().getText(), scopeOfVariable, addContext.value(1).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    second = true;
-                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
+
             }
             instructionList.addInstruction(new Instruction("ADD", 1));
-            if (first && second){
-                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV+secondV);
-            }
+
         } else if (assignContext.expression() instanceof GrammarParser.SUBContext subContext) {
-            boolean first = false, second = false;
-            int firstV=0,secondV = 0;
+
 
             if (subContext.value(1).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(1).NUM().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
-                second = true;
-                secondV = Integer.parseInt(subContext.value(1).NUM().getText());
+
             }
             else {
                 String scopeOfVariable = findEnclosingScope(subContext.value(1));
                 int registerNumber = resolveMemory(subContext.value(1).identifier().getText(), scopeOfVariable, subContext.value(1).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
                 instructionList.addInstruction(new Instruction("STORE", 1));
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    second = true;
-                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
+
             }
             if (subContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(0).NUM().getText())));
-                first = true;
-                firstV = Integer.parseInt(subContext.value(0).NUM().getText());
             }
             else {
                 String scopeOfVariable = findEnclosingScope(subContext.value(0));
                 int registerNumber = resolveMemory(subContext.value(0).identifier().getText(), scopeOfVariable, subContext.value(0).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    first = true;
-                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
+
             }
             instructionList.addInstruction(new Instruction("SUB", 1));
-            if (first && second){
-                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV-secondV);
-            }
+
 
         } else if (assignContext.expression() instanceof GrammarParser.MULContext mulContext) {
             /*
@@ -673,8 +648,7 @@ public class CodeGenerator {
             at the end result goes to acc - r0
              */
 
-            boolean first = false, second = false;
-            int firstV=0,secondV = 0;
+
             //setting result as 0
             instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
             instructionList.addInstruction(new Instruction("STORE", 3));
@@ -693,8 +667,6 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 4));
                 }
-                first = true;
-                firstV = Integer.parseInt(mulContext.value(0).NUM().getText());
             }
             else {
                 String scopeOfVariable = findEnclosingScope(mulContext.value(0));
@@ -708,11 +680,6 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("SET", -1));
                 instructionList.addInstruction(new Instruction("STORE", 4));
 
-
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    first = true;
-                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
             }
             if (mulContext.value(1).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(1).NUM().getText())));
@@ -726,8 +693,6 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 5));
                 }
-                second = true;
-                secondV = Integer.parseInt(mulContext.value(1).NUM().getText());
             }
             else {
                 String scopeOfVariable = findEnclosingScope(mulContext.value(1));
@@ -740,15 +705,10 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("JUMP", 3));
                 instructionList.addInstruction(new Instruction("SET", -1));
                 instructionList.addInstruction(new Instruction("STORE", 5));
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    second = true;
-                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
+
             }
             //If we know values of both m's we save result to the variable in compiler memory
-            if (first && second){
-                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
-            }
+
             //Checking if result of multiplying should be + or - and saving it to r6
             instructionList.addInstruction(new Instruction("LOAD", 4));
             instructionList.addInstruction(new Instruction("SUB", 5));
@@ -816,8 +776,6 @@ public class CodeGenerator {
             at the end result goes to acc - r0
              */
 
-            boolean first = false, second = false;
-            int firstV=0,secondV = 0;
             //setting result as 0
             instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
             instructionList.addInstruction(new Instruction("STORE", 3));
@@ -836,8 +794,6 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 4));
                 }
-                first = true;
-                firstV = Integer.parseInt(divContext.value(0).NUM().getText());
             }
             else {
                 String scopeOfVariable = findEnclosingScope(divContext.value(0));
@@ -851,11 +807,6 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("SET", -1));
                 instructionList.addInstruction(new Instruction("STORE", 4));
 
-
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    first = true;
-                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
             }
             if (divContext.value(1).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(divContext.value(1).NUM().getText())));
@@ -869,8 +820,6 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 5));
                 }
-                second = true;
-                secondV = Integer.parseInt(divContext.value(1).NUM().getText());
             }
             else {
                 String scopeOfVariable = findEnclosingScope(divContext.value(1));
@@ -883,15 +832,10 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("JUMP", 3));
                 instructionList.addInstruction(new Instruction("SET", -1));
                 instructionList.addInstruction(new Instruction("STORE", 5));
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    second = true;
-                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
+
             }
             //If we know values of both m's we save result to the variable in compiler memory
-            if (first && second){
-                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
-            }
+
 
             //Checking if result of division should be + or - and saving it to r6, changing r1 and r2 to + if neccesary
             instructionList.addInstruction(new Instruction("LOAD", 4));
@@ -992,8 +936,6 @@ public class CodeGenerator {
             at the end result goes to acc - r0
              */
 
-            boolean first = false, second = false;
-            int firstV=0,secondV = 0;
             //setting result as 0
             instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
             instructionList.addInstruction(new Instruction("STORE", 3));
@@ -1012,8 +954,6 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 4));
                 }
-                first = true;
-                firstV = Integer.parseInt(modContext.value(0).NUM().getText());
             }
             else {
                 String scopeOfVariable = findEnclosingScope(modContext.value(0));
@@ -1027,11 +967,6 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("SET", -1));
                 instructionList.addInstruction(new Instruction("STORE", 4));
 
-
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    first = true;
-                    firstV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
             }
             if (modContext.value(1).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(1).NUM().getText())));
@@ -1045,8 +980,6 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 5));
                 }
-                second = true;
-                secondV = Integer.parseInt(modContext.value(1).NUM().getText());
             }
             else {
                 String scopeOfVariable = findEnclosingScope(modContext.value(1));
@@ -1059,15 +992,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("JUMP", 3));
                 instructionList.addInstruction(new Instruction("SET", -1));
                 instructionList.addInstruction(new Instruction("STORE", 5));
-                if (memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue() != null){
-                    second = true;
-                    secondV = memory.getMemCell(assignContext.identifier(), scopeOfVariable).getValue();
-                }
             }
-            //If we know values of both m's we save result to the variable in compiler memory
-            if (first && second){
-                memory.getMemCell(assignContext.identifier(), findEnclosingScope(assignContext)).setValue(firstV*secondV);
-            }
+
             //checking if we are multiplying by 0
             instructionList.addInstruction(new Instruction("LOAD", 1));
             instructionList.addInstruction(new Instruction("JZERO", 93));
@@ -1244,13 +1170,11 @@ public class CodeGenerator {
                 //Handling array access with iterator, storing value in r11
 
                 String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
-                System.out.println(baseAdressName);
                 int baseAdress = memory.getMemCell(baseAdressName, scopeOfArray).getValue();
                 int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray);
 
                 instructionList.addInstruction(new Instruction("SET",baseAdress));
                 instructionList.addInstruction(new Instruction("ADD",iteratorRegister));
-                instructionList.addInstruction(new Instruction("PUT",0));
                 instructionList.addInstruction(new Instruction("LOADI",0));
                 instructionList.addInstruction(new Instruction("STORE",11));
 
