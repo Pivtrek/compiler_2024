@@ -1168,7 +1168,7 @@ public class CodeGenerator {
             String scopeOfArray = findEnclosingScope(arrayContext);
             if (arrayContext.PIDENTIFIER(1).getText().equals(iterator) || memory.getMemCell(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray).getValue() == null){
                 //Handling array access with iterator, storing value in r11
-
+                System.out.println(name);
                 String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
                 int baseAdress = memory.getMemCell(baseAdressName, scopeOfArray).getValue();
                 int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray);

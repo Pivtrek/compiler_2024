@@ -12,11 +12,16 @@ public class Memory {
     private Map<String, MemCell> register;
     private int nextFreeAdress = 12;
     private Integer callProcNumber;
+    private Integer maxLowerBound;
+    private Integer maxUpperBound;
 
     public Memory(SymbolTable symbolTable, Integer callProcNumber) {
         this.memory = new HashMap<>();
         this.register = new HashMap<>(nextFreeAdress);
         this.callProcNumber = callProcNumber;
+        findWidestBounds(symbolTable);
+        System.out.println(maxLowerBound);
+        System.out.println(maxUpperBound);
         initializeRegister();
         initializeFromSymbolTable(symbolTable);
         initializeStack();
@@ -141,5 +146,21 @@ public class Memory {
             throw new RuntimeException("Variable " + name + " not found in scope: " + scope);
         }
         return memCell.getRegisterNumber();
+    }
+    private void findWidestBounds(SymbolTable symbolTable) {
+        for (Map.Entry<String, Symbol> entry : symbolTable.getALlSymbols().entrySet()) {
+            String procedureName = entry.getKey();
+            Symbol procedure = entry.getValue();
+            if (procedure.getLocalVariables() != null) {
+                for (Symbol localVariable : procedure.getLocalVariables()) {
+                    if (maxUpperBound == null || (localVariable.getUpperBound() != null && localVariable.getUpperBound() > maxUpperBound)) {
+                        maxUpperBound = localVariable.getUpperBound();
+                    }
+                    if (maxLowerBound == null || (localVariable.getLowerBound() != null && localVariable.getLowerBound() < maxLowerBound)) {
+                        maxLowerBound = localVariable.getLowerBound();
+                    }
+                }
+            }
+        }
     }
 }
