@@ -21,8 +21,8 @@ public class Main {
 
         try {
             //TODO: MAVEN, LINUX LAUNCH, ZIP FOLDER AND LAUNCHING AS REQUESTED, REVIEW THE PROJECT
-            String name = "error9";
-            String filePath = "examples/errors/" + name +".imp";
+            String name = "exampleA";
+            String filePath = "examples/" + name +".imp";
             String code = Files.readString(Paths.get(filePath));
             GrammarLexer lexer = new GrammarLexer(CharStreams.fromString(code));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
