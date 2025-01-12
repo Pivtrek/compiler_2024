@@ -133,6 +133,12 @@ public interface GrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProc_call(GrammarParser.Proc_callContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link GrammarParser#signedNum}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSignedNum(GrammarParser.SignedNumContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code MULTISINGLEDECLARATION}
 	 * labeled alternative in {@link GrammarParser#declarations}.
 	 * @param ctx the parse tree

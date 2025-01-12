@@ -216,6 +216,16 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitProc_call(GrammarParser.Proc_callContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link GrammarParser#signedNum}.
+	 * @param ctx the parse tree
+	 */
+	void enterSignedNum(GrammarParser.SignedNumContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GrammarParser#signedNum}.
+	 * @param ctx the parse tree
+	 */
+	void exitSignedNum(GrammarParser.SignedNumContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code MULTISINGLEDECLARATION}
 	 * labeled alternative in {@link GrammarParser#declarations}.
 	 * @param ctx the parse tree

@@ -180,8 +180,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             Symbol array  = new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY);
 
             //Error handling of declaring wrong range of array d[10:1] for example
-            int lower_bound = Integer.parseInt(array_context.NUM(0).toString());
-            int upper_bound = Integer.parseInt(array_context.NUM(1).toString());
+            int lower_bound = Integer.parseInt(array_context.signedNum(0).getText());
+            int upper_bound = Integer.parseInt(array_context.signedNum(1).getText());
             if (lower_bound >= upper_bound){ //Error handling of declaring wrong range of array d[10:1] for example
                 errorColector.reportError("Niepoprawna deklaracja zasięgu tablicy " + array_context.PIDENTIFIER().getText(), array_context.PIDENTIFIER().getSymbol().getLine());
             }
@@ -204,8 +204,8 @@ public class SymbolTableBuilderVisitor extends GrammarBaseVisitor<Void> {
             Symbol array  = new Symbol(array_context.PIDENTIFIER().getText(), Symbol.SymbolType.ARRAY);
 
             //Error handling of declaring wrong range of array d[10:1] for example
-            int lower_bound = Integer.parseInt(array_context.NUM(0).toString());
-            int upper_bound = Integer.parseInt(array_context.NUM(1).toString());
+            int lower_bound = Integer.parseInt(array_context.signedNum(0).getText());
+            int upper_bound = Integer.parseInt(array_context.signedNum(1).getText());
             if (lower_bound >= upper_bound){ //Error handling of declaring wrong range of array d[10:1] for example
                 errorColector.reportError("Niepoprawna deklaracja zasięgu tablicy " + array_context.PIDENTIFIER().getText(), array_context.PIDENTIFIER().getSymbol().getLine());
             }

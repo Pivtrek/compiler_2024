@@ -31,11 +31,13 @@ proc_head: PIDENTIFIER '(' args_decl ')';
 
 proc_call: PIDENTIFIER '(' args ')';
 
-declarations: declarations',' PIDENTIFIER                   #MULTISINGLEDECLARATION
-            | declarations',' PIDENTIFIER '['NUM':'NUM']'   #MULTIARRAYDECLARATION
-            | PIDENTIFIER                                   #SINGLEDECLARATION
-            | PIDENTIFIER '['NUM':'NUM']'                   #ARRAYDECLARATION
-            ;
+signedNum: '-'? NUM;
+
+declarations: declarations ',' PIDENTIFIER '['signedNum ':' signedNum ']'         #MULTIARRAYDECLARATION
+             | PIDENTIFIER '['signedNum ':' signedNum ']'                         #ARRAYDECLARATION
+             | declarations ',' PIDENTIFIER                                       #MULTISINGLEDECLARATION
+             | PIDENTIFIER                                                        #SINGLEDECLARATION
+             ;
 
 args_decl: args_decl COMMA T PIDENTIFIER #ARGSMUTLIARRDECL
          | args_decl COMMA PIDENTIFIER   #ARGSMULTIDECL
