@@ -239,13 +239,30 @@ public class CodeGenerator {
 
     private void generateAssign(GrammarParser.ASSIGNContext assignContext){
 
-        String targetName = assignContext.identifier().getText();
-        String scope = findEnclosingScope(assignContext);
-        int registerNumber = resolveMemory(targetName, scope, assignContext.identifier());
-        handleExpressionContext(assignContext, targetName, scope);
+        if (assignContext.identifier() instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arrayContext){
+            String targetName = assignContext.identifier().getText();
+            String scope = findEnclosingScope(assignContext);
 
-        //after completing handling right hand side of assign, value of it its in p0 and goes to variable
-        instructionList.addInstruction(new Instruction("STORE", registerNumber));
+            String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
+            int baseAdress = memory.getMemCell(baseAdressName, scope).getValue();
+            int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scope);
+
+            instructionList.addInstruction(new Instruction("SET",baseAdress));
+            instructionList.addInstruction(new Instruction("ADD",iteratorRegister));
+            instructionList.addInstruction(new Instruction("STORE",12));
+            handleExpressionContext(assignContext, targetName, scope);
+            instructionList.addInstruction(new Instruction("STOREI",12));
+
+
+        }
+        else {
+            String targetName = assignContext.identifier().getText();
+            String scope = findEnclosingScope(assignContext);
+            int registerNumber = resolveMemory(targetName, scope, assignContext.identifier());
+            handleExpressionContext(assignContext, targetName, scope);
+            //after completing handling right hand side of assign, value of it its in p0 and goes to variable
+            instructionList.addInstruction(new Instruction("STORE",registerNumber));
+        }
     }
 
     private void generateForUp(GrammarParser.FORUPContext forupContext){
@@ -1170,12 +1187,10 @@ public class CodeGenerator {
                 String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
                 int baseAdress = memory.getMemCell(baseAdressName, scopeOfArray).getValue();
                 int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray);
-
                 instructionList.addInstruction(new Instruction("SET",baseAdress));
                 instructionList.addInstruction(new Instruction("ADD",iteratorRegister));
                 instructionList.addInstruction(new Instruction("LOADI",0));
                 instructionList.addInstruction(new Instruction("STORE",11));
-
                 return 11;
             }
             return memory.resolveMemory(name, scope, identifierContext);
