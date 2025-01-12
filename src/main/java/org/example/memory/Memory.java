@@ -20,8 +20,6 @@ public class Memory {
         this.register = new HashMap<>(nextFreeAdress);
         this.callProcNumber = callProcNumber;
         findWidestBounds(symbolTable);
-        System.out.println(maxLowerBound);
-        System.out.println(maxUpperBound);
         initializeRegister();
         initializeFromSymbolTable(symbolTable);
         initializeStack();
@@ -66,13 +64,23 @@ public class Memory {
                         addMemCell(parameter.getName(), entry.getKey(), MemCell.inputType.INTEGER, null);
                     } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY)) {
                         String nameLowerBound = parameter.getName()+":lowerbound";
-                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, parameter.getLowerBound());
-//                        cannot create memcells for array, dont know how many are needed,
-//                        they are produced in calling procedure, there we have range of array
-//                        for (int i=parameter.getLowerBound(); i<=parameter.getUpperBound();i++){
-//                            String name = parameter.getName() + "[" + i + "]";
-//                            addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
-//                        }
+                        addMemCell(nameLowerBound, entry.getKey(), MemCell.inputType.ARRAY, maxLowerBound);
+                        for (int i=maxLowerBound; i<=maxUpperBound;i++){
+                            String name = parameter.getName() + "[" + i + "]";
+                            addMemCell(name, entry.getKey(), MemCell.inputType.ARRAY, null);
+                        }
+                        String nameIndex0 = parameter.getName() + "[0]:" + entry.getKey();
+                        String baseAddressName = parameter.getName() + ":baseAddress";
+                        if (memory.containsKey(nameIndex0)){
+                            MemCell indexMemCell = memory.get(nameIndex0);
+                            addMemCell(baseAddressName, entry.getKey(), MemCell.inputType.ARRAY, indexMemCell.getRegisterNumber());
+                        }else {
+                            //example t[1:5], or t[-10:-1]. Works equally
+                            String firstArrayName = parameter.getName() + "[" + maxLowerBound + "]";
+                            MemCell firstArrayRegister = getMemCell(firstArrayName, entry.getKey());
+                            addMemCell(baseAddressName, entry.getKey(), MemCell.inputType.ARRAY, firstArrayRegister.getRegisterNumber()-maxLowerBound);
+                        }
+                        
                     }
                 }
             }

@@ -145,14 +145,13 @@ public class CodeGenerator {
                 int parameterRegister = memory.getMemCell(parameterName, procedureName).getRegisterNumber();
                 instructionList.addInstruction(new Instruction("LOAD", argumentRegister));
                 instructionList.addInstruction(new Instruction("STORE", parameterRegister));
-            } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY) && symbolTable.getSymbol(currentScope).getLocalVariables() != null) {
+            } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY)) {
                 String argumentName = callprocContext.proc_call().args().PIDENTIFIER(i).getText();
                 String parameterName = parameter.getName();
                 for (Symbol array: symbolTable.getSymbol(currentScope).getLocalVariables()) {
                     if (array.getType().equals(Symbol.SymbolType.ARRAY) && array.getName().equals(argumentName)){
                         for (int j = array.getLowerBound(); j <= array.getUpperBound(); j++) {
                             String arrayName = parameterName + "[" + j + "]";
-                            memory.addMemCell(arrayName, procedureName, MemCell.inputType.ARRAY, null);
                             String argumentArray = argumentName + "[" + j + "]";
                             int argumentRegister = memory.resolveMemory(argumentArray, currentScope);
                             int parameterRegister = memory.resolveMemory(arrayName, procedureName);
@@ -1168,7 +1167,6 @@ public class CodeGenerator {
             String scopeOfArray = findEnclosingScope(arrayContext);
             if (arrayContext.PIDENTIFIER(1).getText().equals(iterator) || memory.getMemCell(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray).getValue() == null){
                 //Handling array access with iterator, storing value in r11
-                System.out.println(name);
                 String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
                 int baseAdress = memory.getMemCell(baseAdressName, scopeOfArray).getValue();
                 int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray);
