@@ -21,8 +21,8 @@ public class Main {
 
         try {
 
-            String name = "example6";
-            String filePath = "examples/" + name +".imp";
+            String name = "error9";
+            String filePath = "examples/errors/" + name +".imp";
             String code = Files.readString(Paths.get(filePath));
             GrammarLexer lexer = new GrammarLexer(CharStreams.fromString(code));
             CommonTokenStream tokens = new CommonTokenStream(lexer);

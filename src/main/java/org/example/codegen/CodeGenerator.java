@@ -145,14 +145,13 @@ public class CodeGenerator {
                 int parameterRegister = memory.getMemCell(parameterName, procedureName).getRegisterNumber();
                 instructionList.addInstruction(new Instruction("LOAD", argumentRegister));
                 instructionList.addInstruction(new Instruction("STORE", parameterRegister));
-            } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY) && symbolTable.getSymbol(currentScope).getLocalVariables() != null) {
+            } else if (parameter.getType().equals(Symbol.SymbolType.ARRAY)) {
                 String argumentName = callprocContext.proc_call().args().PIDENTIFIER(i).getText();
                 String parameterName = parameter.getName();
                 for (Symbol array: symbolTable.getSymbol(currentScope).getLocalVariables()) {
                     if (array.getType().equals(Symbol.SymbolType.ARRAY) && array.getName().equals(argumentName)){
                         for (int j = array.getLowerBound(); j <= array.getUpperBound(); j++) {
                             String arrayName = parameterName + "[" + j + "]";
-                            memory.addMemCell(arrayName, procedureName, MemCell.inputType.ARRAY, null);
                             String argumentArray = argumentName + "[" + j + "]";
                             int argumentRegister = memory.resolveMemory(argumentArray, currentScope);
                             int parameterRegister = memory.resolveMemory(arrayName, procedureName);
@@ -240,13 +239,30 @@ public class CodeGenerator {
 
     private void generateAssign(GrammarParser.ASSIGNContext assignContext){
 
-        String targetName = assignContext.identifier().getText();
-        String scope = findEnclosingScope(assignContext);
-        int registerNumber = resolveMemory(targetName, scope, assignContext.identifier());
-        handleExpressionContext(assignContext, targetName, scope);
+        if (assignContext.identifier() instanceof GrammarParser.ARRAYWITHPIDUSAGEContext arrayContext){
+            String targetName = assignContext.identifier().getText();
+            String scope = findEnclosingScope(assignContext);
 
-        //after completing handling right hand side of assign, value of it its in p0 and goes to variable
-        instructionList.addInstruction(new Instruction("STORE", registerNumber));
+            String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
+            int baseAdress = memory.getMemCell(baseAdressName, scope).getValue();
+            int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scope);
+
+            instructionList.addInstruction(new Instruction("SET",baseAdress));
+            instructionList.addInstruction(new Instruction("ADD",iteratorRegister));
+            instructionList.addInstruction(new Instruction("STORE",12));
+            handleExpressionContext(assignContext, targetName, scope);
+            instructionList.addInstruction(new Instruction("STOREI",12));
+
+
+        }
+        else {
+            String targetName = assignContext.identifier().getText();
+            String scope = findEnclosingScope(assignContext);
+            int registerNumber = resolveMemory(targetName, scope, assignContext.identifier());
+            handleExpressionContext(assignContext, targetName, scope);
+            //after completing handling right hand side of assign, value of it its in p0 and goes to variable
+            instructionList.addInstruction(new Instruction("STORE",registerNumber));
+        }
     }
 
     private void generateForUp(GrammarParser.FORUPContext forupContext){
@@ -560,15 +576,15 @@ public class CodeGenerator {
             //its number
             if (value.NUM() != null){
                 int num = Integer.parseInt(value.NUM().getText());
-                memory.getMemCell(assignContext.identifier(), scope).setValue(num);
+                //memory.getMemCell(assignContext.identifier(), scope).setValue(num);
                 instructionList.addInstruction(new Instruction("SET", num));
             } else if (value.identifier() != null) { //variable
                 String varName = value.identifier().getText();
                 String scopeOfVariable = findEnclosingScope(valexprContext);
                 int registerNumber = resolveMemory(varName, scopeOfVariable, value.identifier());
-                if (memory.getMemCell(value.identifier(), scopeOfVariable).getValue()!= null){
-                    memory.getMemCell(assignContext.identifier(), scope).setValue(memory.getMemCell(value.identifier(), scopeOfVariable).getValue());
-                }
+//                if (memory.getMemCell(value.identifier(), scopeOfVariable).getValue()!= null){
+//                    memory.getMemCell(assignContext.identifier(), scope).setValue(memory.getMemCell(value.identifier(), scopeOfVariable).getValue());
+//                }
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
         } else if (assignContext.expression() instanceof GrammarParser.NEGATEContext negateContext) {
@@ -1168,16 +1184,13 @@ public class CodeGenerator {
             String scopeOfArray = findEnclosingScope(arrayContext);
             if (arrayContext.PIDENTIFIER(1).getText().equals(iterator) || memory.getMemCell(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray).getValue() == null){
                 //Handling array access with iterator, storing value in r11
-
                 String baseAdressName = arrayContext.PIDENTIFIER(0).getText() + ":baseAddress";
                 int baseAdress = memory.getMemCell(baseAdressName, scopeOfArray).getValue();
                 int iteratorRegister = memory.resolveMemory(arrayContext.PIDENTIFIER(1).getText(),scopeOfArray);
-
                 instructionList.addInstruction(new Instruction("SET",baseAdress));
                 instructionList.addInstruction(new Instruction("ADD",iteratorRegister));
                 instructionList.addInstruction(new Instruction("LOADI",0));
                 instructionList.addInstruction(new Instruction("STORE",11));
-
                 return 11;
             }
             return memory.resolveMemory(name, scope, identifierContext);
