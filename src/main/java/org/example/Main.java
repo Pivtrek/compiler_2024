@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         try {
-
+            //TODO: MAVEN, LINUX LAUNCH, ZIP FOLDER AND LAUNCHING AS REQUESTED, REVIEW THE PROJECT
             String name = "error9";
             String filePath = "examples/errors/" + name +".imp";
             String code = Files.readString(Paths.get(filePath));
