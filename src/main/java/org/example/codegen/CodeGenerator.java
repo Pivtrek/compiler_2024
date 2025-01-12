@@ -559,15 +559,15 @@ public class CodeGenerator {
             //its number
             if (value.NUM() != null){
                 int num = Integer.parseInt(value.NUM().getText());
-                memory.getMemCell(assignContext.identifier(), scope).setValue(num);
+                //memory.getMemCell(assignContext.identifier(), scope).setValue(num);
                 instructionList.addInstruction(new Instruction("SET", num));
             } else if (value.identifier() != null) { //variable
                 String varName = value.identifier().getText();
                 String scopeOfVariable = findEnclosingScope(valexprContext);
                 int registerNumber = resolveMemory(varName, scopeOfVariable, value.identifier());
-                if (memory.getMemCell(value.identifier(), scopeOfVariable).getValue()!= null){
-                    memory.getMemCell(assignContext.identifier(), scope).setValue(memory.getMemCell(value.identifier(), scopeOfVariable).getValue());
-                }
+//                if (memory.getMemCell(value.identifier(), scopeOfVariable).getValue()!= null){
+//                    memory.getMemCell(assignContext.identifier(), scope).setValue(memory.getMemCell(value.identifier(), scopeOfVariable).getValue());
+//                }
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
         } else if (assignContext.expression() instanceof GrammarParser.NEGATEContext negateContext) {
