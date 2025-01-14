@@ -3,12 +3,16 @@
 !**/src/test/**/target/
 
 /src/test
-/examples
 
 ### IntelliJ IDEA ###
 .idea
 
 /target
+
+/examples
+
+TODO.md
+untitled.iml
 
 ### Eclipse ###
 .apt_generated
