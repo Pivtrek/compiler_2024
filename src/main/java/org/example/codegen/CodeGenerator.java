@@ -31,10 +31,12 @@ public class CodeGenerator {
     }
 
     public void genereteCode(){
-        instructionList.addInstruction(new Instruction("SET",stackIndex));
-        int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
-        instructionList.addInstruction(new Instruction("STORE",stackPointerRegister));
-        instructionList.addInstruction(new Instruction("JUMP", 0));
+        if (isProcedureInProgram(tree)){
+            instructionList.addInstruction(new Instruction("SET",stackIndex));
+            int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
+            instructionList.addInstruction(new Instruction("STORE",stackPointerRegister));
+            instructionList.addInstruction(new Instruction("JUMP", 0));
+        }
         traverse(tree);
         instructionList.addInstruction(new Instruction("HALT"));
     }
@@ -1304,13 +1306,17 @@ public class CodeGenerator {
     private static boolean isPowerOfTwo(int n){
         return n > 0 && (n & (n - 1)) == 0;
     }
-    private static boolean isProcedureInProgram(ParserRuleContext context) {
-        ParserRuleContext current = context;
-        while (current != null) {
-            if (current instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext || current instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext) {
+    private static boolean isProcedureInProgram(ParseTree node) {
+        if (node == null) {
+            return false;
+        }
+        if (node instanceof GrammarParser.CALLPROCContext) {
+            return true;
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            if (isProcedureInProgram(node.getChild(i))) {
                 return true;
             }
-            current = current.getParent();
         }
         return false;
     }
