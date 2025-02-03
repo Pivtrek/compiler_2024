@@ -12,16 +12,19 @@ import org.example.semantic.SemanticAnalysis;
 import org.example.semantic.SymbolTable;
 import org.example.semantic.SymbolTableBuilderVisitor;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Test {
     public static void main(String[] args) {
-        String[] names = {"example1.imp", "example2.imp", "example3.imp", "example4.imp", "example5.imp", "example6.imp", "example7.imp", "example8.imp", "example9.imp", "exampleA-n.imp", "program0.imp", "program1.imp", "program2.imp", "program3.imp"};
+        String[] names = {"example1", "example2", "example3", "example4", "example5", "example6", "example7", "example8", "example9", "exampleA-n", "program0", "program1", "program2", "program3"};
         for (String name : names) {
             try {
-                String filePath = "examples/" + name;
+                //Compilation
+                String filePath = "labor4/testy/" + name + ".imp";
                 String code = Files.readString(Paths.get(filePath));
                 GrammarLexer lexer = new GrammarLexer(CharStreams.fromString(code));
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -36,7 +39,7 @@ public class Test {
                 Memory memory = new Memory(symbolTable, semanticAnalysis.getProcCallNumber());
                 CodeGenerator codeGen = new CodeGenerator(memory, tree, symbolTable);
                 codeGen.genereteCode();
-                codeGen.getInstructionList().writeToFile("C:/Users/piotr/Desktop/labor4_2/maszyna_wirtualna/" + name +".mr");
+                codeGen.getInstructionList().writeToFile("labor4/maszyna_wirtualna/" + name +".mr");
             } catch (ErrorColector.SemanticErrorException | IOException e) {
             }
         }
