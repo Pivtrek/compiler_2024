@@ -1,0 +1,10 @@
+example1.mr 11006 600
+example2.mr 22172 230
+example3.mr 1481 128
+example4.mr 136962 564
+example5.mr 2213768 772
+example6.mr 75492 159
+example7.mr 640544 79
+example9.mr 80371 758
+program0.mr 74337 260
+program3.mr 654288352 558

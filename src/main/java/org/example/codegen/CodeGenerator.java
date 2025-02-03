@@ -19,6 +19,7 @@ public class CodeGenerator {
     private InstructionList instructionList;
     private Map<String, Integer> procedureAdresses;
     private SymbolTable symbolTable;
+    private boolean isProcedureInProgram;
 
     private int stackIndex = 1;
 
@@ -31,7 +32,8 @@ public class CodeGenerator {
     }
 
     public void genereteCode(){
-        if (isProcedureInProgram(tree)){
+        isProcedureInProgram = isProcedureInProgram(tree);
+        if (isProcedureInProgram){
             instructionList.addInstruction(new Instruction("SET",stackIndex));
             int stackPointerRegister = memory.resolveMemory("stack:0","GLOBAL");
             instructionList.addInstruction(new Instruction("STORE",stackPointerRegister));
@@ -88,8 +90,10 @@ public class CodeGenerator {
     }
 
     private void generateMainProgram(ParseTree node){
-        int mainProgramJumpAdress = instructionList.getInstructions().size()-2;
-        instructionList.getInstructions().set(2,new Instruction("JUMP", mainProgramJumpAdress));
+        if (isProcedureInProgram){
+            int mainProgramJumpAdress = instructionList.getInstructions().size()-2;
+            instructionList.getInstructions().set(2,new Instruction("JUMP", mainProgramJumpAdress));
+        }
         if (node instanceof GrammarParser.MAINWITHOUTDECLARATIONSContext mainwithoutdeclarationsContext){
             traverse(mainwithoutdeclarationsContext.commands());
         } else if (node instanceof GrammarParser.MAINDECLARATIONSContext maindeclarationsContext) {
