@@ -795,6 +795,8 @@ public class CodeGenerator {
             //setting result as 0
 
 
+
+
             //First part, storing multiplier and multiplicand to r1 and r2
             if (divContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(divContext.value(0).NUM().getText())));
@@ -1213,5 +1215,8 @@ public class CodeGenerator {
             current = current.getParent();
         }
         return "NO_ITERATOR";
+    }
+    private static boolean isPowerOfTwo(int n){
+        return n > 0 && (n & (n - 1)) == 0;
     }
 }
