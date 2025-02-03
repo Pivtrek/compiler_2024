@@ -1304,4 +1304,14 @@ public class CodeGenerator {
     private static boolean isPowerOfTwo(int n){
         return n > 0 && (n & (n - 1)) == 0;
     }
+    private static boolean isProcedureInProgram(ParserRuleContext context) {
+        ParserRuleContext current = context;
+        while (current != null) {
+            if (current instanceof GrammarParser.PROCEDUREWITHDECLARATIONSContext || current instanceof GrammarParser.PROCEDUREWITHOUTDECLARATIONSContext) {
+                return true;
+            }
+            current = current.getParent();
+        }
+        return false;
+    }
 }
