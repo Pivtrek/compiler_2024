@@ -664,123 +664,177 @@ public class CodeGenerator {
             at the end result goes to acc - r0
              */
 
-
-
-
-            //First part, storing multiplier and multiplicand to r1 and r2
-            //TODO: OPTIMALIZATION --- while m1 and m2 in acc check for multiplying by 0 and 1 and jump to the end with correct result
-            if (mulContext.value(0).signedNum() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(0).signedNum().getText())));
-                instructionList.addInstruction(new Instruction("STORE", 1));
-                //saving information about sign of number to register
-                if (Integer.parseInt(mulContext.value(0).signedNum().getText()) < 0){
-                    instructionList.addInstruction(new Instruction("SET", -1));
-                    instructionList.addInstruction(new Instruction("LOAD", 4));
-                }
-                else {
-                    instructionList.addInstruction(new Instruction("LOAD", 3));
-                    instructionList.addInstruction(new Instruction("STORE", 4));
-                }
+            //If both values are numbers we can calculate result in compiler
+            if (mulContext.value(0).signedNum() != null && mulContext.value(1).signedNum() != null){
+                int divident = Integer.parseInt(mulContext.value(0).signedNum().getText());
+                int divisor = Integer.parseInt(mulContext.value(1).signedNum().getText());
+                instructionList.addInstruction(new Instruction("SET", divident*divisor));
             }
-            else {
+            //we multiply by power of 2 with positive number
+            else if (mulContext.value(1).signedNum() != null && mulContext.value(0).signedNum() == null && isPowerOfTwo(Integer.parseInt(mulContext.value(1).signedNum().getText()))) {
                 String scopeOfVariable = findEnclosingScope(mulContext.value(0));
                 int registerNumber = resolveMemory(mulContext.value(0).identifier().getText(), scopeOfVariable, mulContext.value(0).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
-                instructionList.addInstruction(new Instruction("STORE", 1));
-                instructionList.addInstruction(new Instruction("JNEG", 4));
-                instructionList.addInstruction(new Instruction("LOAD", 3));
-                instructionList.addInstruction(new Instruction("STORE", 4));
-                instructionList.addInstruction(new Instruction("JUMP", 3));
-                instructionList.addInstruction(new Instruction("SET", -1));
-                instructionList.addInstruction(new Instruction("STORE", 4));
-
-            }
-            if (mulContext.value(1).signedNum() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(1).signedNum().getText())));
-                instructionList.addInstruction(new Instruction("STORE", 2));
-                //saving information about sign of number to register
-                if (Integer.parseInt(mulContext.value(1).signedNum().getText()) < 0){
-                    instructionList.addInstruction(new Instruction("SET", -1));
-                    instructionList.addInstruction(new Instruction("LOAD", 5));
-                }
-                else {
-                    instructionList.addInstruction(new Instruction("LOAD", 3));
-                    instructionList.addInstruction(new Instruction("STORE", 5));
+                int power = (int) (Math.log(Integer.parseInt(mulContext.value(1).signedNum().getText())) / Math.log(2));
+                for (int i = 0; i < power; i++) {
+                    instructionList.addInstruction(new Instruction("ADD", 0));
                 }
             }
-            else {
+            else if (mulContext.value(0).signedNum() != null && mulContext.value(1).signedNum() == null && isPowerOfTwo(Integer.parseInt(mulContext.value(0).signedNum().getText()))) {
                 String scopeOfVariable = findEnclosingScope(mulContext.value(1));
                 int registerNumber = resolveMemory(mulContext.value(1).identifier().getText(), scopeOfVariable, mulContext.value(1).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
-                instructionList.addInstruction(new Instruction("STORE", 2));
-                instructionList.addInstruction(new Instruction("JNEG", 4));
-                instructionList.addInstruction(new Instruction("LOAD", 3));
-                instructionList.addInstruction(new Instruction("STORE", 5));
-                instructionList.addInstruction(new Instruction("JUMP", 3));
-                instructionList.addInstruction(new Instruction("SET", -1));
-                instructionList.addInstruction(new Instruction("STORE", 5));
-
+                int power = (int) (Math.log(Integer.parseInt(mulContext.value(0).signedNum().getText())) / Math.log(2));
+                for (int i = 0; i < power; i++) {
+                    instructionList.addInstruction(new Instruction("ADD", 0));
+                }
             }
-            //If we know values of both m's we save result to the variable in compiler memory
+            //we multiply by power of 2 with negative number, has to change sign of result
+            else if (mulContext.value(1).signedNum() != null && mulContext.value(0).signedNum() == null && Integer.parseInt(mulContext.value(1).signedNum().getText()) < 0 && isPowerOfTwo(Math.abs(Integer.parseInt(mulContext.value(1).signedNum().getText())))) {
+                String scopeOfVariable = findEnclosingScope(mulContext.value(0));
+                int registerNumber = resolveMemory(mulContext.value(0).identifier().getText(), scopeOfVariable, mulContext.value(0).identifier());
+                int divisor = Math.abs(Integer.parseInt(mulContext.value(1).signedNum().getText()));
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                int power = (int) (Math.log(divisor) / Math.log(2));
+                for (int i = 0; i < power; i++) {
+                    instructionList.addInstruction(new Instruction("ADD", 0));
+                }
+                //changing sign of result because in every case we have to change it
+                instructionList.addInstruction(new Instruction("STORE", 3));
+                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("SUB", 3));
+            }
+            else if (mulContext.value(0).signedNum() != null && mulContext.value(1).signedNum() == null && Integer.parseInt(mulContext.value(0).signedNum().getText()) < 0 && isPowerOfTwo(Math.abs(Integer.parseInt(mulContext.value(0).signedNum().getText())))) {
+                String scopeOfVariable = findEnclosingScope(mulContext.value(1));
+                int registerNumber = resolveMemory(mulContext.value(1).identifier().getText(), scopeOfVariable, mulContext.value(1).identifier());
+                int divisor = Math.abs(Integer.parseInt(mulContext.value(0).signedNum().getText()));
+                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                int power = (int) (Math.log(divisor) / Math.log(2));
+                for (int i = 0; i < power; i++) {
+                    instructionList.addInstruction(new Instruction("ADD", 0));
+                }
+                //changing sign of result because in every case we have to change it
+                instructionList.addInstruction(new Instruction("STORE", 3));
+                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("SUB", 3));
+            }
 
-            //setting result as 0
-            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
-            instructionList.addInstruction(new Instruction("STORE", 3));
+            else {
+                //First part, storing multiplier and multiplicand to r1 and r2
+                //TODO: OPTIMALIZATION --- while m1 and m2 in acc check for multiplying by 0 and 1 and jump to the end with correct result
+                if (mulContext.value(0).signedNum() != null){
+                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(0).signedNum().getText())));
+                    instructionList.addInstruction(new Instruction("STORE", 1));
+                    //saving information about sign of number to register
+                    if (Integer.parseInt(mulContext.value(0).signedNum().getText()) < 0){
+                        instructionList.addInstruction(new Instruction("SET", -1));
+                        instructionList.addInstruction(new Instruction("LOAD", 4));
+                    }
+                    else {
+                        instructionList.addInstruction(new Instruction("LOAD", 3));
+                        instructionList.addInstruction(new Instruction("STORE", 4));
+                    }
+                }
+                else {
+                    String scopeOfVariable = findEnclosingScope(mulContext.value(0));
+                    int registerNumber = resolveMemory(mulContext.value(0).identifier().getText(), scopeOfVariable, mulContext.value(0).identifier());
+                    instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                    instructionList.addInstruction(new Instruction("STORE", 1));
+                    instructionList.addInstruction(new Instruction("JNEG", 4));
+                    instructionList.addInstruction(new Instruction("LOAD", 3));
+                    instructionList.addInstruction(new Instruction("STORE", 4));
+                    instructionList.addInstruction(new Instruction("JUMP", 3));
+                    instructionList.addInstruction(new Instruction("SET", -1));
+                    instructionList.addInstruction(new Instruction("STORE", 4));
 
-            //Checking if result of multiplying should be + or - and saving it to r6
-            instructionList.addInstruction(new Instruction("LOAD", 4));
-            instructionList.addInstruction(new Instruction("SUB", 5));
-            instructionList.addInstruction(new Instruction("STORE", 6));
-            instructionList.addInstruction(new Instruction("LOAD", 1)); //check r1 if negative change its value to positive
-            instructionList.addInstruction(new Instruction("JZERO", 5));
-            instructionList.addInstruction(new Instruction("JPOS", 4));
-            instructionList.addInstruction(new Instruction("LOAD", 3));
-            instructionList.addInstruction(new Instruction("SUB", 1));
-            instructionList.addInstruction(new Instruction("STORE", 1));
-            instructionList.addInstruction(new Instruction("LOAD", 2));
-            instructionList.addInstruction(new Instruction("JZERO", 5));
-            instructionList.addInstruction(new Instruction("JPOS", 4));
-            instructionList.addInstruction(new Instruction("LOAD", 3));
-            instructionList.addInstruction(new Instruction("SUB", 2));
-            instructionList.addInstruction(new Instruction("STORE", 2));
+                }
+                if (mulContext.value(1).signedNum() != null){
+                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(1).signedNum().getText())));
+                    instructionList.addInstruction(new Instruction("STORE", 2));
+                    //saving information about sign of number to register
+                    if (Integer.parseInt(mulContext.value(1).signedNum().getText()) < 0){
+                        instructionList.addInstruction(new Instruction("SET", -1));
+                        instructionList.addInstruction(new Instruction("LOAD", 5));
+                    }
+                    else {
+                        instructionList.addInstruction(new Instruction("LOAD", 3));
+                        instructionList.addInstruction(new Instruction("STORE", 5));
+                    }
+                }
+                else {
+                    String scopeOfVariable = findEnclosingScope(mulContext.value(1));
+                    int registerNumber = resolveMemory(mulContext.value(1).identifier().getText(), scopeOfVariable, mulContext.value(1).identifier());
+                    instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                    instructionList.addInstruction(new Instruction("STORE", 2));
+                    instructionList.addInstruction(new Instruction("JNEG", 4));
+                    instructionList.addInstruction(new Instruction("LOAD", 3));
+                    instructionList.addInstruction(new Instruction("STORE", 5));
+                    instructionList.addInstruction(new Instruction("JUMP", 3));
+                    instructionList.addInstruction(new Instruction("SET", -1));
+                    instructionList.addInstruction(new Instruction("STORE", 5));
 
-            //checking if we are multiplying by 0
-            instructionList.addInstruction(new Instruction("LOAD", 1));
-            instructionList.addInstruction(new Instruction("JZERO", 19));
-            instructionList.addInstruction(new Instruction("LOAD", 2));
-            instructionList.addInstruction(new Instruction("JZERO", 17));
+                }
+                //If we know values of both m's we save result to the variable in compiler memory
 
-            //Multiplying
-            instructionList.addInstruction(new Instruction("LOAD", 1));
-            instructionList.addInstruction(new Instruction("JZERO", 18));//exit number
-            instructionList.addInstruction(new Instruction("HALF"));
-            instructionList.addInstruction(new Instruction("ADD", 0));
-            instructionList.addInstruction(new Instruction("SUB", 1));
-            instructionList.addInstruction(new Instruction("JZERO", 4)); //r0 = 0, not odd do not
-            instructionList.addInstruction(new Instruction("LOAD", 3));
-            instructionList.addInstruction(new Instruction("ADD", 2));
-            instructionList.addInstruction(new Instruction("STORE", 3));
-            instructionList.addInstruction(new Instruction("LOAD", 2));//double r2
-            instructionList.addInstruction(new Instruction("ADD", 0));
-            instructionList.addInstruction(new Instruction("STORE", 2));
-            instructionList.addInstruction(new Instruction("LOAD", 1));//Halve r1
-            instructionList.addInstruction(new Instruction("HALF"));
-            instructionList.addInstruction(new Instruction("STORE", 1));
-            instructionList.addInstruction(new Instruction("JUMP", (-15)));
+                //setting result as 0
+                instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
+                instructionList.addInstruction(new Instruction("STORE", 3));
 
-            //Place for setting result to 0 if result
-            instructionList.addInstruction(new Instruction("SET", 0));
-            instructionList.addInstruction(new Instruction("STORE", 3));
-            instructionList.addInstruction(new Instruction("JUMP", 7));
+                //Checking if result of multiplying should be + or - and saving it to r6
+                instructionList.addInstruction(new Instruction("LOAD", 4));
+                instructionList.addInstruction(new Instruction("SUB", 5));
+                instructionList.addInstruction(new Instruction("STORE", 6));
+                instructionList.addInstruction(new Instruction("LOAD", 1)); //check r1 if negative change its value to positive
+                instructionList.addInstruction(new Instruction("JZERO", 5));
+                instructionList.addInstruction(new Instruction("JPOS", 4));
+                instructionList.addInstruction(new Instruction("LOAD", 3));
+                instructionList.addInstruction(new Instruction("SUB", 1));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                instructionList.addInstruction(new Instruction("LOAD", 2));
+                instructionList.addInstruction(new Instruction("JZERO", 5));
+                instructionList.addInstruction(new Instruction("JPOS", 4));
+                instructionList.addInstruction(new Instruction("LOAD", 3));
+                instructionList.addInstruction(new Instruction("SUB", 2));
+                instructionList.addInstruction(new Instruction("STORE", 2));
+
+                //checking if we are multiplying by 0
+                instructionList.addInstruction(new Instruction("LOAD", 1));
+                instructionList.addInstruction(new Instruction("JZERO", 19));
+                instructionList.addInstruction(new Instruction("LOAD", 2));
+                instructionList.addInstruction(new Instruction("JZERO", 17));
+
+                //Multiplying
+                instructionList.addInstruction(new Instruction("LOAD", 1));
+                instructionList.addInstruction(new Instruction("JZERO", 18));//exit number
+                instructionList.addInstruction(new Instruction("HALF"));
+                instructionList.addInstruction(new Instruction("ADD", 0));
+                instructionList.addInstruction(new Instruction("SUB", 1));
+                instructionList.addInstruction(new Instruction("JZERO", 4)); //r0 = 0, not odd do not
+                instructionList.addInstruction(new Instruction("LOAD", 3));
+                instructionList.addInstruction(new Instruction("ADD", 2));
+                instructionList.addInstruction(new Instruction("STORE", 3));
+                instructionList.addInstruction(new Instruction("LOAD", 2));//double r2
+                instructionList.addInstruction(new Instruction("ADD", 0));
+                instructionList.addInstruction(new Instruction("STORE", 2));
+                instructionList.addInstruction(new Instruction("LOAD", 1));//Halve r1
+                instructionList.addInstruction(new Instruction("HALF"));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                instructionList.addInstruction(new Instruction("JUMP", (-15)));
+
+                //Place for setting result to 0 if result
+                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("STORE", 3));
+                instructionList.addInstruction(new Instruction("JUMP", 7));
 
 
-            //Checking if result should be with + or - and saving it to acc
-            instructionList.addInstruction(new Instruction("LOAD", 6));
-            instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
-            instructionList.addInstruction(new Instruction("SET", 0));
-            instructionList.addInstruction(new Instruction("SUB", 3));
-            instructionList.addInstruction(new Instruction("STORE", 3));
-            instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
+                //Checking if result should be with + or - and saving it to acc
+                instructionList.addInstruction(new Instruction("LOAD", 6));
+                instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
+                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("SUB", 3));
+                instructionList.addInstruction(new Instruction("STORE", 3));
+                instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
+            }
         }
         else if (assignContext.expression() instanceof GrammarParser.DIVContext divContext) {
             /*
