@@ -2,6 +2,7 @@ PROGRAM IS
     a, b, c, d, e, f, g, h, i
 BEGIN
     READ a;
-    b:= 2*a;
-    WRITE b;
+    READ b;
+    c:= a%b;
+    WRITE c;
 END;
