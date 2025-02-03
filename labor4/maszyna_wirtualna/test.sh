@@ -64,7 +64,7 @@ for i in "${!files[@]}"; do
     # 1. Sprawdzenie długości kodu
     if [ -f "$file" ]; then
         new_code_length=$(wc -l < "$file")
-        echo "Długość kodu (linie): $new_code_length"
+        #echo "Długość kodu (linie): $new_code_length"
     else
         echo "Plik $file nie istnieje!"
         continue
@@ -72,7 +72,7 @@ for i in "${!files[@]}"; do
 
     # 2. Uruchomienie programu z danymi wejściowymi
     output=$(printf "%b\n" "$input" | "$PROGRAM" "$file")
-    clean_output=$(echo "$output" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
+    clean_output=$(echo "$output" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g'| tr -d '\r')
 
     # 3. Wyodrębnianie wyników (linie zawierające znak '>' i liczbę po nim)
     results=()
@@ -82,16 +82,6 @@ for i in "${!files[@]}"; do
             results+=("$wynik")
         fi
     done <<< "$clean_output"
-
-    if [ "${#results[@]}" -eq 0 ]; then
-        echo "Brak wyekstrahowanych wyników dla $file."
-    else
-        echo -n "Wyniki dla $file: "
-        for r in "${results[@]}"; do
-            echo -n "$r "
-        done
-        echo ""
-    fi
 
     # 4. (Opcjonalnie) Porównanie wyników z oczekiwanymi
     IFS=' ' read -r -a expected <<< "${expected_results[$file]}"
@@ -117,12 +107,6 @@ for i in "${!files[@]}"; do
     # 5. Wyodrębnianie kosztu z ostatniej linii
     last_line=$(echo "$clean_output" | tail -n 1)
     new_cost=$(echo "$last_line" | awk -F'koszt: ' '{split($2, a, ";"); print a[1]}')
-    if [ -n "$new_cost" ]; then
-        echo "Wyodrębniony koszt dla $file: $new_cost"
-    else
-        echo "Nie udało się wyodrębnić kosztu dla $file."
-        new_cost=""
-    fi
 
     # 6. Aktualizacja (nadpisanie) wpisu w pliku wyniki.txt
     existing_line=$(grep "^$file " "$wynikiPlik")

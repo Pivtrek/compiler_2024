@@ -2,15 +2,11 @@ PROGRAM IS
     a, b, c, d, e, f, g, h, i
 BEGIN
     READ a;
-    b:= a/2;
+    b:= a/-2;
     WRITE b;
     READ c;
     d:= c/16;
     WRITE d;
-    READ e;
-    f:= e/-2;
-    WRITE f;
-    READ g;
-    h:= g/-8;
-    WRITE h;
+    e:=8/4;
+    WRITE e;
 END;

@@ -37,7 +37,7 @@ public class Main {
             Memory memory = new Memory(symbolTable, semanticAnalysis.getProcCallNumber());
             CodeGenerator codeGen = new CodeGenerator(memory, tree, symbolTable);
             codeGen.genereteCode();
-            codeGen.getInstructionList().writeToFile("labor4/maszyna_wirtualna" + name +".mr");
+            codeGen.getInstructionList().writeToFile("labor4/maszyna_wirtualna/" + name +".mr");
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
 

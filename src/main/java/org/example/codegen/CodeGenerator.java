@@ -223,9 +223,9 @@ public class CodeGenerator {
 
     private void generateWrite(GrammarParser.WRITEContext writeContext){
         // WRITE 123
-        if (writeContext.value().NUM() != null){
+        if (writeContext.value().signedNum() != null){
 
-            int number = Integer.parseInt(writeContext.value().NUM().getText());
+            int number = Integer.parseInt(writeContext.value().signedNum().getText());
             //Setting given number in acc and showing it on console
             instructionList.addInstruction(new Instruction("SET", number));
             instructionList.addInstruction(new Instruction("PUT", 0));
@@ -271,10 +271,10 @@ public class CodeGenerator {
         int iteratorRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText(), scope);
         int forLenRegister = memory.resolveMemory(forupContext.PIDENTIFIER().getText() + "LEN", scope);
         //saving from value to r1 and to value to r2
-        if (forupContext.value(0).NUM() != null){
-            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(0).NUM().getText())));
+        if (forupContext.value(0).signedNum() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(0).signedNum().getText())));
             instructionList.addInstruction(new Instruction("STORE", 1));
-            memory.getMemCell(forupContext.PIDENTIFIER().getText(), scope).setValue(Integer.parseInt(forupContext.value(0).NUM().getText()));
+            memory.getMemCell(forupContext.PIDENTIFIER().getText(), scope).setValue(Integer.parseInt(forupContext.value(0).signedNum().getText()));
         }
         else {
             String scopeOfVariable = findEnclosingScope(forupContext.value(0));
@@ -283,8 +283,8 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 1));
             //TODO: IF STARTING VALUE IS IN MEMORY OF COMPILER ASSIGN IT TO INTEGER
         }
-        if (forupContext.value(1).NUM() != null){
-            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(1).NUM().getText())));
+        if (forupContext.value(1).signedNum() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(forupContext.value(1).signedNum().getText())));
             instructionList.addInstruction(new Instruction("STORE", 2));
         }
         else {
@@ -324,10 +324,10 @@ public class CodeGenerator {
         int iteratorRegister = memory.resolveMemory(fordowntoContext.PIDENTIFIER().getText(), scope);
         int forLenRegister = memory.resolveMemory(fordowntoContext.PIDENTIFIER().getText() + "LEN", scope);
         //saving from value to r1 and to value to r2
-        if (fordowntoContext.value(0).NUM() != null){
-            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(fordowntoContext.value(0).NUM().getText())));
+        if (fordowntoContext.value(0).signedNum() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(fordowntoContext.value(0).signedNum().getText())));
             instructionList.addInstruction(new Instruction("STORE", 1));
-            memory.getMemCell(fordowntoContext.PIDENTIFIER().getText(), scope).setValue(Integer.parseInt(fordowntoContext.value(0).NUM().getText()));
+            memory.getMemCell(fordowntoContext.PIDENTIFIER().getText(), scope).setValue(Integer.parseInt(fordowntoContext.value(0).signedNum().getText()));
         }
         else {
             String scopeOfVariable = findEnclosingScope(fordowntoContext.value(0));
@@ -336,8 +336,8 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("STORE", 1));
             //TODO: IF STARTING VALUE IS IN MEMORY OF COMPILER ASSIGN IT TO INTEGER
         }
-        if (fordowntoContext.value(1).NUM() != null){
-            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(fordowntoContext.value(1).NUM().getText())));
+        if (fordowntoContext.value(1).signedNum() != null){
+            instructionList.addInstruction(new Instruction("SET", Integer.parseInt(fordowntoContext.value(1).signedNum().getText())));
             instructionList.addInstruction(new Instruction("STORE", 2));
         }
         else {
@@ -404,8 +404,8 @@ public class CodeGenerator {
         //if acc >0 we do skip, condition not true, if acc =0 we do the condition
 
         if (conditionContext instanceof GrammarParser.EQContext eqContext){
-            if (eqContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(eqContext.value(0).NUM().getText())));
+            if (eqContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(eqContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
             }
             else {
@@ -415,8 +415,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (eqContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(eqContext.value(1).NUM().getText())));
+            if (eqContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(eqContext.value(1).signedNum().getText())));
             }
             else {
                 String scopeOfVariable = findEnclosingScope(eqContext.value(1));
@@ -430,8 +430,8 @@ public class CodeGenerator {
 
 
         } else if (conditionContext instanceof GrammarParser.NEQContext neqContext) {
-            if (neqContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(neqContext.value(0).NUM().getText())));
+            if (neqContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(neqContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
             }
             else {
@@ -441,8 +441,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (neqContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(neqContext.value(1).NUM().getText())));
+            if (neqContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(neqContext.value(1).signedNum().getText())));
             }
             else {
                 String scopeOfVariable = findEnclosingScope(neqContext.value(1));
@@ -456,8 +456,8 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("SET", 1));
             
         }else if (conditionContext instanceof GrammarParser.GTContext gtContext) {
-            if (gtContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(gtContext.value(0).NUM().getText())));
+            if (gtContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(gtContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
             }
             else {
@@ -467,8 +467,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (gtContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(gtContext.value(1).NUM().getText())));
+            if (gtContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(gtContext.value(1).signedNum().getText())));
             }
             else {
                 String scopeOfVariable = findEnclosingScope(gtContext.value(1));
@@ -483,8 +483,8 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("SET", 0));
 
         }else if (conditionContext instanceof GrammarParser.LTContext ltContext) {
-            if (ltContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(ltContext.value(0).NUM().getText())));
+            if (ltContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(ltContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
             }
             else {
@@ -494,8 +494,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (ltContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(ltContext.value(1).NUM().getText())));
+            if (ltContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(ltContext.value(1).signedNum().getText())));
             }
             else {
                 String scopeOfVariable = findEnclosingScope(ltContext.value(1));
@@ -510,8 +510,8 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("SET", 0));
 
         }else if (conditionContext instanceof GrammarParser.GEQContext geqContext) {
-            if (geqContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(geqContext.value(0).NUM().getText())));
+            if (geqContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(geqContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
             }
             else {
@@ -521,8 +521,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (geqContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(geqContext.value(1).NUM().getText())));
+            if (geqContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(geqContext.value(1).signedNum().getText())));
             }
             else {
                 String scopeOfVariable = findEnclosingScope(geqContext.value(1));
@@ -539,8 +539,8 @@ public class CodeGenerator {
 
 
         }else if (conditionContext instanceof GrammarParser.LEQContext leqContext) {
-            if (leqContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(leqContext.value(0).NUM().getText())));
+            if (leqContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(leqContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
             }
             else {
@@ -550,8 +550,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (leqContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(leqContext.value(1).NUM().getText())));
+            if (leqContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(leqContext.value(1).signedNum().getText())));
             }
             else {
                 String scopeOfVariable = findEnclosingScope(leqContext.value(1));
@@ -574,8 +574,8 @@ public class CodeGenerator {
             //number or variable
             GrammarParser.ValueContext value = valexprContext.value();
             //its number
-            if (value.NUM() != null){
-                int num = Integer.parseInt(value.NUM().getText());
+            if (value.signedNum() != null){
+                int num = Integer.parseInt(value.signedNum().getText());
                 //memory.getMemCell(assignContext.identifier(), scope).setValue(num);
                 instructionList.addInstruction(new Instruction("SET", num));
             } else if (value.identifier() != null) { //variable
@@ -588,8 +588,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
             }
         } else if (assignContext.expression() instanceof GrammarParser.NEGATEContext negateContext) {
-            if (negateContext.value().NUM() != null){
-                int num = Integer.parseInt(negateContext.value().NUM().getText());
+            if (negateContext.value().signedNum() != null){
+                int num = Integer.parseInt(negateContext.value().signedNum().getText());
                 memory.getMemCell(assignContext.identifier(), scope).setValue(-num);
                 instructionList.addInstruction(new Instruction("SET", -num));
 
@@ -601,8 +601,8 @@ public class CodeGenerator {
         } else if (assignContext.expression() instanceof GrammarParser.ADDContext addContext ) {
 
 
-            if (addContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(0).NUM().getText())));
+            if (addContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
@@ -613,8 +613,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (addContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(1).NUM().getText())));
+            if (addContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(addContext.value(1).signedNum().getText())));
 
             }
             else {
@@ -628,8 +628,8 @@ public class CodeGenerator {
         } else if (assignContext.expression() instanceof GrammarParser.SUBContext subContext) {
 
 
-            if (subContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(1).NUM().getText())));
+            if (subContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(1).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
@@ -640,8 +640,8 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 1));
 
             }
-            if (subContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(0).NUM().getText())));
+            if (subContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(subContext.value(0).signedNum().getText())));
             }
             else {
                 String scopeOfVariable = findEnclosingScope(subContext.value(0));
@@ -671,11 +671,11 @@ public class CodeGenerator {
 
             //First part, storing multiplier and multiplicand to r1 and r2
             //TODO: OPTIMALIZATION --- while m1 and m2 in acc check for multiplying by 0 and 1 and jump to the end with correct result
-            if (mulContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(0).NUM().getText())));
+            if (mulContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
                 //saving information about sign of number to register
-                if (Integer.parseInt(mulContext.value(0).NUM().getText()) < 0){
+                if (Integer.parseInt(mulContext.value(0).signedNum().getText()) < 0){
                     instructionList.addInstruction(new Instruction("SET", -1));
                     instructionList.addInstruction(new Instruction("LOAD", 4));
                 }
@@ -697,11 +697,11 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 4));
 
             }
-            if (mulContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(1).NUM().getText())));
+            if (mulContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(mulContext.value(1).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 2));
                 //saving information about sign of number to register
-                if (Integer.parseInt(mulContext.value(1).NUM().getText()) < 0){
+                if (Integer.parseInt(mulContext.value(1).signedNum().getText()) < 0){
                     instructionList.addInstruction(new Instruction("SET", -1));
                     instructionList.addInstruction(new Instruction("LOAD", 5));
                 }
@@ -792,9 +792,9 @@ public class CodeGenerator {
             at the end result goes to acc - r0
              */
             //If both values are numbers we can calculate result in compiler
-            if (divContext.value(0).NUM() != null && divContext.value(1).NUM() != null){
-                int divident = Integer.parseInt(divContext.value(0).NUM().getText());
-                int divisor = Integer.parseInt(divContext.value(1).NUM().getText());
+            if (divContext.value(0).signedNum() != null && divContext.value(1).signedNum() != null){
+                int divident = Integer.parseInt(divContext.value(0).signedNum().getText());
+                int divisor = Integer.parseInt(divContext.value(1).signedNum().getText());
                 if(divisor == 0){
                     instructionList.addInstruction(new Instruction("SET", 0));
                 }
@@ -803,18 +803,18 @@ public class CodeGenerator {
                 }
             }
             //using half operation when divisor is power of 2
-            else if (divContext.value(1).NUM() != null && divContext.value(0).NUM() == null && isPowerOfTwo(Integer.parseInt(divContext.value(1).NUM().getText()))) {
-                String scopeOfVariable = findEnclosingScope(divContext.value(1));
-                int registerNumber = resolveMemory(divContext.value(1).identifier().getText(), scopeOfVariable, divContext.value(1).identifier());
+            else if (divContext.value(1).signedNum() != null && divContext.value(0).signedNum() == null && isPowerOfTwo(Integer.parseInt(divContext.value(1).signedNum().getText()))) {
+                String scopeOfVariable = findEnclosingScope(divContext.value(0));
+                int registerNumber = resolveMemory(divContext.value(0).identifier().getText(), scopeOfVariable, divContext.value(0).identifier());
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
-                int power = (int) (Math.log(Integer.parseInt(divContext.value(1).NUM().getText())) / Math.log(2));
+                int power = (int) (Math.log(Integer.parseInt(divContext.value(1).signedNum().getText())) / Math.log(2));
                 for (int i = 0; i < power; i++) {
                     instructionList.addInstruction(new Instruction("HALF"));
                 }
-            } else if (divContext.value(1).NUM() != null && divContext.value(0).NUM() == null && Integer.parseInt(divContext.value(1).NUM().getText()) < 0 && isPowerOfTwo(Math.abs(Integer.parseInt(divContext.value(1).NUM().getText())))) {
-                String scopeOfVariable = findEnclosingScope(divContext.value(1));
-                int registerNumber = resolveMemory(divContext.value(1).identifier().getText(), scopeOfVariable, divContext.value(1).identifier());
-                int divisor = Math.abs(Integer.parseInt(divContext.value(1).NUM().getText()));
+            } else if (divContext.value(1).signedNum() != null && divContext.value(0).signedNum() == null && Integer.parseInt(divContext.value(1).signedNum().getText()) < 0 && isPowerOfTwo(Math.abs(Integer.parseInt(divContext.value(1).signedNum().getText())))) {
+                String scopeOfVariable = findEnclosingScope(divContext.value(0));
+                int registerNumber = resolveMemory(divContext.value(0).identifier().getText(), scopeOfVariable, divContext.value(0).identifier());
+                int divisor = Math.abs(Integer.parseInt(divContext.value(1).signedNum().getText()));
                 instructionList.addInstruction(new Instruction("LOAD", registerNumber));
                 int power = (int) (Math.log(divisor) / Math.log(2));
                 for (int i = 0; i < power; i++) {
@@ -827,11 +827,11 @@ public class CodeGenerator {
             }
             else{
                 //First part, storing multiplier and multiplicand to r1 and r2
-                if (divContext.value(0).NUM() != null){
-                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(divContext.value(0).NUM().getText())));
+                if (divContext.value(0).signedNum() != null){
+                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(divContext.value(0).signedNum().getText())));
                     instructionList.addInstruction(new Instruction("STORE", 1));
                     //saving information about sign of number to register
-                    if (Integer.parseInt(divContext.value(0).NUM().getText()) < 0){
+                    if (Integer.parseInt(divContext.value(0).signedNum().getText()) < 0){
                         instructionList.addInstruction(new Instruction("SET", -1));
                         instructionList.addInstruction(new Instruction("LOAD", 4));
                     }
@@ -853,11 +853,11 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("STORE", 4));
 
                 }
-                if (divContext.value(1).NUM() != null){
-                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(divContext.value(1).NUM().getText())));
+                if (divContext.value(1).signedNum() != null){
+                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(divContext.value(1).signedNum().getText())));
                     instructionList.addInstruction(new Instruction("STORE", 2));
                     //saving information about sign of number to register
-                    if (Integer.parseInt(divContext.value(1).NUM().getText()) < 0){
+                    if (Integer.parseInt(divContext.value(1).signedNum().getText()) < 0){
                         instructionList.addInstruction(new Instruction("SET", -1));
                         instructionList.addInstruction(new Instruction("LOAD", 5));
                     }
@@ -991,11 +991,11 @@ public class CodeGenerator {
 
             //First part, storing multiplier and multiplicand to r1 and r2
             //TODO: OPTIMALIZATION --- while m1 and m2 in acc check for multiplying by 0 and 1 and jump to the end with correct result
-            if (modContext.value(0).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(0).NUM().getText())));
+            if (modContext.value(0).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(0).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
                 //saving information about sign of number to register
-                if (Integer.parseInt(modContext.value(0).NUM().getText()) < 0){
+                if (Integer.parseInt(modContext.value(0).signedNum().getText()) < 0){
                     instructionList.addInstruction(new Instruction("SET", -1));
                     instructionList.addInstruction(new Instruction("LOAD", 4));
                 }
@@ -1017,11 +1017,11 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 4));
 
             }
-            if (modContext.value(1).NUM() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(1).NUM().getText())));
+            if (modContext.value(1).signedNum() != null){
+                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(1).signedNum().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 2));
                 //saving information about sign of number to register
-                if (Integer.parseInt(modContext.value(1).NUM().getText()) < 0){
+                if (Integer.parseInt(modContext.value(1).signedNum().getText()) < 0){
                     instructionList.addInstruction(new Instruction("SET", -1));
                     instructionList.addInstruction(new Instruction("LOAD", 5));
                 }

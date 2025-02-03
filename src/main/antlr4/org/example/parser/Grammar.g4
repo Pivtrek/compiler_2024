@@ -63,7 +63,7 @@ condition: value '=' value  #EQ
             | value '<=' value  #LEQ
             ;
 
-value: NUM
+value: signedNum
     | identifier
     ;
 

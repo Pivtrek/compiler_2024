@@ -2053,7 +2053,9 @@ public class GrammarParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ValueContext extends ParserRuleContext {
-		public TerminalNode NUM() { return getToken(GrammarParser.NUM, 0); }
+		public SignedNumContext signedNum() {
+			return getRuleContext(SignedNumContext.class,0);
+		}
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
@@ -2083,11 +2085,12 @@ public class GrammarParser extends Parser {
 			setState(263);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
+			case T__24:
 			case NUM:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(261);
-				match(NUM);
+				signedNum();
 				}
 				break;
 			case PIDENTIFIER:
@@ -2434,17 +2437,17 @@ public class GrammarParser extends Parser {
 		"\u0103\u00eb\u0001\u0000\u0000\u0000\u0103\u00ef\u0001\u0000\u0000\u0000"+
 		"\u0103\u00f3\u0001\u0000\u0000\u0000\u0103\u00f7\u0001\u0000\u0000\u0000"+
 		"\u0103\u00fb\u0001\u0000\u0000\u0000\u0103\u00ff\u0001\u0000\u0000\u0000"+
-		"\u0104\u0019\u0001\u0000\u0000\u0000\u0105\u0108\u0005(\u0000\u0000\u0106"+
-		"\u0108\u0003\u001c\u000e\u0000\u0107\u0105\u0001\u0000\u0000\u0000\u0107"+
-		"\u0106\u0001\u0000\u0000\u0000\u0108\u001b\u0001\u0000\u0000\u0000\u0109"+
-		"\u0113\u0005\'\u0000\u0000\u010a\u010b\u0005\'\u0000\u0000\u010b\u010c"+
-		"\u0005*\u0000\u0000\u010c\u010d\u0005\'\u0000\u0000\u010d\u0113\u0005"+
-		"+\u0000\u0000\u010e\u010f\u0005\'\u0000\u0000\u010f\u0110\u0005*\u0000"+
-		"\u0000\u0110\u0111\u0005(\u0000\u0000\u0111\u0113\u0005+\u0000\u0000\u0112"+
-		"\u0109\u0001\u0000\u0000\u0000\u0112\u010a\u0001\u0000\u0000\u0000\u0112"+
-		"\u010e\u0001\u0000\u0000\u0000\u0113\u001d\u0001\u0000\u0000\u0000\u0011"+
-		"!5DJ\u008b\u0098\u00a5\u00b3\u00b5\u00bc\u00c5\u00c7\u00cf\u00e9\u0103"+
-		"\u0107\u0112";
+		"\u0104\u0019\u0001\u0000\u0000\u0000\u0105\u0108\u0003\u000e\u0007\u0000"+
+		"\u0106\u0108\u0003\u001c\u000e\u0000\u0107\u0105\u0001\u0000\u0000\u0000"+
+		"\u0107\u0106\u0001\u0000\u0000\u0000\u0108\u001b\u0001\u0000\u0000\u0000"+
+		"\u0109\u0113\u0005\'\u0000\u0000\u010a\u010b\u0005\'\u0000\u0000\u010b"+
+		"\u010c\u0005*\u0000\u0000\u010c\u010d\u0005\'\u0000\u0000\u010d\u0113"+
+		"\u0005+\u0000\u0000\u010e\u010f\u0005\'\u0000\u0000\u010f\u0110\u0005"+
+		"*\u0000\u0000\u0110\u0111\u0005(\u0000\u0000\u0111\u0113\u0005+\u0000"+
+		"\u0000\u0112\u0109\u0001\u0000\u0000\u0000\u0112\u010a\u0001\u0000\u0000"+
+		"\u0000\u0112\u010e\u0001\u0000\u0000\u0000\u0113\u001d\u0001\u0000\u0000"+
+		"\u0000\u0011!5DJ\u008b\u0098\u00a5\u00b3\u00b5\u00bc\u00c5\u00c7\u00cf"+
+		"\u00e9\u0103\u0107\u0112";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
