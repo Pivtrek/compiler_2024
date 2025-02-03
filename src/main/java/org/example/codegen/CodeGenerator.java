@@ -793,11 +793,9 @@ public class CodeGenerator {
              */
 
             //setting result as 0
-            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
-            instructionList.addInstruction(new Instruction("STORE", 3));
+
 
             //First part, storing multiplier and multiplicand to r1 and r2
-            //TODO: OPTIMALIZATION --- while r1 and r2 in acc check for division by 0 and 1 and jump to the end with correct result
             if (divContext.value(0).NUM() != null){
                 instructionList.addInstruction(new Instruction("SET", Integer.parseInt(divContext.value(0).NUM().getText())));
                 instructionList.addInstruction(new Instruction("STORE", 1));
@@ -851,6 +849,10 @@ public class CodeGenerator {
 
             }
             //If we know values of both m's we save result to the variable in compiler memory
+
+            //setting result as 0
+            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("STORE", 3));
 
 
             //Checking if result of division should be + or - and saving it to r6, changing r1 and r2 to + if neccesary
