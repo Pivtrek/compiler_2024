@@ -3,7 +3,7 @@
 
 # Ścieżka do Twojego programu
 PROGRAM="./maszyna-wirtualna"
-wynikiPlik="wyniki1.txt"
+wynikiPlik="wyniki2.txt"
 
 # Lista plików, dla których chcesz uruchomić testy
 files=(
