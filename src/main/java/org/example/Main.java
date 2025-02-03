@@ -21,7 +21,7 @@ public class Main {
 
         try {
             //TODO: MAVEN, LINUX LAUNCH, ZIP FOLDER AND LAUNCHING AS REQUESTED, REVIEW THE PROJECT
-            String name = "program3";
+            String name = "ex1";
             String filePath = "examples/" + name +".imp";
             String code = Files.readString(Paths.get(filePath));
             GrammarLexer lexer = new GrammarLexer(CharStreams.fromString(code));
@@ -37,7 +37,7 @@ public class Main {
             Memory memory = new Memory(symbolTable, semanticAnalysis.getProcCallNumber());
             CodeGenerator codeGen = new CodeGenerator(memory, tree, symbolTable);
             codeGen.genereteCode();
-            codeGen.getInstructionList().writeToFile("C:/Users/piotr/Desktop/labor4_2/maszyna_wirtualna/" + name +".mr");
+            codeGen.getInstructionList().writeToFile("labor4/maszyna_wirtualna" + name +".mr");
         }
         catch (ErrorColector.SemanticErrorException | IOException e){
 
