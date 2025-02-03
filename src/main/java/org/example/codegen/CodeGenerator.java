@@ -665,9 +665,7 @@ public class CodeGenerator {
              */
 
 
-            //setting result as 0
-            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
-            instructionList.addInstruction(new Instruction("STORE", 3));
+
 
             //First part, storing multiplier and multiplicand to r1 and r2
             //TODO: OPTIMALIZATION --- while m1 and m2 in acc check for multiplying by 0 and 1 and jump to the end with correct result
@@ -724,6 +722,10 @@ public class CodeGenerator {
 
             }
             //If we know values of both m's we save result to the variable in compiler memory
+
+            //setting result as 0
+            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
+            instructionList.addInstruction(new Instruction("STORE", 3));
 
             //Checking if result of multiplying should be + or - and saving it to r6
             instructionList.addInstruction(new Instruction("LOAD", 4));
