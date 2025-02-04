@@ -13,6 +13,11 @@
 .idea
 
 target
+labor4
+examples
+src/main/resources
+src/test
+TODO.md
 
 ### Eclipse ###
 .apt_generated
