@@ -1050,137 +1050,157 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
             instructionList.addInstruction(new Instruction("STORE", 3));
 
-            //First part, storing multiplier and multiplicand to r1 and r2
-            if (modContext.value(0).signedNum() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(0).signedNum().getText())));
-                instructionList.addInstruction(new Instruction("STORE", 1));
-                //saving information about sign of number to register
-                if (Integer.parseInt(modContext.value(0).signedNum().getText()) < 0){
-                    instructionList.addInstruction(new Instruction("SET", -1));
-                    instructionList.addInstruction(new Instruction("LOAD", 4));
+            if (modContext.value(0).signedNum() == null && modContext.value(1).signedNum() != null){
+                if (Integer.parseInt(modContext.value(1).signedNum().getText()) == 2){
+                    String scopeOfVariable = findEnclosingScope(modContext.value(0));
+                    int registerNumber = resolveMemory(modContext.value(0).identifier().getText(), scopeOfVariable, modContext.value(0).identifier());
+                    //TODO: NOT GOOD RESULTS FOR -1%2 and 1%2
+                    instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                    instructionList.addInstruction(new Instruction("STORE", 3));
+                    instructionList.addInstruction(new Instruction("JZERO", 10));//jump to load3
+                    instructionList.addInstruction(new Instruction("JPOS",4));//jump from changing to positive
+                    instructionList.addInstruction(new Instruction("SET", 0));//changing from negative to positive
+                    instructionList.addInstruction(new Instruction("SUB", registerNumber));
+                    instructionList.addInstruction(new Instruction("STORE", 3));//modulo optimization for a%2
+                    instructionList.addInstruction(new Instruction("HALF"));
+                    instructionList.addInstruction(new Instruction("ADD", 0));
+                    instructionList.addInstruction(new Instruction("STORE", 4));
+                    instructionList.addInstruction(new Instruction("LOAD", 3));
+                    instructionList.addInstruction(new Instruction("SUB", 4));
+                }
+            }
+            else {
+                //First part, storing multiplier and multiplicand to r1 and r2
+                if (modContext.value(0).signedNum() != null){
+                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(0).signedNum().getText())));
+                    instructionList.addInstruction(new Instruction("STORE", 1));
+                    //saving information about sign of number to register
+                    if (Integer.parseInt(modContext.value(0).signedNum().getText()) < 0){
+                        instructionList.addInstruction(new Instruction("SET", -1));
+                        instructionList.addInstruction(new Instruction("LOAD", 4));
+                    }
+                    else {
+                        instructionList.addInstruction(new Instruction("LOAD", 3));
+                        instructionList.addInstruction(new Instruction("STORE", 4));
+                    }
                 }
                 else {
+                    String scopeOfVariable = findEnclosingScope(modContext.value(0));
+                    int registerNumber = resolveMemory(modContext.value(0).identifier().getText(), scopeOfVariable, modContext.value(0).identifier());
+                    instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                    instructionList.addInstruction(new Instruction("STORE", 1));
+                    instructionList.addInstruction(new Instruction("JNEG", 4));
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 4));
-                }
-            }
-            else {
-                String scopeOfVariable = findEnclosingScope(modContext.value(0));
-                int registerNumber = resolveMemory(modContext.value(0).identifier().getText(), scopeOfVariable, modContext.value(0).identifier());
-                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
-                instructionList.addInstruction(new Instruction("STORE", 1));
-                instructionList.addInstruction(new Instruction("JNEG", 4));
-                instructionList.addInstruction(new Instruction("LOAD", 3));
-                instructionList.addInstruction(new Instruction("STORE", 4));
-                instructionList.addInstruction(new Instruction("JUMP", 3));
-                instructionList.addInstruction(new Instruction("SET", -1));
-                instructionList.addInstruction(new Instruction("STORE", 4));
-
-            }
-            if (modContext.value(1).signedNum() != null){
-                instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(1).signedNum().getText())));
-                instructionList.addInstruction(new Instruction("STORE", 2));
-                //saving information about sign of number to register
-                if (Integer.parseInt(modContext.value(1).signedNum().getText()) < 0){
+                    instructionList.addInstruction(new Instruction("JUMP", 3));
                     instructionList.addInstruction(new Instruction("SET", -1));
-                    instructionList.addInstruction(new Instruction("LOAD", 5));
+                    instructionList.addInstruction(new Instruction("STORE", 4));
+
+                }
+                if (modContext.value(1).signedNum() != null){
+                    instructionList.addInstruction(new Instruction("SET", Integer.parseInt(modContext.value(1).signedNum().getText())));
+                    instructionList.addInstruction(new Instruction("STORE", 2));
+                    //saving information about sign of number to register
+                    if (Integer.parseInt(modContext.value(1).signedNum().getText()) < 0){
+                        instructionList.addInstruction(new Instruction("SET", -1));
+                        instructionList.addInstruction(new Instruction("LOAD", 5));
+                    }
+                    else {
+                        instructionList.addInstruction(new Instruction("LOAD", 3));
+                        instructionList.addInstruction(new Instruction("STORE", 5));
+                    }
                 }
                 else {
+                    String scopeOfVariable = findEnclosingScope(modContext.value(1));
+                    int registerNumber = resolveMemory(modContext.value(1).identifier().getText(), scopeOfVariable, modContext.value(1).identifier());
+                    instructionList.addInstruction(new Instruction("LOAD", registerNumber));
+                    instructionList.addInstruction(new Instruction("STORE", 2));
+                    instructionList.addInstruction(new Instruction("JNEG", 4));
                     instructionList.addInstruction(new Instruction("LOAD", 3));
                     instructionList.addInstruction(new Instruction("STORE", 5));
+                    instructionList.addInstruction(new Instruction("JUMP", 3));
+                    instructionList.addInstruction(new Instruction("SET", -1));
+                    instructionList.addInstruction(new Instruction("STORE", 5));
                 }
-            }
-            else {
-                String scopeOfVariable = findEnclosingScope(modContext.value(1));
-                int registerNumber = resolveMemory(modContext.value(1).identifier().getText(), scopeOfVariable, modContext.value(1).identifier());
-                instructionList.addInstruction(new Instruction("LOAD", registerNumber));
-                instructionList.addInstruction(new Instruction("STORE", 2));
-                instructionList.addInstruction(new Instruction("JNEG", 4));
+
+                //checking if we are mod by 0
+                instructionList.addInstruction(new Instruction("LOAD", 1));
+                instructionList.addInstruction(new Instruction("JZERO", 61));
+                instructionList.addInstruction(new Instruction("LOAD", 2));
+                instructionList.addInstruction(new Instruction("JZERO", 59));
+
+                //Checking if result of mod should be + or - and saving it to r6
+                instructionList.addInstruction(new Instruction("LOAD", 5));
+                instructionList.addInstruction(new Instruction("JZERO", 4));
+                instructionList.addInstruction(new Instruction("SET", 1));
+                instructionList.addInstruction(new Instruction("STORE", 6));
+                instructionList.addInstruction(new Instruction("JUMP", 2));
+                instructionList.addInstruction(new Instruction("STORE", 6));
+
+                instructionList.addInstruction(new Instruction("LOAD", 1)); //check r1 if negative change its value to positive
+                instructionList.addInstruction(new Instruction("JZERO", 5));
+                instructionList.addInstruction(new Instruction("JPOS", 4));
                 instructionList.addInstruction(new Instruction("LOAD", 3));
+                instructionList.addInstruction(new Instruction("SUB", 1));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                instructionList.addInstruction(new Instruction("LOAD", 2)); //check r2 if negative change its value to positive
+                instructionList.addInstruction(new Instruction("JZERO", 5));
+                instructionList.addInstruction(new Instruction("JPOS", 4));
+                instructionList.addInstruction(new Instruction("LOAD", 3));
+                instructionList.addInstruction(new Instruction("SUB", 2));
+                instructionList.addInstruction(new Instruction("STORE", 2));
+
+
+
+                //check if r1<r2, if yes result is r1
+
+                instructionList.addInstruction(new Instruction("LOAD", 2));
+                instructionList.addInstruction(new Instruction("SUB", 1));
+                instructionList.addInstruction(new Instruction("JPOS", 31));
+                instructionList.addInstruction(new Instruction("JZERO", 36));
+
+
+
+                instructionList.addInstruction(new Instruction("SET", 1));
+                instructionList.addInstruction(new Instruction("STORE", 4));
+                instructionList.addInstruction(new Instruction("STORE", 13));
+                instructionList.addInstruction(new Instruction("LOAD", 2));
+                instructionList.addInstruction(new Instruction("STORE", 7));
+
+                instructionList.addInstruction(new Instruction("LOAD", 7));
+                instructionList.addInstruction(new Instruction("ADD", 0));
                 instructionList.addInstruction(new Instruction("STORE", 5));
-                instructionList.addInstruction(new Instruction("JUMP", 3));
-                instructionList.addInstruction(new Instruction("SET", -1));
-                instructionList.addInstruction(new Instruction("STORE", 5));
+                instructionList.addInstruction(new Instruction("SUB", 1));
+                instructionList.addInstruction(new Instruction("JPOS", 7));
+                instructionList.addInstruction(new Instruction("LOAD", 4));
+                instructionList.addInstruction(new Instruction("ADD", 0));
+                instructionList.addInstruction(new Instruction("STORE", 4));
+                instructionList.addInstruction(new Instruction("LOAD", 5));
+                instructionList.addInstruction(new Instruction("STORE", 7));
+                instructionList.addInstruction(new Instruction("JUMP", -10));
+                instructionList.addInstruction(new Instruction("LOAD", 4));
+                instructionList.addInstruction(new Instruction("JZERO", 12));
+                instructionList.addInstruction(new Instruction("LOAD", 1));
+                instructionList.addInstruction(new Instruction("SUB", 7));
+                instructionList.addInstruction(new Instruction("JNEG", 2));
+                instructionList.addInstruction(new Instruction("STORE", 1));
+                instructionList.addInstruction(new Instruction("LOAD", 4));
+                instructionList.addInstruction(new Instruction("HALF"));
+                instructionList.addInstruction(new Instruction("STORE", 4));
+                instructionList.addInstruction(new Instruction("LOAD", 7));
+                instructionList.addInstruction(new Instruction("HALF"));
+                instructionList.addInstruction(new Instruction("STORE", 7));
+                instructionList.addInstruction(new Instruction("JUMP", -12));
+
+                //result from r1
+                instructionList.addInstruction(new Instruction("LOAD", 6));
+                instructionList.addInstruction(new Instruction("JZERO", 4));
+                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("SUB", 1));
+                instructionList.addInstruction(new Instruction("JUMP", 2));
+                instructionList.addInstruction(new Instruction("LOAD", 1));
             }
-
-            //checking if we are mod by 0
-            instructionList.addInstruction(new Instruction("LOAD", 1));
-            instructionList.addInstruction(new Instruction("JZERO", 61));
-            instructionList.addInstruction(new Instruction("LOAD", 2));
-            instructionList.addInstruction(new Instruction("JZERO", 59));
-
-            //Checking if result of mod should be + or - and saving it to r6
-            instructionList.addInstruction(new Instruction("LOAD", 5));
-            instructionList.addInstruction(new Instruction("JZERO", 4));
-            instructionList.addInstruction(new Instruction("SET", 1));
-            instructionList.addInstruction(new Instruction("STORE", 6));
-            instructionList.addInstruction(new Instruction("JUMP", 2));
-            instructionList.addInstruction(new Instruction("STORE", 6));
-
-            instructionList.addInstruction(new Instruction("LOAD", 1)); //check r1 if negative change its value to positive
-            instructionList.addInstruction(new Instruction("JZERO", 5));
-            instructionList.addInstruction(new Instruction("JPOS", 4));
-            instructionList.addInstruction(new Instruction("LOAD", 3));
-            instructionList.addInstruction(new Instruction("SUB", 1));
-            instructionList.addInstruction(new Instruction("STORE", 1));
-            instructionList.addInstruction(new Instruction("LOAD", 2)); //check r2 if negative change its value to positive
-            instructionList.addInstruction(new Instruction("JZERO", 5));
-            instructionList.addInstruction(new Instruction("JPOS", 4));
-            instructionList.addInstruction(new Instruction("LOAD", 3));
-            instructionList.addInstruction(new Instruction("SUB", 2));
-            instructionList.addInstruction(new Instruction("STORE", 2));
-
-
-
-            //check if r1<r2, if yes result is r1
-
-            instructionList.addInstruction(new Instruction("LOAD", 2));
-            instructionList.addInstruction(new Instruction("SUB", 1));
-            instructionList.addInstruction(new Instruction("JPOS", 31));
-            instructionList.addInstruction(new Instruction("JZERO", 36));
-
-
-
-            instructionList.addInstruction(new Instruction("SET", 1));
-            instructionList.addInstruction(new Instruction("STORE", 4));
-            instructionList.addInstruction(new Instruction("STORE", 13));
-            instructionList.addInstruction(new Instruction("LOAD", 2));
-            instructionList.addInstruction(new Instruction("STORE", 7));
-
-            instructionList.addInstruction(new Instruction("LOAD", 7));
-            instructionList.addInstruction(new Instruction("ADD", 0));
-            instructionList.addInstruction(new Instruction("STORE", 5));
-            instructionList.addInstruction(new Instruction("SUB", 1));
-            instructionList.addInstruction(new Instruction("JPOS", 7));
-            instructionList.addInstruction(new Instruction("LOAD", 4));
-            instructionList.addInstruction(new Instruction("ADD", 0));
-            instructionList.addInstruction(new Instruction("STORE", 4));
-            instructionList.addInstruction(new Instruction("LOAD", 5));
-            instructionList.addInstruction(new Instruction("STORE", 7));
-            instructionList.addInstruction(new Instruction("JUMP", -10));
-            instructionList.addInstruction(new Instruction("LOAD", 4));
-            instructionList.addInstruction(new Instruction("JZERO", 12));
-            instructionList.addInstruction(new Instruction("LOAD", 1));
-            instructionList.addInstruction(new Instruction("SUB", 7));
-            instructionList.addInstruction(new Instruction("JNEG", 2));
-            instructionList.addInstruction(new Instruction("STORE", 1));
-            instructionList.addInstruction(new Instruction("LOAD", 4));
-            instructionList.addInstruction(new Instruction("HALF"));
-            instructionList.addInstruction(new Instruction("STORE", 4));
-            instructionList.addInstruction(new Instruction("LOAD", 7));
-            instructionList.addInstruction(new Instruction("HALF"));
-            instructionList.addInstruction(new Instruction("STORE", 7));
-            instructionList.addInstruction(new Instruction("JUMP", -12));
-
-            //result from r1
-            instructionList.addInstruction(new Instruction("LOAD", 6));
-            instructionList.addInstruction(new Instruction("JZERO", 4));
-            instructionList.addInstruction(new Instruction("SET", 0));
-            instructionList.addInstruction(new Instruction("SUB", 1));
-            instructionList.addInstruction(new Instruction("JUMP", 2));
-            instructionList.addInstruction(new Instruction("LOAD", 1));
         }
-
     }
 
 

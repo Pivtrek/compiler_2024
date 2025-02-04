@@ -2,11 +2,6 @@ PROGRAM IS
     a, b, c, d, e, f, g, h, i
 BEGIN
     READ a;
-    READ b;
-    c:= a%b;
+    c:= a%2;
     WRITE c;
-    READ d;
-    READ e;
-    f:=d%e;
-    WRITE f;
 END;
