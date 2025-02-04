@@ -832,7 +832,6 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("STORE", 3));
                 instructionList.addInstruction(new Instruction("JUMP", 7));
 
-
                 //Checking if result should be with + or - and saving it to acc
                 instructionList.addInstruction(new Instruction("LOAD", 6));
                 instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
@@ -1048,7 +1047,8 @@ public class CodeGenerator {
              */
 
             //setting result as 0
-
+            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
+            instructionList.addInstruction(new Instruction("STORE", 3));
 
             //First part, storing multiplier and multiplicand to r1 and r2
             if (modContext.value(0).signedNum() != null){
@@ -1105,9 +1105,9 @@ public class CodeGenerator {
 
             //checking if we are mod by 0
             instructionList.addInstruction(new Instruction("LOAD", 1));
-            instructionList.addInstruction(new Instruction("JZERO", 63));
-            instructionList.addInstruction(new Instruction("LOAD", 2));
             instructionList.addInstruction(new Instruction("JZERO", 61));
+            instructionList.addInstruction(new Instruction("LOAD", 2));
+            instructionList.addInstruction(new Instruction("JZERO", 59));
 
             //Checking if result of mod should be + or - and saving it to r6
             instructionList.addInstruction(new Instruction("LOAD", 5));
@@ -1136,11 +1136,9 @@ public class CodeGenerator {
 
             instructionList.addInstruction(new Instruction("LOAD", 2));
             instructionList.addInstruction(new Instruction("SUB", 1));
-            instructionList.addInstruction(new Instruction("JPOS", 33));
-            instructionList.addInstruction(new Instruction("JZERO", 32));
+            instructionList.addInstruction(new Instruction("JPOS", 31));
+            instructionList.addInstruction(new Instruction("JZERO", 36));
 
-            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
-            instructionList.addInstruction(new Instruction("STORE", 3));
 
 
             instructionList.addInstruction(new Instruction("SET", 1));
@@ -1176,7 +1174,7 @@ public class CodeGenerator {
 
             //result from r1
             instructionList.addInstruction(new Instruction("LOAD", 6));
-            instructionList.addInstruction(new Instruction("JZERO", 4));//33
+            instructionList.addInstruction(new Instruction("JZERO", 4));
             instructionList.addInstruction(new Instruction("SET", 0));
             instructionList.addInstruction(new Instruction("SUB", 1));
             instructionList.addInstruction(new Instruction("JUMP", 2));

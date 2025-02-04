@@ -5,4 +5,8 @@ BEGIN
     READ b;
     c:= a%b;
     WRITE c;
+    READ d;
+    READ e;
+    f:=d%e;
+    WRITE f;
 END;
