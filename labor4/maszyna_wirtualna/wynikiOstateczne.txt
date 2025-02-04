@@ -1,20 +1,20 @@
-example1.mr 9590 555
+example1.mr 8950 555
 example2.mr 22172 230
 example3.mr 1420 125
-example4.mr 88749 458
-example5.mr 759501 447
-example6.mr 75431 156
-example7.mr 640483 76
-example9.mr 80371 758
-program0.mr 7640 33
-program3.mr 414510179 468
+example4.mr 84989 458
+example5.mr 747701 447
+example6.mr 74671 156
+example7.mr 560523 76
+example9.mr 79491 758
+program0.mr 7160 33
+program3.mr 406812099 468
 
 Dotychczasowe wyniki optymalizacji:
 
 =================================================
 Przetwarzam plik: example1.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla example1.mr.
-Koszt dla example1.mr jest lepszy o 12.86% (poprzedni: 11006, nowy: 9590)
+Koszt dla example1.mr jest lepszy o 18.68% (poprzedni: 11006, nowy: 8950)
 Długość kodu dla example1.mr jest mniejsza o 7.50% (poprzednia: 600, nowa: 555)
 =================================================
 Przetwarzam plik: example2.mr
@@ -29,36 +29,37 @@ Długość kodu dla example3.mr jest mniejsza o 2.34% (poprzednia: 128, nowa: 12
 =================================================
 Przetwarzam plik: example4.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla example4.mr.
-Koszt dla example4.mr jest lepszy o 35.20% (poprzedni: 136962, nowy: 88749)
+Koszt dla example4.mr jest lepszy o 37.94% (poprzedni: 136962, nowy: 84989)
 Długość kodu dla example4.mr jest mniejsza o 18.79% (poprzednia: 564, nowa: 458)
 =================================================
 Przetwarzam plik: example5.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla example5.mr.
-Koszt dla example5.mr jest lepszy o 65.69% (poprzedni: 2213768, nowy: 759501)
+Koszt dla example5.mr jest lepszy o 66.22% (poprzedni: 2213768, nowy: 747701)
 Długość kodu dla example5.mr jest mniejsza o 42.09% (poprzednia: 772, nowa: 447)
 =================================================
 Przetwarzam plik: example6.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla example6.mr.
-Koszt dla example6.mr jest lepszy o .08% (poprzedni: 75492, nowy: 75431)
+Koszt dla example6.mr jest lepszy o 1.08% (poprzedni: 75492, nowy: 74671)
 Długość kodu dla example6.mr jest mniejsza o 1.88% (poprzednia: 159, nowa: 156)
 =================================================
 Przetwarzam plik: example7.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla example7.mr.
-Koszt dla example7.mr jest lepszy o 0% (poprzedni: 640544, nowy: 640483)
+Koszt dla example7.mr jest lepszy o 12.49% (poprzedni: 640544, nowy: 560523)
 Długość kodu dla example7.mr jest mniejsza o 3.79% (poprzednia: 79, nowa: 76)
 =================================================
 Przetwarzam plik: example9.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla example9.mr.
-Koszt dla example9.mr się nie zmienił: 80371
+Koszt dla example9.mr jest lepszy o 1.09% (poprzedni: 80371, nowy: 79491)
 Długość kodu dla example9.mr się nie zmieniła: 758
 =================================================
 Przetwarzam plik: program0.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla program0.mr.
-Koszt dla program0.mr jest lepszy o 89.72% (poprzedni: 74337, nowy: 7640)
+Koszt dla program0.mr jest lepszy o 90.36% (poprzedni: 74337, nowy: 7160)
 Długość kodu dla program0.mr jest mniejsza o 87.30% (poprzednia: 260, nowa: 33)
 =================================================
 Przetwarzam plik: program3.mr
 Wynik: OK - wszystkie wyniki się zgadzają dla program3.mr.
-Koszt dla program3.mr jest lepszy o 36.64% (poprzedni: 654288352, nowy: 414510179)
+Koszt dla program3.mr jest lepszy o 37.82% (poprzedni: 654288352, nowy: 406812099)
 Długość kodu dla program3.mr jest mniejsza o 16.12% (poprzednia: 558, nowa: 468)
-Koniec testów. Aktualne wyniki zapisane w wyniki6.txt.
+Koniec testów. Aktualne wyniki zapisane w wynikiOstateczne.txt.
+
