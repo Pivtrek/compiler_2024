@@ -384,7 +384,7 @@ public class CodeGenerator {
         traverse(ifelseContext.commands(0)); //generate if commands
         int afterIfIndex = instructionList.getInstructions().size();//if commands
         instructionList.getInstructions().set(skipIfLabel-1, new Instruction("JPOS", afterIfIndex-skipIfLabel+2));
-        instructionList.addInstruction(new Instruction("SET", 0));//on the last step need to set acc to 0 because its telling to skip else
+        instructionList.addInstruction(new Instruction("LOAD", 14));//on the last step need to set acc to 0 because its telling to skip else
         instructionList.addInstruction(new Instruction("JZERO", 1));
         int skipElseLabel = instructionList.getInstructions().size();
         traverse(ifelseContext.commands(1)); //generate else commands
@@ -457,7 +457,7 @@ public class CodeGenerator {
             }
             instructionList.addInstruction(new Instruction("SUB", 1));
             instructionList.addInstruction(new Instruction("JZERO", 3));
-            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("LOAD", 14));
             instructionList.addInstruction(new Instruction("JZERO", 2));
             instructionList.addInstruction(new Instruction("SET", 1));
             
@@ -486,7 +486,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("JNEG", 3));
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("JPOS", 2));
-            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("LOAD", 14));
 
         }else if (conditionContext instanceof GrammarParser.LTContext ltContext) {
             if (ltContext.value(0).signedNum() != null){
@@ -513,7 +513,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("JPOS", 3));
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("JPOS", 2));
-            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("LOAD", 14));
 
         }else if (conditionContext instanceof GrammarParser.GEQContext geqContext) {
             if (geqContext.value(0).signedNum() != null){
@@ -541,7 +541,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("JNEG", 3)); //jump to set 0
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("JPOS", 2));
-            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("LOAD", 14));
 
 
         }else if (conditionContext instanceof GrammarParser.LEQContext leqContext) {
@@ -570,7 +570,7 @@ public class CodeGenerator {
             instructionList.addInstruction(new Instruction("JPOS", 3)); //jump to set 0
             instructionList.addInstruction(new Instruction("SET", 1));
             instructionList.addInstruction(new Instruction("JPOS", 2));
-            instructionList.addInstruction(new Instruction("SET", 0));
+            instructionList.addInstruction(new Instruction("LOAD", 14));
         }
     }
 
@@ -707,7 +707,7 @@ public class CodeGenerator {
                 }
                 //changing sign of result because in every case we have to change it
                 instructionList.addInstruction(new Instruction("STORE", 3));
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("SUB", 3));
             }
             else if (mulContext.value(0).signedNum() != null && mulContext.value(1).signedNum() == null && Integer.parseInt(mulContext.value(0).signedNum().getText()) < 0 && isPowerOfTwo(Math.abs(Integer.parseInt(mulContext.value(0).signedNum().getText())))) {
@@ -721,7 +721,7 @@ public class CodeGenerator {
                 }
                 //changing sign of result because in every case we have to change it
                 instructionList.addInstruction(new Instruction("STORE", 3));
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("SUB", 3));
             }
 
@@ -783,7 +783,7 @@ public class CodeGenerator {
                 //If we know values of both m's we save result to the variable in compiler memory
 
                 //setting result as 0
-                instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
+                instructionList.addInstruction(new Instruction("LOAD", 14));//setting result as 0
                 instructionList.addInstruction(new Instruction("STORE", 3));
 
                 //Checking if result of multiplying should be + or - and saving it to r6
@@ -828,14 +828,14 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("JUMP", (-15)));
 
                 //Place for setting result to 0 if result
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("STORE", 3));
                 instructionList.addInstruction(new Instruction("JUMP", 7));
 
                 //Checking if result should be with + or - and saving it to acc
                 instructionList.addInstruction(new Instruction("LOAD", 6));
                 instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("SUB", 3));
                 instructionList.addInstruction(new Instruction("STORE", 3));
                 instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
@@ -857,7 +857,7 @@ public class CodeGenerator {
                 int divident = Integer.parseInt(divContext.value(0).signedNum().getText());
                 int divisor = Integer.parseInt(divContext.value(1).signedNum().getText());
                 if(divisor == 0){
-                    instructionList.addInstruction(new Instruction("SET", 0));
+                    instructionList.addInstruction(new Instruction("LOAD", 14));
                 }
                 else {
                     instructionList.addInstruction(new Instruction("SET", divident / divisor));
@@ -883,7 +883,7 @@ public class CodeGenerator {
                 }
                 //changing sign of result because in every case we have to change it
                 instructionList.addInstruction(new Instruction("STORE", 3));
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("SUB", 3));
             }
             else{
@@ -943,7 +943,7 @@ public class CodeGenerator {
                 //If we know values of both m's we save result to the variable in compiler memory
 
                 //setting result as 0
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("STORE", 3));
 
 
@@ -1021,14 +1021,14 @@ public class CodeGenerator {
                 instructionList.addInstruction(new Instruction("JUMP", -23));
 
                 //Place for setting result to 0 if result
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("STORE", 3));
                 instructionList.addInstruction(new Instruction("JUMP", 7));
 
                 //Checking if result should be with + or - and saving it to acc
                 instructionList.addInstruction(new Instruction("LOAD", 6));
                 instructionList.addInstruction(new Instruction("JZERO", 4)); //Jump to exit of mul, result is positive
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("SUB", 3));
                 instructionList.addInstruction(new Instruction("STORE", 3));
                 instructionList.addInstruction(new Instruction("LOAD", 3));//exit from loop here, loading result to acc
@@ -1047,7 +1047,7 @@ public class CodeGenerator {
              */
 
             //setting result as 0
-            instructionList.addInstruction(new Instruction("SET", 0));//setting result as 0
+            instructionList.addInstruction(new Instruction("LOAD", 14));//setting result as 0
             instructionList.addInstruction(new Instruction("STORE", 3));
 
             if (modContext.value(0).signedNum() == null && modContext.value(1).signedNum() != null){
@@ -1059,7 +1059,7 @@ public class CodeGenerator {
                     instructionList.addInstruction(new Instruction("STORE", 3));
                     instructionList.addInstruction(new Instruction("JZERO", 10));//jump to load3
                     instructionList.addInstruction(new Instruction("JPOS",4));//jump from changing to positive
-                    instructionList.addInstruction(new Instruction("SET", 0));//changing from negative to positive
+                    instructionList.addInstruction(new Instruction("LOAD", 14));//changing from negative to positive
                     instructionList.addInstruction(new Instruction("SUB", registerNumber));
                     instructionList.addInstruction(new Instruction("STORE", 3));//modulo optimization for a%2
                     instructionList.addInstruction(new Instruction("HALF"));
@@ -1195,7 +1195,7 @@ public class CodeGenerator {
                 //result from r1
                 instructionList.addInstruction(new Instruction("LOAD", 6));
                 instructionList.addInstruction(new Instruction("JZERO", 4));
-                instructionList.addInstruction(new Instruction("SET", 0));
+                instructionList.addInstruction(new Instruction("LOAD", 14));
                 instructionList.addInstruction(new Instruction("SUB", 1));
                 instructionList.addInstruction(new Instruction("JUMP", 2));
                 instructionList.addInstruction(new Instruction("LOAD", 1));
