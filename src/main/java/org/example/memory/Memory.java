@@ -10,7 +10,7 @@ public class Memory {
     private Map<String, MemCell> memory;
     private Map<String, MemCell> referenceMap;
     private Map<String, MemCell> register;
-    private int nextFreeAdress = 14;
+    private int nextFreeAdress = 15;
     private Integer callProcNumber;
     private Integer maxLowerBound;
     private Integer maxUpperBound;
